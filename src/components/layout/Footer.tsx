@@ -30,7 +30,7 @@ export function Footer() {
           {/* Social Links */}
           <div className="flex space-x-6">
             <a
-              href="https://github.com"
+              href="https://github.com/dhananjaysinghk"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground transition-colors"
@@ -39,7 +39,7 @@ export function Footer() {
               <Github className="h-4 w-4" />
             </a>
             <a
-              href="https://linkedin.com"
+              href="https://linkedin.com/in/dhananjaysinghk"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground transition-colors"
@@ -48,7 +48,7 @@ export function Footer() {
               <Linkedin className="h-4 w-4" />
             </a>
             <a
-              href="https://twitter.com"
+              href="https://x.com/dhananjay_real"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground transition-colors"
@@ -57,7 +57,7 @@ export function Footer() {
               <Twitter className="h-4 w-4" />
             </a>
             <a
-              href="mailto:contact@dhananjay.dev"
+              href="mailto:dhananjay6903@gmail.com"
               className="text-muted-foreground hover:text-foreground transition-colors"
               aria-label="Send Email"
             >
