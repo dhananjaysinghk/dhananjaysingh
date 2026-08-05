@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // Hash for admin login
+  name      String
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model Project {
+  id           String   @id @default(uuid())
+  title        String
+  slug         String   @unique
+  description  String
+  problem      String   @db.Text
+  solution     String   @db.Text
+  architecture String   @db.Text
+  techStack    String[] // Array of tools used
+  features     String[]
+  challenges   String   @db.Text
+  lessons      String   @db.Text
+  github       String?
+  demo         String?
+  roadmap      Json?    // Future roadmap bullet points
+  images       String[] // Image URLs
+  category     String
+  featured     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model BlogPost {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  content     String   @db.Text
+  excerpt     String
+  coverImage  String
+  tags        String[]
+  category    String
+  readingTime String
+  featured    Boolean  @default(false)
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Note {
+  id        String   @id @default(uuid())
+  title     String
+  slug      String   @unique
+  content   String   @db.Text
+  category  String   // DSA, System Design, React, DevOps, Go, etc.
+  tags      String[]
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  subject   String
+  message   String   @db.Text
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Experience {
+  id           String    @id @default(uuid())
+  role         String
+  company      String
+  location     String?
+  startDate    DateTime
+  endDate      DateTime? // Null if current
+  description  String[]
+  technologies String[]
+  achievements String[]
+}
+
+model Certificate {
+  id            String   @id @default(uuid())
+  title         String
+  issuer        String
+  issueDate     DateTime
+  credentialId  String?
+  credentialUrl String?
+  image         String?
+}
