@@ -29,7 +29,7 @@ export function Hero() {
           <SlideUp delay={0.2}>
             <h1 className="max-w-4xl font-heading text-4xl font-extrabold tracking-tight sm:text-6xl text-foreground leading-[1.1]">
               Architecting systems for <br />
-              <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                 maximum scale & reliability.
               </span>
             </h1>
