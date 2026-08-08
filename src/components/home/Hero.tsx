@@ -47,7 +47,7 @@ export function Hero() {
             <div className="flex w-full sm:w-auto items-center gap-4">
               <Link
                 href="/projects"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-90 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-90 transition-all focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
                 Showcase Projects
                 <ArrowRight className="h-4 w-4" />

@@ -58,7 +58,7 @@ export function Navbar() {
                   {isActive && (
                     <motion.span
                       layoutId="activeNavIndicator"
-                      className="absolute -bottom-[21px] left-0 right-0 h-[2px] bg-foreground"
+                      className="absolute -bottom-5.25 left-0 right-0 h-0.5 bg-foreground"
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}

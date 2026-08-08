@@ -45,11 +45,11 @@ export default function RootLayout({
         >
           {/* Background Grid Pattern Overlay */}
           <div className="fixed inset-0 -z-50 pointer-events-none overflow-hidden">
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-border)/20_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)/20_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_80%,transparent_100%)] opacity-35" />
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-border)/20_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)/20_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_80%,transparent_100%)] opacity-35" />
           </div>
 
           <Navbar />
-          <main className="flex-grow flex flex-col">
+          <main className="grow flex flex-col">
             {children}
           </main>
           <Footer />

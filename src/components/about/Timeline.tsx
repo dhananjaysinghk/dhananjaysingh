@@ -26,7 +26,7 @@ export function Timeline({ events }: TimelineProps) {
         {events.map((event) => (
           <StaggerItem key={event.id} className="relative pl-8 md:pl-10 group">
             {/* Timeline Dot Indicator */}
-            <div className="absolute -left-[17px] top-1.5 flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-sm transition-colors group-hover:border-primary group-hover:text-primary">
+            <div className="absolute -left-4.25 top-1.5 flex h-8 w-8 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-sm transition-colors group-hover:border-primary group-hover:text-primary">
               {event.type === "work" ? (
                 <Briefcase className="h-4 w-4" />
               ) : (

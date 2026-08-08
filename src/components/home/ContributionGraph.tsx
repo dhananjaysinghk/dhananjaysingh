@@ -80,14 +80,14 @@ export function ContributionGraph() {
 
               {/* Grid Scroll Wrapper */}
               <div className="overflow-x-auto pb-2 scrollbar-thin">
-                <div className="flex gap-[3px] min-w-[700px] select-none justify-between">
+                <div className="flex gap-0.75 min-w-175 select-none justify-between">
                   {columns.map((col, colIdx) => (
-                    <div key={colIdx} className="flex flex-col gap-[3px]">
+                    <div key={colIdx} className="flex flex-col gap-0.75">
                       {col.map((level, dayIdx) => (
                         <motion.div
                           key={dayIdx}
                           whileHover={{ scale: 1.3, zIndex: 10 }}
-                          className={`h-[10px] w-[10px] rounded-[1.5px] transition-colors duration-300 ${getColorClass(
+                          className={`h-2.5 w-2.5 rounded-[1.5px] transition-colors duration-300 ${getColorClass(
                             level
                           )}`}
                           title={`Level ${level} activity`}

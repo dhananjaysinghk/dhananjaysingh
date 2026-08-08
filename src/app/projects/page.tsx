@@ -47,7 +47,7 @@ async function getProjects() {
       orderBy: { createdAt: "desc" },
     })
     
-    if (projects.length === 0) return fallbackProjects
+    if (projects.length === 0) return []
 
     return projects.map((p) => ({
       id: p.id,
@@ -60,8 +60,8 @@ async function getProjects() {
       demo: p.demo,
     }))
   } catch (error) {
-    console.error("Database query failed; loading fallback projects", error)
-    return fallbackProjects
+    console.error("Database query failed", error)
+    return []
   }
 }
 

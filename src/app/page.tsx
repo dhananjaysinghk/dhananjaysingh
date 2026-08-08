@@ -153,7 +153,7 @@ export default async function Home() {
   const { projects, blogs, notes } = await getFeaturedData()
 
   return (
-    <div className="flex flex-col flex-grow">
+    <div className="flex flex-col grow">
       {/* 1. Hero */}
       <Hero />
 
@@ -202,7 +202,7 @@ export default async function Home() {
                         </Link>
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="flex-grow">
+                    <CardContent className="grow">
                       <CardDescription className="text-sm font-sans text-muted-foreground leading-relaxed">
                         {project.description}
                       </CardDescription>

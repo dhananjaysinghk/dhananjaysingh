@@ -71,7 +71,7 @@ export function ProjectsShowcase({ initialProjects }: ProjectsShowcaseProps) {
       <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between pb-6 border-b border-border/20">
         
         {/* Search */}
-        <div className="relative flex-grow max-w-md">
+        <div className="relative grow max-w-md">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
           <Input
             type="search"
@@ -138,7 +138,7 @@ export function ProjectsShowcase({ initialProjects }: ProjectsShowcaseProps) {
                     </Link>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="flex-grow">
+                <CardContent className="grow">
                   <CardDescription className="text-sm font-sans text-muted-foreground leading-relaxed">
                     {project.description}
                   </CardDescription>
