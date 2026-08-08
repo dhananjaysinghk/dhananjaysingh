@@ -4,10 +4,10 @@ import React from "react"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
 
 const stats = [
-  { label: "Years of Engineering", value: "8+" },
-  { label: "Systems Architecture Uptime", value: "99.999%" },
-  { label: "Production Containers", value: "2,500+" },
-  { label: "Open Source Commits", value: "1,200+" },
+  { label: "Years of Development", value: "3+" },
+  { label: "Projects Completed", value: "15+" },
+  { label: "Open Source Commits", value: "300+" },
+  { label: "LeetCode Problems Solved", value: "500+" },
 ]
 
 export function Stats() {

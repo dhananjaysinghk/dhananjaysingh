@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dhananjay Singh | Staff Engineer & Solution Architect",
-  description: "Personal portfolio and developer platform of Dhananjay Singh, showcasing systems development, architectural designs, projects, and articles.",
+  title: "Dhananjay Singh | Software Engineer & Student",
+  description: "Personal portfolio and developer platform of Dhananjay Singh, showcasing systems development, projects, and academic coursework.",
   icons: {
     icon: "/favicon.png",
     shortcut: "/favicon.png",

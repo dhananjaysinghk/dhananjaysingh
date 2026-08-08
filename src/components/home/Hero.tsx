@@ -38,7 +38,7 @@ export function Hero() {
           {/* Intro Description */}
           <SlideUp delay={0.3}>
             <p className="max-w-3xl text-lg sm:text-xl leading-relaxed text-muted-foreground font-sans">
-              I am a Staff Software Engineer & Solution Architect. I design robust cloud-native systems, build high-performance distributed microservices, and shape technical strategies that support millions of concurrent connections.
+              I am a Software Engineer & Computer Science Student at GLA University. I focus on architecting robust backend systems, building distributed microservices, and designing low-latency application structures.
             </p>
           </SlideUp>
 

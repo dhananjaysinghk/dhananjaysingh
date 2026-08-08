@@ -130,13 +130,27 @@ async function getTimelineEvents(): Promise<TimelineEvent[]> {
     const eduEvents = fallbackEvents.filter((ev) => ev.type === "education")
     const combined = [...workEvents, ...eduEvents]
     
-    // Sort combined events reverse chronologically by startDate
-    combined.sort((a, b) => parseDateString(b.startDate) - parseDateString(a.startDate))
+    // Sort combined events reverse chronologically by endDate (to keep active/future education at the top)
+    combined.sort((a, b) => {
+      const dateA = parseDateString(a.endDate || "Present")
+      const dateB = parseDateString(b.endDate || "Present")
+      if (dateB !== dateA) {
+        return dateB - dateA
+      }
+      return parseDateString(b.startDate) - parseDateString(a.startDate)
+    })
     return combined
   } catch (error) {
     console.error("Database experienced read failures; utilizing fallbacks", error)
     const combined = [...fallbackEvents]
-    combined.sort((a, b) => parseDateString(b.startDate) - parseDateString(a.startDate))
+    combined.sort((a, b) => {
+      const dateA = parseDateString(a.endDate || "Present")
+      const dateB = parseDateString(b.endDate || "Present")
+      if (dateB !== dateA) {
+        return dateB - dateA
+      }
+      return parseDateString(b.startDate) - parseDateString(a.startDate)
+    })
     return combined
   }
 }
