@@ -193,6 +193,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
         if (match) {
           const level = match[1].length
           const text = match[2]
+          const id = text.toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-")
           const headingClasses = {
             1: "font-heading text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight mt-10 mb-6",
             2: "font-heading text-2xl sm:text-3xl font-bold text-foreground tracking-tight mt-8 mb-4 border-b border-border/10 pb-2",
@@ -205,6 +206,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           elements.push(
             <HeadingTag
               key={`h-${i}`}
+              id={id}
               className={headingClasses[level as keyof typeof headingClasses]}
               dangerouslySetInnerHTML={{ __html: parseInlineMarkdown(text) }}
             />
