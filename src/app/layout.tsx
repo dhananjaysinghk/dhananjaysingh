@@ -18,10 +18,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Dhananjay Singh | Software Engineer & Student",
   description: "Personal portfolio and developer platform of Dhananjay Singh, showcasing systems development, projects, and academic coursework.",
+  manifest: "/site.webmanifest",
   icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/apple-icon.png",
   },
 };
 
