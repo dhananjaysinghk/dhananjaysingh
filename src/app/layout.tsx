@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CommandMenu } from "@/components/layout/CommandMenu";
+import { TerminalSandbox } from "@/components/layout/TerminalSandbox";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -60,6 +61,7 @@ export default function RootLayout({
           </main>
           <Footer />
           <CommandMenu />
+          <TerminalSandbox />
         </ThemeProvider>
       </body>
     </html>
