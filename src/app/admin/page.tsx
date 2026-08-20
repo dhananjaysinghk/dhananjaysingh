@@ -1,49 +1,64 @@
 import React from "react"
 import { Metadata } from "next"
+import { db } from "@/lib/db"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { LayoutDashboard, FileText, Database, ShieldAlert, Settings, HardDrive, BarChart3, LineChart, FileCode } from "lucide-react"
+import { LayoutDashboard, FileText, Database, ShieldAlert, Settings, HardDrive, BarChart3, LineChart, FileCode, Mail, Calendar, User } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Admin Dashboard | Developer Platform Architecture",
-  description: "Architectural dashboard placeholder demonstrating the future CMS scalability.",
+  description: "Architectural dashboard displaying telemetry metrics and contact message inbox records.",
 }
 
-const stats = [
-  { label: "Active Database Records", value: "24", icon: Database, color: "text-indigo-400" },
-  { label: "System Media Storage", value: "1.2 GB / 10 GB", icon: HardDrive, color: "text-purple-400" },
-  { label: "API Endpoint Telemetry Uptime", value: "99.98%", icon: LineChart, color: "text-emerald-400" },
-]
+async function getContactMessages() {
+  try {
+    return await db.contactMessage.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 10, // Limit to recent 10 messages
+    })
+  } catch (error) {
+    console.warn("Prisma contact message query failed; returning empty list for static build safety.", error)
+    return []
+  }
+}
 
-const modules = [
-  {
-    title: "Blog CMS Manager",
-    description: "Write and edit posts utilizing standard Markdown or import dynamic drafts. Supports tags, reading-time estimations, and cover assets mapping.",
-    status: "Architecture Ready",
-    icon: FileText,
-  },
-  {
-    title: "Project Showcase Manager",
-    description: "Configure case studies, problem-solution descriptions, dynamic tech stack badges, roadmap sequences, and github/demo link routes.",
-    status: "Architecture Ready",
-    icon: FileCode,
-  },
-  {
-    title: "Knowledge Notes Editor",
-    description: "Publish quick reference sheets, distributed algorithms descriptions, syntax cheatsheets directly into categorized notes rings.",
-    status: "Architecture Ready",
-    icon: Settings,
-  },
-  {
-    title: "System Analytics Dashboard",
-    description: "Monitor API connection thresholds, page render speeds, search query terms, and contact form transmission telemetry.",
-    status: "Planning Stage",
-    icon: BarChart3,
-  },
-]
+export default async function AdminPage() {
+  const messages = await getContactMessages()
 
-export default function AdminPage() {
+  const stats = [
+    { label: "Active Database Records", value: "24", icon: Database, color: "text-indigo-400" },
+    { label: "Inbox Messages Count", value: String(messages.length), icon: Mail, color: "text-purple-400" },
+    { label: "API Endpoint Telemetry Uptime", value: "99.98%", icon: LineChart, color: "text-emerald-400" },
+  ]
+
+  const modules = [
+    {
+      title: "Blog CMS Manager",
+      description: "Write and edit posts utilizing standard Markdown or import dynamic drafts. Supports tags, reading-time estimations, and cover assets mapping.",
+      status: "Architecture Ready",
+      icon: FileText,
+    },
+    {
+      title: "Project Showcase Manager",
+      description: "Configure case studies, problem-solution descriptions, dynamic tech stack badges, roadmap sequences, and github/demo link routes.",
+      status: "Architecture Ready",
+      icon: FileCode,
+    },
+    {
+      title: "Knowledge Notes Editor",
+      description: "Publish quick reference sheets, distributed algorithms descriptions, syntax cheatsheets directly into categorized notes rings.",
+      status: "Architecture Ready",
+      icon: Settings,
+    },
+    {
+      title: "System Analytics Dashboard",
+      description: "Monitor API connection thresholds, page render speeds, search query terms, and contact form transmission telemetry.",
+      status: "Planning Stage",
+      icon: BarChart3,
+    },
+  ]
+
   return (
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 flex flex-col gap-12">
       
@@ -58,7 +73,7 @@ export default function AdminPage() {
               Developer Platform Admin CMS
             </h1>
             <p className="text-sm text-muted-foreground font-sans">
-              Admin control console layout demonstrating future scalability pathways.
+              Admin control console telemetry and dynamic contact message inbox.
             </p>
           </div>
         </div>
@@ -69,7 +84,7 @@ export default function AdminPage() {
         <div className="flex items-start gap-4 rounded-xl border border-amber-500/30 bg-amber-500/5 p-5 text-sm text-amber-200/90 leading-relaxed">
           <ShieldAlert className="h-5 w-5 shrink-0 text-amber-400 mt-0.5" />
           <div className="flex flex-col gap-1">
-            <strong className="font-semibold text-foreground">Architectural Mock Mode</strong>
+            <strong className="font-semibold text-foreground">Security Sandbox Mode</strong>
             <span>
               This is a structural placeholder showing how the CMS module integrates. In a fully configured production state, these routes are wrapped in Next.js Middleware check guards against OAuth auth tokens to secure database edit endpoints.
             </span>
@@ -101,8 +116,65 @@ export default function AdminPage() {
         })}
       </div>
 
+      {/* Dynamic Contact Messages Inbox Section */}
+      <section className="flex flex-col gap-6">
+        <ScrollReveal className="max-w-2xl flex flex-col gap-2">
+          <h2 className="font-heading text-2xl font-bold text-foreground">
+            Contact Messages Inbox
+          </h2>
+          <p className="text-sm text-muted-foreground font-sans">
+            Recent messages submitted by visitors through the contact form pipeline.
+          </p>
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.1}>
+          {messages.length > 0 ? (
+            <div className="flex flex-col gap-6">
+              {messages.map((msg) => (
+                <Card key={msg.id} className="bg-card/20 border-border/40 hover:border-border/70 transition-colors">
+                  <CardHeader className="pb-3 border-b border-border/20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex flex-col gap-1.5">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground font-mono">
+                        <User className="h-3.5 w-3.5 text-primary" />
+                        <span>{msg.name} (<a href={`mailto:${msg.email}`} className="hover:underline text-foreground/80">{msg.email}</a>)</span>
+                      </div>
+                      <CardTitle className="font-heading text-base font-bold text-foreground leading-tight">
+                        Subject: {msg.subject}
+                      </CardTitle>
+                    </div>
+                    <div className="flex items-center gap-1 text-[10px] text-muted-foreground font-mono self-start sm:self-auto">
+                      <Calendar className="h-3 w-3" />
+                      <span>
+                        {msg.createdAt.toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-4 text-sm text-muted-foreground leading-relaxed font-sans whitespace-pre-wrap">
+                    {msg.message}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-xl border border-dashed border-border/60 bg-card/10 p-12 text-center flex flex-col items-center gap-3">
+              <Mail className="h-8 w-8 text-muted-foreground" />
+              <h3 className="font-heading text-sm font-bold text-foreground">
+                Inbox is empty
+              </h3>
+              <p className="text-xs text-muted-foreground font-sans">
+                Submissions from the contact page will appear dynamically in this panel.
+              </p>
+            </div>
+          )}
+        </ScrollReveal>
+      </section>
+
       {/* CMS Module Areas */}
-      <section className="flex flex-col gap-8">
+      <section className="flex flex-col gap-6">
         <ScrollReveal className="max-w-2xl flex flex-col gap-2">
           <h2 className="font-heading text-2xl font-bold text-foreground">
             Modular CMS Control Planes
