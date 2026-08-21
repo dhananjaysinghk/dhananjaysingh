@@ -28,7 +28,15 @@ const categories = ["All", "Backend & Systems", "Distributed Systems", "Cloud In
 export function ProjectsShowcase({ initialProjects }: ProjectsShowcaseProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
+  const [selectedTech, setSelectedTech] = useState<string | null>(null)
   const [sortBy, setSortBy] = useState("newest") // newest, oldest, alphabetical
+
+  // Get all unique tech tags across all projects
+  const allTechs = useMemo(() => {
+    const techs = new Set<string>()
+    initialProjects.forEach((p) => p.techStack.forEach((t) => techs.add(t)))
+    return Array.from(techs).sort()
+  }, [initialProjects])
 
   // Filter & Sort logic
   const filteredAndSortedProjects = useMemo(() => {
@@ -41,7 +49,14 @@ export function ProjectsShowcase({ initialProjects }: ProjectsShowcaseProps) {
       )
     }
 
-    // 2. Filter by search query
+    // 2. Filter by tech tag
+    if (selectedTech) {
+      result = result.filter((p) =>
+        p.techStack.some((t) => t.toLowerCase() === selectedTech.toLowerCase())
+      )
+    }
+
+    // 3. Filter by search query
     if (searchQuery.trim() !== "") {
       const query = searchQuery.toLowerCase()
       result = result.filter(
@@ -52,20 +67,18 @@ export function ProjectsShowcase({ initialProjects }: ProjectsShowcaseProps) {
       )
     }
 
-    // 3. Sort
+    // 4. Sort
     if (sortBy === "alphabetical") {
       result.sort((a, b) => a.title.localeCompare(b.title))
     } else if (sortBy === "oldest") {
-      // In a real app we'd sort by date; here we use initial database order inverted
       result.reverse()
     }
-    // "newest" is the default database ordering
 
     return result
-  }, [initialProjects, selectedCategory, searchQuery, sortBy])
+  }, [initialProjects, selectedCategory, selectedTech, searchQuery, sortBy])
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-8">
       
       {/* Filters & Controls */}
       <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between pb-6 border-b border-border/20">
@@ -103,9 +116,12 @@ export function ProjectsShowcase({ initialProjects }: ProjectsShowcaseProps) {
         {categories.map((cat) => (
           <button
             key={cat}
-            onClick={() => setSelectedCategory(cat)}
+            onClick={() => {
+              setSelectedCategory(cat)
+              setSelectedTech(null) // Reset tech filter on category switch
+            }}
             className={`rounded-full px-4 py-1.5 text-xs font-semibold tracking-wide border transition-all ${
-              selectedCategory === cat
+              selectedCategory === cat && !selectedTech
                 ? "bg-foreground text-background border-foreground shadow-sm"
                 : "border-border/40 bg-card/30 text-muted-foreground hover:text-foreground hover:border-border"
             }`}
@@ -113,6 +129,37 @@ export function ProjectsShowcase({ initialProjects }: ProjectsShowcaseProps) {
             {cat}
           </button>
         ))}
+      </div>
+
+      {/* Tech Stack Pills Filter */}
+      <div className="flex flex-wrap gap-1.5 items-center border-t border-border/10 pt-4">
+        <span className="text-[10px] font-mono text-muted-foreground uppercase mr-2">
+          Filter by Stack:
+        </span>
+        {allTechs.map((tech) => {
+          const isSelected = selectedTech === tech
+          return (
+            <button
+              key={tech}
+              onClick={() => setSelectedTech(isSelected ? null : tech)}
+              className={`rounded-md px-2.5 py-1 text-[10px] font-mono border transition-all ${
+                isSelected
+                  ? "bg-primary/20 text-primary border-primary/40 font-semibold"
+                  : "border-border/20 bg-card/10 text-muted-foreground hover:text-foreground hover:border-border/40"
+              }`}
+            >
+              {tech}
+            </button>
+          )
+        })}
+        {selectedTech && (
+          <button
+            onClick={() => setSelectedTech(null)}
+            className="text-[10px] font-mono text-red-400 hover:text-red-300 underline underline-offset-2 ml-2"
+          >
+            Reset Filter
+          </button>
+        )}
       </div>
 
       {/* Grid Showcase */}
