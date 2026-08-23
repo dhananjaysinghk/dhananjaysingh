@@ -26,6 +26,14 @@ const categories = ["All", "Systems Engineering", "Distributed Systems", "Fronte
 export function BlogList({ initialPosts }: BlogListProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
+  const [selectedTag, setSelectedTag] = useState<string | null>(null)
+
+  // Get all unique tags across all posts
+  const allTags = useMemo(() => {
+    const tagsSet = new Set<string>()
+    initialPosts.forEach((post) => post.tags.forEach((t) => tagsSet.add(t)))
+    return Array.from(tagsSet).sort()
+  }, [initialPosts])
 
   // Filter posts
   const filteredPosts = useMemo(() => {
@@ -38,7 +46,14 @@ export function BlogList({ initialPosts }: BlogListProps) {
       )
     }
 
-    // 2. Filter by search query
+    // 2. Filter by tag
+    if (selectedTag) {
+      result = result.filter((p) =>
+        p.tags.some((t) => t.toLowerCase() === selectedTag.toLowerCase())
+      )
+    }
+
+    // 3. Filter by search query
     if (searchQuery.trim() !== "") {
       const query = searchQuery.toLowerCase()
       result = result.filter(
@@ -50,7 +65,7 @@ export function BlogList({ initialPosts }: BlogListProps) {
     }
 
     return result
-  }, [initialPosts, selectedCategory, searchQuery])
+  }, [initialPosts, selectedCategory, selectedTag, searchQuery])
 
   return (
     <div className="flex flex-col gap-10">
@@ -75,9 +90,12 @@ export function BlogList({ initialPosts }: BlogListProps) {
           {categories.map((cat) => (
             <button
               key={cat}
-              onClick={() => setSelectedCategory(cat)}
+              onClick={() => {
+                setSelectedCategory(cat)
+                setSelectedTag(null) // Reset tag filter on category switch
+              }}
               className={`rounded-full px-4 py-1.5 text-xs font-semibold border transition-all ${
-                selectedCategory === cat
+                selectedCategory === cat && !selectedTag
                   ? "bg-foreground text-background border-foreground shadow-sm"
                   : "border-border/40 bg-card/30 text-muted-foreground hover:text-foreground hover:border-border"
               }`}
@@ -87,6 +105,37 @@ export function BlogList({ initialPosts }: BlogListProps) {
           ))}
         </div>
 
+      </div>
+
+      {/* Tech Tags Filter */}
+      <div className="flex flex-wrap gap-1.5 items-center border-t border-border/10 pt-4">
+        <span className="text-[10px] font-mono text-muted-foreground uppercase mr-2">
+          Filter by Tag:
+        </span>
+        {allTags.map((tag) => {
+          const isSelected = selectedTag === tag
+          return (
+            <button
+              key={tag}
+              onClick={() => setSelectedTag(isSelected ? null : tag)}
+              className={`rounded-md px-2.5 py-1 text-[10px] font-mono border transition-all ${
+                isSelected
+                  ? "bg-primary/20 text-primary border-primary/40 font-semibold"
+                  : "border-border/20 bg-card/10 text-muted-foreground hover:text-foreground hover:border-border/40"
+              }`}
+            >
+              #{tag}
+            </button>
+          )
+        })}
+        {selectedTag && (
+          <button
+            onClick={() => setSelectedTag(null)}
+            className="text-[10px] font-mono text-red-400 hover:text-red-300 underline underline-offset-2 ml-2"
+          >
+            Reset Filter
+          </button>
+        )}
       </div>
 
       {/* Blog Cards Grid */}
