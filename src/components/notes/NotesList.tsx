@@ -33,6 +33,14 @@ const categories = [
 export function NotesList({ initialNotes }: NotesListProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
+  const [selectedTag, setSelectedTag] = useState<string | null>(null)
+
+  // Get all unique tags across all notes
+  const allTags = useMemo(() => {
+    const tagsSet = new Set<string>()
+    initialNotes.forEach((note) => note.tags.forEach((t) => tagsSet.add(t)))
+    return Array.from(tagsSet).sort()
+  }, [initialNotes])
 
   // Filter notes
   const filteredNotes = useMemo(() => {
@@ -45,7 +53,14 @@ export function NotesList({ initialNotes }: NotesListProps) {
       )
     }
 
-    // 2. Filter by search query
+    // 2. Filter by tag
+    if (selectedTag) {
+      result = result.filter((n) =>
+        n.tags.some((t) => t.toLowerCase() === selectedTag.toLowerCase())
+      )
+    }
+
+    // 3. Filter by search query
     if (searchQuery.trim() !== "") {
       const query = searchQuery.toLowerCase()
       result = result.filter(
@@ -57,7 +72,7 @@ export function NotesList({ initialNotes }: NotesListProps) {
     }
 
     return result
-  }, [initialNotes, selectedCategory, searchQuery])
+  }, [initialNotes, selectedCategory, selectedTag, searchQuery])
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -71,9 +86,12 @@ export function NotesList({ initialNotes }: NotesListProps) {
           {categories.map((cat) => (
             <button
               key={cat}
-              onClick={() => setSelectedCategory(cat)}
+              onClick={() => {
+                setSelectedCategory(cat)
+                setSelectedTag(null) // Reset tag filter on category switch
+              }}
               className={`rounded-lg px-3 py-2 text-sm font-semibold text-left whitespace-nowrap transition-all ${
-                selectedCategory === cat
+                selectedCategory === cat && !selectedTag
                   ? "bg-muted text-foreground"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
               }`}
@@ -97,6 +115,37 @@ export function NotesList({ initialNotes }: NotesListProps) {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-card/20 border-border/40 focus:border-border/80"
           />
+        </div>
+
+        {/* Tech Tags Filter */}
+        <div className="flex flex-wrap gap-1.5 items-center border-t border-border/10 pt-4">
+          <span className="text-[10px] font-mono text-muted-foreground uppercase mr-2">
+            Filter by Tag:
+          </span>
+          {allTags.map((tag) => {
+            const isSelected = selectedTag === tag
+            return (
+              <button
+                key={tag}
+                onClick={() => setSelectedTag(isSelected ? null : tag)}
+                className={`rounded-md px-2.5 py-1 text-[10px] font-mono border transition-all ${
+                  isSelected
+                    ? "bg-primary/20 text-primary border-primary/40 font-semibold"
+                    : "border-border/20 bg-card/10 text-muted-foreground hover:text-foreground hover:border-border/40"
+                }`}
+              >
+                #{tag}
+              </button>
+            )
+          })}
+          {selectedTag && (
+            <button
+              onClick={() => setSelectedTag(null)}
+              className="text-[10px] font-mono text-red-400 hover:text-red-300 underline underline-offset-2 ml-2"
+            >
+              Reset Filter
+            </button>
+          )}
         </div>
 
         {/* Notes Grid */}
