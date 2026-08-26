@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { CommandMenu } from "@/components/layout/CommandMenu";
 import { TerminalSandbox } from "@/components/layout/TerminalSandbox";
 import { ConsoleEasterEgg } from "@/components/layout/ConsoleEasterEgg";
+import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -64,6 +65,7 @@ export default function RootLayout({
           <CommandMenu />
           <TerminalSandbox />
           <ConsoleEasterEgg />
+          <ScrollToTop />
         </ThemeProvider>
       </body>
     </html>
