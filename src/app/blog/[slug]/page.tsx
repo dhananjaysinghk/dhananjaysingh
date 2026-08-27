@@ -6,6 +6,7 @@ import { db } from "@/lib/db"
 import { MarkdownRenderer } from "@/components/content/markdown-renderer"
 import { ReadingProgressBar } from "@/components/blog/ReadingProgressBar"
 import { TableOfContents } from "@/components/blog/TableOfContents"
+import { PostInteractions } from "@/components/blog/PostInteractions"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
@@ -324,6 +325,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         {/* Left main: Markdown Renderer */}
         <ScrollReveal className="lg:col-span-3 flex flex-col gap-6">
           <MarkdownRenderer content={post.content} />
+          <PostInteractions title={post.title} slug={post.slug} type="blog" />
         </ScrollReveal>
 
         {/* Right sidebar: Table of Contents & Related info */}

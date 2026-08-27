@@ -4,6 +4,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { db } from "@/lib/db"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
+import { PostInteractions } from "@/components/blog/PostInteractions"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { ArrowLeft, Github, ExternalLink, Calendar, Code, Shield, Network, Terminal, Lightbulb } from "lucide-react"
@@ -251,6 +252,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               </p>
             </div>
           </div>
+
+          {/* Interactive Reactions & Social Share */}
+          <PostInteractions title={project.title} slug={project.slug} type="project" />
 
         </ScrollReveal>
 
