@@ -8,7 +8,7 @@ const BASE_URL =
   "https://dhananjaysinghk.vercel.app"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const routes = ["", "/about", "/projects", "/blog", "/notes", "/contact", "/resume", "/certificates"]
+  const routes = ["", "/about", "/projects", "/blog", "/notes", "/contact", "/resume", "/certificates", "/status", "/privacy", "/terms"]
   
   const staticEntries: MetadataRoute.Sitemap = routes.map((route) => ({
     url: `${BASE_URL}${route}`,
