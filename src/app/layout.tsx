@@ -20,6 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://dhananjaysinghk.vercel.app"),
   title: "Dhananjay Singh | Software Engineer & Student",
   description: "Personal portfolio and developer platform of Dhananjay Singh, showcasing systems development, projects, and academic coursework.",
   manifest: "/site.webmanifest",
