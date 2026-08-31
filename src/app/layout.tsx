@@ -7,6 +7,7 @@ import { CommandMenu } from "@/components/layout/CommandMenu";
 import { TerminalSandbox } from "@/components/layout/TerminalSandbox";
 import { ConsoleEasterEgg } from "@/components/layout/ConsoleEasterEgg";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
+import { QuickContactModal } from "@/components/contact/QuickContactModal";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -67,6 +68,7 @@ export default function RootLayout({
           <TerminalSandbox />
           <ConsoleEasterEgg />
           <ScrollToTop />
+          <QuickContactModal />
         </ThemeProvider>
       </body>
     </html>

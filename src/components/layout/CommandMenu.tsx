@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, FileText, Bookmark, Sparkles, Terminal, Sun, Moon, Laptop, ArrowRight, Activity } from "lucide-react"
+import { Search, FileText, Bookmark, Sparkles, Terminal, Sun, Moon, Laptop, ArrowRight, Activity, MessageSquare } from "lucide-react"
 
 interface SearchItem {
   title: string
@@ -35,6 +35,7 @@ export function CommandMenu() {
     { title: "Vortex CDN Case Study", category: "Projects", href: "/projects/vortex-cdn", type: "project", icon: Terminal },
     { title: "Microsecond-Latency Rust Article", category: "Blog", href: "/blog/architecting-microsecond-latency-rust", type: "blog", icon: FileText },
     { title: "Custom Raft Consensus Protocol Go", category: "Blog", href: "/blog/designing-custom-raft-go", type: "blog", icon: FileText },
+    { title: "Send Quick Message (⌘M)", category: "Actions", href: "quick-contact", type: "action", icon: MessageSquare },
     { title: "Switch to Dark Mode", category: "Theme", href: "dark", type: "action", icon: Moon },
     { title: "Switch to Light Mode", category: "Theme", href: "light", type: "action", icon: Sun },
   ]
@@ -85,6 +86,8 @@ export function CommandMenu() {
   const handleSelect = (item: SearchItem) => {
     if (item.category === "Theme") {
       setTheme(item.href)
+    } else if (item.href === "quick-contact") {
+      window.dispatchEvent(new CustomEvent("open-quick-contact"))
     } else {
       router.push(item.href)
     }
