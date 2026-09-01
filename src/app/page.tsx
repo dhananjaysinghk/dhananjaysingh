@@ -5,6 +5,7 @@ import { Hero } from "@/components/home/Hero"
 import { Stats } from "@/components/home/Stats"
 import { TechStack } from "@/components/home/TechStack"
 import { ContributionGraph } from "@/components/home/ContributionGraph"
+import { ConsensusVisualizer } from "@/components/home/ConsensusVisualizer"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -244,6 +245,9 @@ export default async function Home() {
           </ScrollReveal>
         </div>
       </section>
+
+      {/* 4.5 Interactive Distributed Consensus Visualizer */}
+      <ConsensusVisualizer />
 
       {/* 5. Blogs and Notes Section */}
       <section className="py-20 border-b border-border/40">
