@@ -28,6 +28,7 @@ export function CommandMenu() {
     { title: "View Projects Showcase", category: "Navigation", href: "/projects", type: "action", icon: Terminal },
     { title: "Read Engineering Blog", category: "Navigation", href: "/blog", type: "action", icon: FileText },
     { title: "Knowledge Notes Archives", category: "Navigation", href: "/notes", type: "action", icon: Bookmark },
+    { title: "Sign Developer Guestbook", category: "Navigation", href: "/guestbook", type: "action", icon: MessageSquare },
     { title: "Read Dhananjay's Story", category: "Navigation", href: "/about", type: "action", icon: Sparkles },
     { title: "System Telemetry & Status", category: "Navigation", href: "/status", type: "action", icon: Activity },
     { title: "Nova Orchestrator Case Study", category: "Projects", href: "/projects/nova-orchestrator", type: "project", icon: Terminal },

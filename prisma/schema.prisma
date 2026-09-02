@@ -105,3 +105,12 @@ model Certificate {
   credentialUrl String?
   image         String?
 }
+
+model GuestbookEntry {
+  id        String   @id @default(uuid())
+  name      String
+  handle    String?  // GitHub, Twitter or company handle
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+}
+
