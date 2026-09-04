@@ -67,6 +67,9 @@ export function Footer() {
 
           {/* Utility links */}
           <div className="flex space-x-6 text-xs font-medium text-muted-foreground">
+            <Link href="/adr" className="hover:text-foreground transition-colors">
+              Architecture ADRs
+            </Link>
             <Link href="/tools" className="hover:text-foreground transition-colors">
               Systems Lab
             </Link>
