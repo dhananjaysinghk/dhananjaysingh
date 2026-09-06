@@ -67,6 +67,9 @@ export function Footer() {
 
           {/* Utility links */}
           <div className="flex space-x-6 text-xs font-medium text-muted-foreground">
+            <Link href="/uses" className="hover:text-foreground transition-colors">
+              Uses
+            </Link>
             <Link href="/roadmap" className="hover:text-foreground transition-colors">
               Roadmap
             </Link>
