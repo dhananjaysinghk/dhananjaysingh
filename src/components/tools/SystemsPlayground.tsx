@@ -2,13 +2,21 @@
 
 import React, { useState } from "react"
 import { motion } from "framer-motion"
-import { Cpu, Network, Binary, ShieldCheck, Zap, RefreshCw, Layers, Sliders } from "lucide-react"
+import { Cpu, Network, Binary, ShieldCheck, Zap, RefreshCw, Layers, Sliders, Box, Trash2, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { soundFx } from "@/lib/sound"
 
-type ToolTab = "cacheline" | "hashring" | "bitmask"
+type ToolTab = "cacheline" | "hashring" | "bitmask" | "arena"
+
+interface AllocationBlock {
+  id: string
+  name: string
+  size: number
+  offset: number
+  color: string
+}
 
 export function SystemsPlayground() {
   const [activeTab, setActiveTab] = useState<ToolTab>("cacheline")
@@ -29,6 +37,13 @@ export function SystemsPlayground() {
     EXEC: false,
     ADMIN: false,
   })
+
+  // Arena Allocator State (512 Bytes Total Buffer)
+  const TOTAL_ARENA_CAPACITY = 512
+  const [allocations, setAllocations] = useState<AllocationBlock[]>([
+    { id: "b-1", name: "TxHeader (64B)", size: 64, offset: 0, color: "bg-indigo-500" },
+    { id: "b-2", name: "PayloadBuf (128B)", size: 128, offset: 64, color: "bg-purple-500" },
+  ])
 
   // 1. Cache line increment
   const handleCoreWrite = (core: 1 | 2) => {
@@ -53,6 +68,30 @@ export function SystemsPlayground() {
     setFlags((prev) => ({ ...prev, [flag]: !prev[flag] }))
   }
 
+  // 4. Arena Allocator Actions
+  const currentArenaOffset = allocations.reduce((acc, curr) => acc + curr.size, 0)
+
+  const handleAllocate = (name: string, size: number, color: string) => {
+    if (currentArenaOffset + size > TOTAL_ARENA_CAPACITY) {
+      soundFx.playToggle()
+      return
+    }
+    soundFx.playClick()
+    const newBlock: AllocationBlock = {
+      id: `alloc-${Date.now()}`,
+      name: `${name} (${size}B)`,
+      size,
+      offset: currentArenaOffset,
+      color,
+    }
+    setAllocations((prev) => [...prev, newBlock])
+  }
+
+  const handleResetArena = () => {
+    soundFx.playChime()
+    setAllocations([])
+  }
+
   // Calculate bitmask integer
   const bitmaskValue =
     (flags.READ ? 1 : 0) |
@@ -68,6 +107,7 @@ export function SystemsPlayground() {
           { id: "cacheline", label: "CPU Cache & False Sharing", icon: Cpu },
           { id: "hashring", label: "Consistent Hash Ring", icon: Network },
           { id: "bitmask", label: "Bitwise Flags & Bitmasks", icon: Binary },
+          { id: "arena", label: "Arena & Bump Memory Allocator", icon: Box },
         ].map((tab) => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id
@@ -301,6 +341,114 @@ export function SystemsPlayground() {
                 <span className="text-[10px] uppercase text-zinc-500">Unix Octal</span>
                 <span className="text-lg font-bold text-amber-400">0o{bitmaskValue.toString(8)}</span>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Tab 4: Arena & Bump Memory Allocator */}
+      {activeTab === "arena" && (
+        <Card className="bg-card/25 border-border/40 backdrop-blur-sm">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/20 pb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="rounded-lg bg-emerald-500/10 p-2 text-emerald-400 border border-emerald-500/20">
+                <Box className="h-4 w-4" />
+              </div>
+              <div>
+                <CardTitle className="font-heading text-base font-bold text-foreground">
+                  Contiguous Arena & Bump Allocator Simulator
+                </CardTitle>
+                <span className="text-xs text-muted-foreground font-sans">
+                  Simulates zero-fragmentation O(1) pointer bump allocation and instant linear buffer resets.
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleResetArena}
+                className="text-xs font-mono gap-1.5 border-red-500/30 text-red-400 hover:bg-red-500/10"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                Reset Arena (O(1) Rewind)
+              </Button>
+            </div>
+          </CardHeader>
+
+          <CardContent className="pt-6 flex flex-col gap-6">
+            {/* Allocation Buttons */}
+            <div className="flex flex-wrap gap-2">
+              <Button
+                size="sm"
+                onClick={() => handleAllocate("Header", 64, "bg-indigo-500")}
+                className="text-xs font-mono gap-1.5"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                + Alloc 64B Struct
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => handleAllocate("Packet", 128, "bg-purple-500")}
+                className="text-xs font-mono gap-1.5"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                + Alloc 128B Packet
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => handleAllocate("LargePayload", 256, "bg-emerald-500")}
+                className="text-xs font-mono gap-1.5"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                + Alloc 256B Payload
+              </Button>
+            </div>
+
+            {/* Contiguous 512B Memory Visualizer Bar */}
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between text-xs font-mono text-muted-foreground">
+                <span>0x000 (Start)</span>
+                <span className="text-foreground font-bold">
+                  {currentArenaOffset} / {TOTAL_ARENA_CAPACITY} Bytes Used ({((currentArenaOffset / TOTAL_ARENA_CAPACITY) * 100).toFixed(0)}%)
+                </span>
+                <span>0x200 (512B Cap)</span>
+              </div>
+
+              <div className="relative h-12 w-full rounded-xl border border-border/40 bg-zinc-950 p-1 flex overflow-hidden shadow-inner">
+                {allocations.map((block) => {
+                  const widthPercent = (block.size / TOTAL_ARENA_CAPACITY) * 100
+                  return (
+                    <motion.div
+                      key={block.id}
+                      initial={{ opacity: 0, scaleX: 0 }}
+                      animate={{ opacity: 1, scaleX: 1 }}
+                      style={{ width: `${widthPercent}%` }}
+                      className={`h-full ${block.color} opacity-90 border-r border-black/40 flex items-center justify-center text-[10px] font-mono font-bold text-white px-1 truncate`}
+                      title={`${block.name} @ offset +${block.offset}B`}
+                    >
+                      {block.name}
+                    </motion.div>
+                  )
+                })}
+                {currentArenaOffset < TOTAL_ARENA_CAPACITY && (
+                  <div
+                    style={{ width: `${((TOTAL_ARENA_CAPACITY - currentArenaOffset) / TOTAL_ARENA_CAPACITY) * 100}%` }}
+                    className="h-full bg-zinc-900/40 flex items-center justify-center text-[10px] font-mono text-zinc-600 italic"
+                  >
+                    Unallocated Free Space
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Technical Explanation */}
+            <div className="rounded-xl border border-border/30 bg-card/20 p-4 font-mono text-xs text-muted-foreground leading-relaxed flex flex-col gap-1">
+              <span className="font-bold text-foreground">💡 Why High-Frequency Systems Use Arena Bump Allocation:</span>
+              <span>
+                Standard <code className="text-primary font-bold">malloc()</code> invokes kernel syscalls and causes heap fragmentation. A Bump Allocator allocates memory in <code className="text-emerald-400 font-bold">O(1)</code> time simply by incrementing an offset pointer by N bytes, and frees all memory instantly by resetting the pointer to zero.
+              </span>
             </div>
           </CardContent>
         </Card>
