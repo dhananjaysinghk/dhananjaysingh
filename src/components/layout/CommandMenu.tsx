@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, FileText, Bookmark, Sparkles, Terminal, Sun, Moon, Laptop, ArrowRight, Activity, MessageSquare, Cpu, Scale, Compass } from "lucide-react"
+import { Search, FileText, Bookmark, Sparkles, Terminal, Sun, Moon, Laptop, ArrowRight, Activity, MessageSquare, Cpu, Scale, Compass, Globe } from "lucide-react"
 
 interface SearchItem {
   title: string
@@ -33,6 +33,7 @@ export function CommandMenu() {
     { title: "Architecture Decision Records (ADRs)", category: "Navigation", href: "/adr", type: "action", icon: Scale },
     { title: "Engineering Roadmap & Research", category: "Navigation", href: "/roadmap", type: "action", icon: Compass },
     { title: "Developer Setup & Gear (/uses)", category: "Navigation", href: "/uses", type: "action", icon: Laptop },
+    { title: "Global CDN Edge Inspector (/network)", category: "Navigation", href: "/network", type: "action", icon: Globe },
     { title: "Read Dhananjay's Story", category: "Navigation", href: "/about", type: "action", icon: Sparkles },
     { title: "System Telemetry & Status", category: "Navigation", href: "/status", type: "action", icon: Activity },
     { title: "Nova Orchestrator Case Study", category: "Projects", href: "/projects/nova-orchestrator", type: "project", icon: Terminal },
