@@ -2,6 +2,7 @@ import React from "react"
 import { Metadata } from "next"
 import { db } from "@/lib/db"
 import { Timeline, TimelineEvent } from "@/components/about/Timeline"
+import { GithubRepositories } from "@/components/about/GithubRepositories"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Sparkles, Target, Compass, Code, Server, Shield, Layers } from "lucide-react"
@@ -256,6 +257,22 @@ export default async function About() {
         </ScrollReveal>
 
         <Timeline events={timelineEvents} />
+      </section>
+
+      {/* 5. Open Source & Pinned Repositories */}
+      <section className="flex flex-col gap-8">
+        <ScrollReveal className="max-w-2xl flex flex-col gap-2">
+          <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-foreground">
+            Featured Open Source Repositories
+          </h2>
+          <p className="text-muted-foreground font-sans">
+            Core open-source systems libraries, consensus simulators, and low-latency financial ledger implementations on GitHub.
+          </p>
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.05}>
+          <GithubRepositories />
+        </ScrollReveal>
       </section>
 
     </div>
