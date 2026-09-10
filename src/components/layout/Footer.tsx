@@ -67,6 +67,9 @@ export function Footer() {
 
           {/* Utility links */}
           <div className="flex space-x-6 text-xs font-medium text-muted-foreground">
+            <Link href="/benchmark" className="hover:text-foreground transition-colors">
+              Benchmark
+            </Link>
             <Link href="/network" className="hover:text-foreground transition-colors">
               CDN Edge
             </Link>
