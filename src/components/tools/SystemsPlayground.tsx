@@ -2,13 +2,13 @@
 
 import React, { useState } from "react"
 import { motion } from "framer-motion"
-import { Cpu, Network, Binary, ShieldCheck, Zap, RefreshCw, Layers, Sliders, Box, Trash2, Plus } from "lucide-react"
+import { Cpu, Network, Binary, ShieldCheck, Zap, RefreshCw, Layers, Sliders, Box, Trash2, Plus, Terminal, FileCode, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { soundFx } from "@/lib/sound"
 
-type ToolTab = "cacheline" | "hashring" | "bitmask" | "arena"
+type ToolTab = "cacheline" | "hashring" | "bitmask" | "arena" | "hexdump"
 
 interface AllocationBlock {
   id: string
@@ -17,6 +17,24 @@ interface AllocationBlock {
   offset: number
   color: string
 }
+
+const HEX_PRESETS = [
+  {
+    name: "gRPC Framed Stream Header",
+    hex: "00 00 00 00 0a 08 01 12 04 6e 6f 76 61",
+    desc: "Uncompressed 5-byte gRPC prefix (flags + length) + Protobuf tag/field data",
+  },
+  {
+    name: "HTTP/1.1 Request Header",
+    hex: "47 45 54 20 2f 20 48 54 54 50 2f 31 2e 31 0d 0a 48 6f 73 74 3a 20 64 68 61 6e 61 6e 6a 61 79 2e 64 65 76 0d 0a 0d 0a",
+    desc: "Standard raw ASCII wire representation of GET / HTTP/1.1 CRLF Host: dhananjay.dev",
+  },
+  {
+    name: "DNS Wire Query Packet",
+    hex: "aa bb 01 00 00 01 00 00 00 00 00 00 09 64 68 61 6e 61 6e 6a 61 79 03 64 65 76 00 00 01 00 01",
+    desc: "Standard RFC 1035 UDP query for A record of dhananjay.dev",
+  },
+]
 
 export function SystemsPlayground() {
   const [activeTab, setActiveTab] = useState<ToolTab>("cacheline")
@@ -44,6 +62,9 @@ export function SystemsPlayground() {
     { id: "b-1", name: "TxHeader (64B)", size: 64, offset: 0, color: "bg-indigo-500" },
     { id: "b-2", name: "PayloadBuf (128B)", size: 128, offset: 64, color: "bg-purple-500" },
   ])
+
+  // Hex Dump State
+  const [rawHexInput, setRawHexInput] = useState(HEX_PRESETS[0].hex)
 
   // 1. Cache line increment
   const handleCoreWrite = (core: 1 | 2) => {
@@ -92,6 +113,35 @@ export function SystemsPlayground() {
     setAllocations([])
   }
 
+  // Parse Hex Bytes into 16-byte lines
+  const parsedBytes = React.useMemo(() => {
+    const cleaned = rawHexInput.replace(/[^0-9a-fA-F]/g, "")
+    const bytes: number[] = []
+    for (let i = 0; i < cleaned.length; i += 2) {
+      bytes.push(parseInt(cleaned.substr(i, 2), 16) || 0)
+    }
+    return bytes
+  }, [rawHexInput])
+
+  // Format Hex Dump Rows (16 bytes each)
+  const hexDumpRows = React.useMemo(() => {
+    const rows: { offset: string; hex: string; ascii: string }[] = []
+    for (let i = 0; i < parsedBytes.length; i += 16) {
+      const chunk = parsedBytes.slice(i, i + 16)
+      const offset = i.toString(16).padStart(8, "0")
+      const hexPart = chunk
+        .map((b) => b.toString(16).padStart(2, "0").toUpperCase())
+        .join(" ")
+        .padEnd(48, " ")
+      const asciiPart = chunk
+        .map((b) => (b >= 32 && b <= 126 ? String.fromCharCode(b) : "."))
+        .join("")
+
+      rows.push({ offset, hex: hexPart, ascii: asciiPart })
+    }
+    return rows
+  }, [parsedBytes])
+
   // Calculate bitmask integer
   const bitmaskValue =
     (flags.READ ? 1 : 0) |
@@ -108,6 +158,7 @@ export function SystemsPlayground() {
           { id: "hashring", label: "Consistent Hash Ring", icon: Network },
           { id: "bitmask", label: "Bitwise Flags & Bitmasks", icon: Binary },
           { id: "arena", label: "Arena & Bump Memory Allocator", icon: Box },
+          { id: "hexdump", label: "Binary Hex Dump & Packet Decoder", icon: Terminal },
         ].map((tab) => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id
@@ -164,9 +215,7 @@ export function SystemsPlayground() {
           </CardHeader>
 
           <CardContent className="pt-6 flex flex-col gap-6">
-            {/* Visualizer diagram */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Core 1 */}
               <div className="rounded-xl border border-border/30 bg-card/20 p-5 flex flex-col gap-4">
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-xs uppercase text-indigo-400 font-bold">
@@ -185,7 +234,6 @@ export function SystemsPlayground() {
                 </Button>
               </div>
 
-              {/* Core 2 */}
               <div className="rounded-xl border border-border/30 bg-card/20 p-5 flex flex-col gap-4">
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-xs uppercase text-purple-400 font-bold">
@@ -207,7 +255,6 @@ export function SystemsPlayground() {
               </div>
             </div>
 
-            {/* Explanation card */}
             <div
               className={`p-4 rounded-xl border text-xs font-mono leading-relaxed ${
                 isPadded
@@ -293,7 +340,6 @@ export function SystemsPlayground() {
           </CardHeader>
 
           <CardContent className="pt-6 flex flex-col gap-6 font-mono text-xs">
-            {/* Toggles */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {[
                 { key: "READ", label: "READ (0b0001 = 1)", desc: "Read access" },
@@ -323,7 +369,6 @@ export function SystemsPlayground() {
               })}
             </div>
 
-            {/* Calculations Result */}
             <div className="rounded-xl border border-border/40 bg-zinc-950 p-5 grid grid-cols-2 sm:grid-cols-4 gap-4 text-zinc-300">
               <div className="flex flex-col gap-1">
                 <span className="text-[10px] uppercase text-zinc-500">Binary Mask</span>
@@ -378,7 +423,6 @@ export function SystemsPlayground() {
           </CardHeader>
 
           <CardContent className="pt-6 flex flex-col gap-6">
-            {/* Allocation Buttons */}
             <div className="flex flex-wrap gap-2">
               <Button
                 size="sm"
@@ -406,7 +450,6 @@ export function SystemsPlayground() {
               </Button>
             </div>
 
-            {/* Contiguous 512B Memory Visualizer Bar */}
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between text-xs font-mono text-muted-foreground">
                 <span>0x000 (Start)</span>
@@ -443,12 +486,108 @@ export function SystemsPlayground() {
               </div>
             </div>
 
-            {/* Technical Explanation */}
             <div className="rounded-xl border border-border/30 bg-card/20 p-4 font-mono text-xs text-muted-foreground leading-relaxed flex flex-col gap-1">
               <span className="font-bold text-foreground">💡 Why High-Frequency Systems Use Arena Bump Allocation:</span>
               <span>
                 Standard <code className="text-primary font-bold">malloc()</code> invokes kernel syscalls and causes heap fragmentation. A Bump Allocator allocates memory in <code className="text-emerald-400 font-bold">O(1)</code> time simply by incrementing an offset pointer by N bytes, and frees all memory instantly by resetting the pointer to zero.
               </span>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Tab 5: Binary Hex Dump & Protocol Packet Inspector */}
+      {activeTab === "hexdump" && (
+        <Card className="bg-card/25 border-border/40 backdrop-blur-sm">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/20 pb-4">
+            <div className="flex items-center gap-2.5">
+              <div className="rounded-lg bg-indigo-500/10 p-2 text-indigo-400 border border-indigo-500/20">
+                <Terminal className="h-4 w-4" />
+              </div>
+              <div>
+                <CardTitle className="font-heading text-base font-bold text-foreground">
+                  Binary Hex Dump & Protocol Packet Decoder
+                </CardTitle>
+                <span className="text-xs text-muted-foreground font-sans">
+                  Inspect raw binary byte arrays with 16-byte offset alignment and ASCII translation.
+                </span>
+              </div>
+            </div>
+          </CardHeader>
+
+          <CardContent className="pt-6 flex flex-col gap-6 font-mono text-xs">
+            {/* Presets */}
+            <div className="flex flex-col gap-2">
+              <span className="text-[11px] uppercase text-muted-foreground font-bold">
+                Load Sample Protocol Payload:
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {HEX_PRESETS.map((p) => (
+                  <Button
+                    key={p.name}
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      soundFx.playClick()
+                      setRawHexInput(p.hex)
+                    }}
+                    className="text-xs font-mono border-border/30 text-muted-foreground hover:text-foreground"
+                  >
+                    {p.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            {/* Input */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[11px] uppercase text-muted-foreground font-bold">
+                Raw Hex Input Bytes (Space or contiguous hex):
+              </label>
+              <textarea
+                rows={2}
+                value={rawHexInput}
+                onChange={(e) => setRawHexInput(e.target.value)}
+                className="w-full rounded-xl border border-border/40 bg-zinc-950 p-3 text-xs font-mono text-indigo-300 focus:outline-none focus:ring-1 focus:ring-primary"
+                placeholder="Paste hex bytes e.g. 48 65 6c 6c 6f ..."
+              />
+            </div>
+
+            {/* Hex Dump Output Box */}
+            <div className="rounded-xl border border-border/40 bg-zinc-950 p-4 flex flex-col gap-3 shadow-inner">
+              <div className="flex items-center justify-between border-b border-zinc-800 pb-2 text-[10px] text-zinc-500 uppercase">
+                <span>Offset (Hex)</span>
+                <span>Hexadecimal Byte Representation (0-15)</span>
+                <span>ASCII Translation</span>
+              </div>
+
+              <div className="space-y-1 font-mono text-xs overflow-x-auto">
+                {hexDumpRows.map((row, idx) => (
+                  <div key={idx} className="grid grid-cols-12 gap-2 text-zinc-300">
+                    <span className="col-span-2 text-zinc-500 select-none">{row.offset}:</span>
+                    <span className="col-span-7 text-indigo-400 font-semibold tracking-wide">{row.hex}</span>
+                    <span className="col-span-3 text-emerald-400 font-bold">{row.ascii}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Summary metrics */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-zinc-300">
+              <div className="rounded-xl border border-border/30 bg-card/20 p-4 flex flex-col gap-1">
+                <span className="text-[10px] uppercase text-zinc-500">Payload Size</span>
+                <span className="text-lg font-bold text-foreground">{parsedBytes.length} Bytes</span>
+              </div>
+              <div className="rounded-xl border border-border/30 bg-card/20 p-4 flex flex-col gap-1">
+                <span className="text-[10px] uppercase text-zinc-500">Bit Stream</span>
+                <span className="text-lg font-bold text-purple-400">{parsedBytes.length * 8} Bits</span>
+              </div>
+              <div className="rounded-xl border border-border/30 bg-card/20 p-4 flex flex-col gap-1">
+                <span className="text-[10px] uppercase text-zinc-500">Aligned Memory</span>
+                <span className="text-lg font-bold text-emerald-400">
+                  {Math.ceil(parsedBytes.length / 16) * 16} Bytes (16B Padded)
+                </span>
+              </div>
             </div>
           </CardContent>
         </Card>
