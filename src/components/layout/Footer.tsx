@@ -67,6 +67,9 @@ export function Footer() {
 
           {/* Utility links */}
           <div className="flex space-x-6 text-xs font-medium text-muted-foreground">
+            <Link href="/sql" className="hover:text-foreground transition-colors">
+              SQL Profiler
+            </Link>
             <Link href="/benchmark" className="hover:text-foreground transition-colors">
               Benchmark
             </Link>
