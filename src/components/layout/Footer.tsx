@@ -67,6 +67,9 @@ export function Footer() {
 
           {/* Utility links */}
           <div className="flex space-x-6 text-xs font-medium text-muted-foreground">
+            <Link href="/ratelimit" className="hover:text-foreground transition-colors">
+              Rate Limiter
+            </Link>
             <Link href="/sql" className="hover:text-foreground transition-colors">
               SQL Profiler
             </Link>

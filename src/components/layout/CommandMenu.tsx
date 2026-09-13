@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, FileText, Bookmark, Sparkles, Terminal, Sun, Moon, Laptop, ArrowRight, Activity, MessageSquare, Cpu, Scale, Compass, Globe, Gauge, Database } from "lucide-react"
+import { Search, FileText, Bookmark, Sparkles, Terminal, Sun, Moon, Laptop, ArrowRight, Activity, MessageSquare, Cpu, Scale, Compass, Globe, Gauge, Database, Droplets } from "lucide-react"
 
 interface SearchItem {
   title: string
@@ -36,6 +36,7 @@ export function CommandMenu() {
     { title: "Global CDN Edge Inspector (/network)", category: "Navigation", href: "/network", type: "action", icon: Globe },
     { title: "CPU Sorting & Memory Benchmark (/benchmark)", category: "Navigation", href: "/benchmark", type: "action", icon: Gauge },
     { title: "PostgreSQL Query Profiler (/sql)", category: "Navigation", href: "/sql", type: "action", icon: Database },
+    { title: "Distributed Rate Limiter Simulator (/ratelimit)", category: "Navigation", href: "/ratelimit", type: "action", icon: Droplets },
     { title: "Read Dhananjay's Story", category: "Navigation", href: "/about", type: "action", icon: Sparkles },
     { title: "System Telemetry & Status", category: "Navigation", href: "/status", type: "action", icon: Activity },
     { title: "Nova Orchestrator Case Study", category: "Projects", href: "/projects/nova-orchestrator", type: "project", icon: Terminal },
