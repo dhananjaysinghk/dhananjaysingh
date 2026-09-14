@@ -67,6 +67,9 @@ export function Footer() {
 
           {/* Utility links */}
           <div className="flex space-x-6 text-xs font-medium text-muted-foreground">
+            <Link href="/cache" className="hover:text-foreground transition-colors">
+              LRU Cache
+            </Link>
             <Link href="/ratelimit" className="hover:text-foreground transition-colors">
               Rate Limiter
             </Link>
