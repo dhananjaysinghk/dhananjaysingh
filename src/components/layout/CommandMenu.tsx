@@ -38,6 +38,7 @@ export function CommandMenu() {
     { title: "PostgreSQL Query Profiler (/sql)", category: "Navigation", href: "/sql", type: "action", icon: Database },
     { title: "Distributed Rate Limiter Simulator (/ratelimit)", category: "Navigation", href: "/ratelimit", type: "action", icon: Droplets },
     { title: "O(1) LRU Cache Visualizer (/cache)", category: "Navigation", href: "/cache", type: "action", icon: Cpu },
+    { title: "LSM-Tree Storage Engine Simulator (/storage)", category: "Navigation", href: "/storage", type: "action", icon: Database },
     { title: "Read Dhananjay's Story", category: "Navigation", href: "/about", type: "action", icon: Sparkles },
     { title: "System Telemetry & Status", category: "Navigation", href: "/status", type: "action", icon: Activity },
     { title: "Nova Orchestrator Case Study", category: "Projects", href: "/projects/nova-orchestrator", type: "project", icon: Terminal },
