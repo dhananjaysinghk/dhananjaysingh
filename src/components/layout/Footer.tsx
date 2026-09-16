@@ -67,6 +67,9 @@ export function Footer() {
 
           {/* Utility links */}
           <div className="flex space-x-6 text-xs font-medium text-muted-foreground">
+            <Link href="/ebpf" className="hover:text-foreground transition-colors">
+              eBPF Sandbox
+            </Link>
             <Link href="/storage" className="hover:text-foreground transition-colors">
               Storage Engine
             </Link>
