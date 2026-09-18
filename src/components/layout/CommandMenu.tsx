@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, FileText, Bookmark, Sparkles, Terminal, Sun, Moon, Laptop, ArrowRight, Activity, MessageSquare, Cpu, Scale, Compass, Globe, Gauge, Database, Droplets, Share2 } from "lucide-react"
+import { Search, FileText, Bookmark, Sparkles, Terminal, Sun, Moon, Laptop, ArrowRight, Activity, MessageSquare, Cpu, Scale, Compass, Globe, Gauge, Database, Droplets, Share2, FolderTree } from "lucide-react"
 
 interface SearchItem {
   title: string
@@ -41,6 +41,7 @@ export function CommandMenu() {
     { title: "LSM-Tree Storage Engine Simulator (/storage)", category: "Navigation", href: "/storage", type: "action", icon: Database },
     { title: "eBPF Kernel & Packet Sandbox (/ebpf)", category: "Navigation", href: "/ebpf", type: "action", icon: Activity },
     { title: "CRDT & Vector Clock Sync Mesh (/crdt)", category: "Navigation", href: "/crdt", type: "action", icon: Share2 },
+    { title: "Database B+ Tree Index Simulator (/btree)", category: "Navigation", href: "/btree", type: "action", icon: FolderTree },
     { title: "Read Dhananjay's Story", category: "Navigation", href: "/about", type: "action", icon: Sparkles },
     { title: "System Telemetry & Status", category: "Navigation", href: "/status", type: "action", icon: Activity },
     { title: "Nova Orchestrator Case Study", category: "Projects", href: "/projects/nova-orchestrator", type: "project", icon: Terminal },
