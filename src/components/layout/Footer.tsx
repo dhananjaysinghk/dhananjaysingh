@@ -67,6 +67,9 @@ export function Footer() {
 
           {/* Utility links */}
           <div className="flex space-x-6 text-xs font-medium text-muted-foreground">
+            <Link href="/tracing" className="hover:text-foreground transition-colors">
+              Distributed Tracing
+            </Link>
             <Link href="/btree" className="hover:text-foreground transition-colors">
               B+ Tree
             </Link>
