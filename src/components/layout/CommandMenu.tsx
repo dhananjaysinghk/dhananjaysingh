@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, FileText, Bookmark, Sparkles, Terminal, Sun, Moon, Laptop, ArrowRight, Activity, MessageSquare, Cpu, Scale, Compass, Globe, Gauge, Database, Droplets, Share2, FolderTree } from "lucide-react"
+import { Search, FileText, Bookmark, Sparkles, Terminal, Sun, Moon, Laptop, ArrowRight, Activity, MessageSquare, Cpu, Scale, Compass, Globe, Gauge, Database, Droplets, Share2, FolderTree, Binary } from "lucide-react"
 
 interface SearchItem {
   title: string
@@ -43,6 +43,7 @@ export function CommandMenu() {
     { title: "CRDT & Vector Clock Sync Mesh (/crdt)", category: "Navigation", href: "/crdt", type: "action", icon: Share2 },
     { title: "Database B+ Tree Index Simulator (/btree)", category: "Navigation", href: "/btree", type: "action", icon: FolderTree },
     { title: "Distributed Tracing & Waterfall Profiler (/tracing)", category: "Navigation", href: "/tracing", type: "action", icon: Activity },
+    { title: "Merkle Tree & Cryptographic Inclusion Proof (/merkle)", category: "Navigation", href: "/merkle", type: "action", icon: Binary },
     { title: "Read Dhananjay's Story", category: "Navigation", href: "/about", type: "action", icon: Sparkles },
     { title: "System Telemetry & Status", category: "Navigation", href: "/status", type: "action", icon: Activity },
     { title: "Nova Orchestrator Case Study", category: "Projects", href: "/projects/nova-orchestrator", type: "project", icon: Terminal },

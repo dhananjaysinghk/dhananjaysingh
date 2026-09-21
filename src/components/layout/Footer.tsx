@@ -83,6 +83,11 @@ export function Footer() {
             </h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
+                <Link href="/merkle" className="transition-colors hover:text-foreground">
+                  Merkle Tree
+                </Link>
+              </li>
+              <li>
                 <Link href="/tracing" className="transition-colors hover:text-foreground">
                   Distributed Tracing
                 </Link>
