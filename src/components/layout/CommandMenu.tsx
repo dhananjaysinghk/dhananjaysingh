@@ -45,6 +45,7 @@ export function CommandMenu() {
     { title: "Distributed Tracing & Waterfall Profiler (/tracing)", category: "Navigation", href: "/tracing", type: "action", icon: Activity },
     { title: "Merkle Tree & Cryptographic Inclusion Proof (/merkle)", category: "Navigation", href: "/merkle", type: "action", icon: Binary },
     { title: "SWIM Gossip Protocol & Failure Detector (/gossip)", category: "Navigation", href: "/gossip", type: "action", icon: Share2 },
+    { title: "Virtual Memory MMU & Page Table Simulator (/mmu)", category: "Navigation", href: "/mmu", type: "action", icon: Cpu },
     { title: "Read Dhananjay's Story", category: "Navigation", href: "/about", type: "action", icon: Sparkles },
     { title: "System Telemetry & Status", category: "Navigation", href: "/status", type: "action", icon: Activity },
     { title: "Nova Orchestrator Case Study", category: "Projects", href: "/projects/nova-orchestrator", type: "project", icon: Terminal },
