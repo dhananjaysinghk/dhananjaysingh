@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, FileText, Bookmark, Sparkles, Terminal, Sun, Moon, Laptop, ArrowRight, Activity, MessageSquare, Cpu, Scale, Compass, Globe, Gauge, Database, Droplets, Share2, FolderTree, Binary } from "lucide-react"
+import { Search, FileText, Bookmark, Sparkles, Terminal, Sun, Moon, Laptop, ArrowRight, Activity, MessageSquare, Cpu, Scale, Compass, Globe, Gauge, Database, Droplets, Share2, FolderTree, Binary, Layers } from "lucide-react"
 
 interface SearchItem {
   title: string
@@ -46,6 +46,7 @@ export function CommandMenu() {
     { title: "Merkle Tree & Cryptographic Inclusion Proof (/merkle)", category: "Navigation", href: "/merkle", type: "action", icon: Binary },
     { title: "SWIM Gossip Protocol & Failure Detector (/gossip)", category: "Navigation", href: "/gossip", type: "action", icon: Share2 },
     { title: "Virtual Memory MMU & Page Table Simulator (/mmu)", category: "Navigation", href: "/mmu", type: "action", icon: Cpu },
+    { title: "Kafka Event Log & Partition Rebalance (/kafka)", category: "Navigation", href: "/kafka", type: "action", icon: Layers },
     { title: "Read Dhananjay's Story", category: "Navigation", href: "/about", type: "action", icon: Sparkles },
     { title: "System Telemetry & Status", category: "Navigation", href: "/status", type: "action", icon: Activity },
     { title: "Nova Orchestrator Case Study", category: "Projects", href: "/projects/nova-orchestrator", type: "project", icon: Terminal },
