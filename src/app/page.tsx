@@ -4,6 +4,7 @@ import { db } from "@/lib/db"
 import { Hero } from "@/components/home/Hero"
 import { Stats } from "@/components/home/Stats"
 import { TechStack } from "@/components/home/TechStack"
+import { FeaturedLabs } from "@/components/home/FeaturedLabs"
 import { ContributionGraph } from "@/components/home/ContributionGraph"
 import { ConsensusVisualizer } from "@/components/home/ConsensusVisualizer"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
@@ -246,7 +247,10 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 4.5 Interactive Distributed Consensus Visualizer */}
+      {/* 4.5 Featured Interactive Simulators & Labs */}
+      <FeaturedLabs />
+
+      {/* 4.6 Interactive Distributed Consensus Visualizer */}
       <ConsensusVisualizer />
 
       {/* 5. Blogs and Notes Section */}

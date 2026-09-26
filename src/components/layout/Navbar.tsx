@@ -12,6 +12,7 @@ import { soundFx } from "@/lib/sound"
 const navItems = [
   { name: "About", href: "/about" },
   { name: "Projects", href: "/projects" },
+  { name: "Labs", href: "/labs" },
   { name: "Blog", href: "/blog" },
   { name: "Notes", href: "/notes" },
   { name: "Guestbook", href: "/guestbook" },

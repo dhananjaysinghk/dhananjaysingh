@@ -25,6 +25,7 @@ export function CommandMenu() {
 
   // Actions and Navigation Targets
   const items: SearchItem[] = [
+    { title: "Systems Engineering Labs & Simulators (/labs)", category: "Navigation", href: "/labs", type: "action", icon: Terminal },
     { title: "Lock-Free Ring Buffer & LMAX Disruptor (/disruptor)", category: "Navigation", href: "/disruptor", type: "action", icon: RotateCcw },
     { title: "Kafka Event Log & Partition Rebalance (/kafka)", category: "Navigation", href: "/kafka", type: "action", icon: Layers },
     { title: "View Projects Showcase", category: "Navigation", href: "/projects", type: "action", icon: Terminal },

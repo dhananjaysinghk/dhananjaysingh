@@ -83,6 +83,11 @@ export function Footer() {
             </h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
+                <Link href="/labs" className="font-semibold text-primary transition-colors hover:underline">
+                  All Systems Labs Directory →
+                </Link>
+              </li>
+              <li>
                 <Link href="/disruptor" className="transition-colors hover:text-foreground">
                   LMAX Disruptor
                 </Link>
