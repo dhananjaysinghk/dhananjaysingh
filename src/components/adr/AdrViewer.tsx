@@ -113,6 +113,95 @@ const adrList: ADR[] = [
       ],
     },
   },
+  {
+    id: "adr-005",
+    number: "ADR-005",
+    title: "eBPF XDP In-Kernel Packet Filtering over Userspace Reverse Proxies for DDoS Mitigation",
+    status: "Accepted",
+    date: "August 2026",
+    category: "Performance",
+    context:
+      "High-throughput edge routers suffered from CPU interrupt saturation and context-switch latency under SYN-flood and UDP packet amplification attacks.",
+    decision:
+      "Implement XDP (eXpress Data Path) eBPF bytecode hooks in the Linux network driver layer, dropping or routing malicious packets before kernel `sk_buff` allocation.",
+    consequences: {
+      positive: [
+        "Achieved wire-speed 10Gbps+ packet filtering with zero userspace context switching",
+        "Linux kernel verifier ensures memory safety and non-crashing execution",
+        "Real-time packet count telemetry streamed through BPF ring buffers",
+      ],
+      negative: [
+        "Requires modern Linux kernel (5.8+) with NIC driver XDP support",
+        "Limited helper function availability inside XDP hook constraints",
+      ],
+    },
+  },
+  {
+    id: "adr-006",
+    number: "ADR-006",
+    title: "Incremental Cooperative Rebalancing over Eager Rebalancing in Kafka Consumer Groups",
+    status: "Accepted",
+    date: "August 2026",
+    category: "Distributed Systems",
+    context:
+      "Consumer node scaling events caused catastrophic 'Stop-The-World' pauses across all consumer partitions under legacy Eager rebalance protocols.",
+    decision:
+      "Mandate the Incremental Cooperative Rebalancing protocol across all consumer group topologies, allowing unassigned partitions to continue processing without downtime.",
+    consequences: {
+      positive: [
+        "Eliminated cluster-wide consumer pauses during horizontal pod autoscaling",
+        "Reduced consumer lag spikes during partition reassignment by over 90%",
+        "Progressive partition handoffs without revoking unimpacted workers",
+      ],
+      negative: [
+        "Requires multiple rebalance rounds for complex partition migrations",
+      ],
+    },
+  },
+  {
+    id: "adr-007",
+    number: "ADR-007",
+    title: "Leveled Compaction Strategy (LCS) over Size-Tiered (STCS) in LSM-Tree Storage",
+    status: "Accepted",
+    date: "September 2026",
+    category: "Database",
+    context:
+      "Size-Tiered Compaction caused excessive 50%+ disk space amplification and unpredictable write stall spikes during large SSTable merges.",
+    decision:
+      "Adopt RocksDB-style Leveled Compaction Strategy (LCS) with non-overlapping keys in Level 1+ and fractional bloom filters for SSTable lookups.",
+    consequences: {
+      positive: [
+        "Maintained bounded disk space amplification under 10-15%",
+        "Predictable point-lookup latency by strictly limiting SSTable overlap per level",
+        "Smoother background I/O merge profiles without sudden disk saturation",
+      ],
+      negative: [
+        "Higher overall write amplification factor compared to Size-Tiered compaction",
+      ],
+    },
+  },
+  {
+    id: "adr-008",
+    number: "ADR-008",
+    title: "48-Bit Virtual Memory Canonical Paging Scheme for x86-64 Emulation Sandbox",
+    status: "Accepted",
+    date: "September 2026",
+    category: "Performance",
+    context:
+      "Designing a deterministic WebAssembly/TypeScript hardware MMU simulator to demonstrate TLB hits, page table walking (PML4 -> PDPT -> PD -> PT), and page fault traps.",
+    decision:
+      "Implement a 48-bit 4-level canonical paging hierarchy with a 16-entry 2-way set associative TLB and simulated kernel frame allocator.",
+    consequences: {
+      positive: [
+        "Accurately reflects real-world Linux and hardware x86-64 page translation pipelines",
+        "Enables interactive visual tracing of multi-level memory dereferencing",
+        "Zero external dependencies with sub-millisecond translation timers",
+      ],
+      negative: [
+        "Requires handling 4-level nested pointer maps in memory state",
+      ],
+    },
+  },
 ]
 
 export function AdrViewer() {

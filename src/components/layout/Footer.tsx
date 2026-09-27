@@ -167,6 +167,11 @@ export function Footer() {
             </h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
+                <Link href="/terminal" className="transition-colors hover:text-foreground">
+                  Interactive Terminal (CLI)
+                </Link>
+              </li>
+              <li>
                 <Link href="/tools" className="transition-colors hover:text-foreground">
                   Systems Lab Suite
                 </Link>
