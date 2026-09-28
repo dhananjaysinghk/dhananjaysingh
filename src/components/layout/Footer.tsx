@@ -88,6 +88,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/tcp" className="transition-colors hover:text-foreground">
+                  TCP Sliding Window
+                </Link>
+              </li>
+              <li>
                 <Link href="/disruptor" className="transition-colors hover:text-foreground">
                   LMAX Disruptor
                 </Link>

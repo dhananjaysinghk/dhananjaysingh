@@ -22,6 +22,7 @@ import {
   ExternalLink,
   Zap,
   SlidersHorizontal,
+  Wifi,
 } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -42,6 +43,18 @@ interface LabItem {
 }
 
 export const LAB_ITEMS: LabItem[] = [
+  {
+    id: "tcp",
+    title: "TCP Sliding Window & Congestion Control",
+    slug: "/tcp",
+    category: "Networking & CDN",
+    description: "Interactive transport layer simulation of TCP 3-way handshake, sliding window flow control (rwnd/cwnd), Slow Start exponential growth, AIMD, and BBR.",
+    techStack: ["TCP/IP", "Sliding Window", "AIMD", "Slow Start", "BBR"],
+    metrics: "min(cwnd, rwnd) | 0% Packet Loss",
+    complexity: "Advanced",
+    icon: Wifi,
+    badgeColor: "border-cyan-500/30 text-cyan-400 bg-cyan-500/10",
+  },
   {
     id: "disruptor",
     title: "LMAX Disruptor & Lock-Free Ring Buffer",
