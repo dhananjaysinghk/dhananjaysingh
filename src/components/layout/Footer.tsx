@@ -88,6 +88,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/actor" className="transition-colors hover:text-foreground">
+                  Actor Model & Supervision
+                </Link>
+              </li>
+              <li>
                 <Link href="/tcp" className="transition-colors hover:text-foreground">
                   TCP Sliding Window
                 </Link>

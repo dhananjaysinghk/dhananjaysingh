@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, FileText, Bookmark, Sparkles, Terminal, Sun, Moon, Laptop, ArrowRight, Activity, MessageSquare, Cpu, Scale, Compass, Globe, Gauge, Database, Droplets, Share2, FolderTree, Binary, Layers, RotateCcw, Wifi } from "lucide-react"
+import { Search, FileText, Bookmark, Sparkles, Terminal, Sun, Moon, Laptop, ArrowRight, Activity, MessageSquare, Cpu, Scale, Compass, Globe, Gauge, Database, Droplets, Share2, FolderTree, Binary, Layers, RotateCcw, Wifi, Users } from "lucide-react"
 
 interface SearchItem {
   title: string
@@ -25,6 +25,7 @@ export function CommandMenu() {
 
   // Actions and Navigation Targets
   const items: SearchItem[] = [
+    { title: "Distributed Actor Model & Supervision Tree (/actor)", category: "Navigation", href: "/actor", type: "action", icon: Users },
     { title: "TCP Sliding Window & Congestion Control (/tcp)", category: "Navigation", href: "/tcp", type: "action", icon: Wifi },
     { title: "Interactive Systems Terminal & UNIX Shell (/terminal)", category: "Navigation", href: "/terminal", type: "action", icon: Terminal },
     { title: "Systems Engineering Labs & Simulators (/labs)", category: "Navigation", href: "/labs", type: "action", icon: Terminal },

@@ -23,6 +23,7 @@ import {
   Zap,
   SlidersHorizontal,
   Wifi,
+  Users,
 } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -43,6 +44,18 @@ interface LabItem {
 }
 
 export const LAB_ITEMS: LabItem[] = [
+  {
+    id: "actor",
+    title: "Actor Model & Supervision Tree",
+    slug: "/actor",
+    category: "Distributed Systems",
+    description: "Erlang/OTP fault-tolerant actor system with isolated state mailboxes, non-blocking asynchronous message passing, OneForOne / AllForOne restarts, and Dead Letter Queues.",
+    techStack: ["Actor Model", "Erlang/OTP", "Supervision Trees", "Async Mailbox", "Fault Recovery"],
+    metrics: "Let It Crash | Zero Mutex Deadlocks",
+    complexity: "Expert",
+    icon: Users,
+    badgeColor: "border-purple-500/30 text-purple-400 bg-purple-500/10",
+  },
   {
     id: "tcp",
     title: "TCP Sliding Window & Congestion Control",
