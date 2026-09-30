@@ -45,6 +45,18 @@ interface LabItem {
 
 export const LAB_ITEMS: LabItem[] = [
   {
+    id: "saga",
+    title: "Distributed Transactions: 2PC & Saga",
+    slug: "/saga",
+    category: "Distributed Systems",
+    description: "Atomic multi-database coordination and asynchronous compensating workflows comparing strict Two-Phase Commit (2PC) against resilient Saga patterns.",
+    techStack: ["2-Phase Commit", "Saga Pattern", "WAL", "Compensating Transactions", "ACID"],
+    metrics: "2PC vs Saga | Backward Rollback Engine",
+    complexity: "Expert",
+    icon: Database,
+    badgeColor: "border-indigo-500/30 text-indigo-400 bg-indigo-500/10",
+  },
+  {
     id: "actor",
     title: "Actor Model & Supervision Tree",
     slug: "/actor",
