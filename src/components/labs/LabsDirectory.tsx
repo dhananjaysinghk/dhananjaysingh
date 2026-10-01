@@ -45,6 +45,18 @@ interface LabItem {
 
 export const LAB_ITEMS: LabItem[] = [
   {
+    id: "bloom",
+    title: "Bloom Filter & Counting Filter",
+    slug: "/bloom",
+    category: "Storage & Databases",
+    description: "Probabilistic set membership testing with zero false negatives, theoretical false positive math formulas, bit density heatmaps, and Counting Bloom Filter deletion.",
+    techStack: ["Bloom Filter", "Counting Filter", "FNV-1a", "Murmur3", "Probabilistic Algorithms"],
+    metrics: "0% False Negatives | O(k) Constant Time",
+    complexity: "Advanced",
+    icon: Binary,
+    badgeColor: "border-pink-500/30 text-pink-400 bg-pink-500/10",
+  },
+  {
     id: "saga",
     title: "Distributed Transactions: 2PC & Saga",
     slug: "/saga",

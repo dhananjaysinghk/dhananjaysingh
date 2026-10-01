@@ -88,6 +88,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/bloom" className="transition-colors hover:text-foreground">
+                  Bloom & Counting Filter
+                </Link>
+              </li>
+              <li>
                 <Link href="/saga" className="transition-colors hover:text-foreground">
                   Distributed Saga & 2PC
                 </Link>

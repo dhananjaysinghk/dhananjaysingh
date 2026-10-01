@@ -32,7 +32,7 @@ export default function LabsPage() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 font-mono text-xs">
           <div className="p-3.5 rounded-xl border border-border/30 bg-card/20 backdrop-blur-sm">
             <span className="text-[10px] text-muted-foreground block uppercase">Total Labs</span>
-            <span className="text-lg font-bold text-foreground">19 Simulators</span>
+            <span className="text-lg font-bold text-foreground">20 Simulators</span>
           </div>
           <div className="p-3.5 rounded-xl border border-border/30 bg-card/20 backdrop-blur-sm">
             <span className="text-[10px] text-muted-foreground block uppercase">Domains Covered</span>

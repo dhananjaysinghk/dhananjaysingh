@@ -111,7 +111,7 @@ export function FeaturedLabs() {
                 onClick={() => soundFx.playClick()}
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline group shrink-0"
               >
-                Explore All 19 Simulators
+                Explore All 20 Simulators
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>

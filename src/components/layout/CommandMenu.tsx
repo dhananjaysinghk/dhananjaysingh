@@ -25,6 +25,7 @@ export function CommandMenu() {
 
   // Actions and Navigation Targets
   const items: SearchItem[] = [
+    { title: "Probabilistic Bloom & Counting Filter (/bloom)", category: "Navigation", href: "/bloom", type: "action", icon: Binary },
     { title: "Distributed Transactions: 2PC & Saga (/saga)", category: "Navigation", href: "/saga", type: "action", icon: Database },
     { title: "Distributed Actor Model & Supervision Tree (/actor)", category: "Navigation", href: "/actor", type: "action", icon: Users },
     { title: "TCP Sliding Window & Congestion Control (/tcp)", category: "Navigation", href: "/tcp", type: "action", icon: Wifi },
