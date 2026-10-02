@@ -45,6 +45,18 @@ interface LabItem {
 
 export const LAB_ITEMS: LabItem[] = [
   {
+    id: "zerocopy",
+    title: "Linux Zero-Copy DMA & PageCache",
+    slug: "/zerocopy",
+    category: "Kernel & Low-Level",
+    description: "Linux kernel I/O pipeline comparing traditional 4-step read()/write() CPU buffer copies against sendfile() gather DMA bypass and io_uring ring queues.",
+    techStack: ["Zero-Copy", "sendfile()", "Gather DMA", "PageCache", "io_uring"],
+    metrics: "0 CPU Buffer Copies | 2 Context Switches",
+    complexity: "Expert",
+    icon: Zap,
+    badgeColor: "border-emerald-500/30 text-emerald-400 bg-emerald-500/10",
+  },
+  {
     id: "bloom",
     title: "Bloom Filter & Counting Filter",
     slug: "/bloom",

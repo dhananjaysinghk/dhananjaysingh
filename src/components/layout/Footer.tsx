@@ -88,6 +88,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/zerocopy" className="transition-colors hover:text-foreground">
+                  Linux Zero-Copy DMA
+                </Link>
+              </li>
+              <li>
                 <Link href="/bloom" className="transition-colors hover:text-foreground">
                   Bloom & Counting Filter
                 </Link>
