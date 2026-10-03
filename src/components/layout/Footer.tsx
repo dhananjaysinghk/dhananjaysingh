@@ -88,6 +88,16 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/raft" className="transition-colors hover:text-foreground">
+                  Raft Consensus & Replication
+                </Link>
+              </li>
+              <li>
+                <Link href="/allocator" className="transition-colors hover:text-foreground">
+                  Buddy & Slab Allocator
+                </Link>
+              </li>
+              <li>
                 <Link href="/zerocopy" className="transition-colors hover:text-foreground">
                   Linux Zero-Copy DMA
                 </Link>

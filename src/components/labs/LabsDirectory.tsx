@@ -24,6 +24,7 @@ import {
   SlidersHorizontal,
   Wifi,
   Users,
+  Shield,
 } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -44,6 +45,30 @@ interface LabItem {
 }
 
 export const LAB_ITEMS: LabItem[] = [
+  {
+    id: "raft",
+    title: "Raft Consensus & Log Replication",
+    slug: "/raft",
+    category: "Distributed Systems",
+    description: "Distributed consensus state machine with randomized election timers, majority quorum commits, split-brain network partitions, and log snapshot compaction.",
+    techStack: ["Raft", "Consensus", "AppendEntries", "Quorum", "Split-Brain"],
+    metrics: "Q = floor(N/2) + 1 | Linearizable",
+    complexity: "Expert",
+    icon: Shield,
+    badgeColor: "border-cyan-500/30 text-cyan-400 bg-cyan-500/10",
+  },
+  {
+    id: "allocator",
+    title: "Binary Buddy & Slab Allocator",
+    slug: "/allocator",
+    category: "Kernel & Low-Level",
+    description: "Linux physical memory management with binary buddy order splitting, recursive XOR coalescing on free, and fixed-size Slab object caches.",
+    techStack: ["Buddy System", "Slab Allocator", "Memory Management", "Kernel", "Fragmentation"],
+    metrics: "O(1) Slab Freelist | Zero-Fragmentation",
+    complexity: "Expert",
+    icon: Cpu,
+    badgeColor: "border-indigo-500/30 text-indigo-400 bg-indigo-500/10",
+  },
   {
     id: "zerocopy",
     title: "Linux Zero-Copy DMA & PageCache",

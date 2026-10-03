@@ -14,6 +14,7 @@ import {
   Terminal,
   Activity,
   FolderTree,
+  Shield,
 } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -21,6 +22,16 @@ import { ScrollReveal } from "@/components/animation/motion-wrapper"
 import { soundFx } from "@/lib/sound"
 
 const FEATURED_LABS = [
+  {
+    title: "Raft Consensus & Log Replication",
+    slug: "/raft",
+    category: "Distributed",
+    description: "Distributed consensus state machine with randomized election timers, majority quorum commits, split-brain network partitions, and log snapshot compaction.",
+    metric: "Q = floor(N/2) + 1",
+    icon: Shield,
+    color: "text-cyan-400",
+    bgColor: "bg-cyan-500/10 border-cyan-500/20",
+  },
   {
     title: "LMAX Disruptor & Lock-Free Ring Buffer",
     slug: "/disruptor",
@@ -111,7 +122,7 @@ export function FeaturedLabs() {
                 onClick={() => soundFx.playClick()}
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline group shrink-0"
               >
-                Explore All 21 Simulators
+                Explore All 22 Simulators
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>

@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
 import { motion, AnimatePresence } from "framer-motion"
-import { Search, FileText, Bookmark, Sparkles, Terminal, Sun, Moon, Laptop, ArrowRight, Activity, MessageSquare, Cpu, Scale, Compass, Globe, Gauge, Database, Droplets, Share2, FolderTree, Binary, Layers, RotateCcw, Wifi, Users, Zap } from "lucide-react"
+import { Search, FileText, Bookmark, Sparkles, Terminal, Sun, Moon, Laptop, ArrowRight, Activity, MessageSquare, Cpu, Scale, Compass, Globe, Gauge, Database, Droplets, Share2, FolderTree, Binary, Layers, RotateCcw, Wifi, Users, Zap, Shield } from "lucide-react"
 
 interface SearchItem {
   title: string
@@ -25,6 +25,8 @@ export function CommandMenu() {
 
   // Actions and Navigation Targets
   const items: SearchItem[] = [
+    { title: "Distributed Raft Consensus Engine (/raft)", category: "Navigation", href: "/raft", type: "action", icon: Shield },
+    { title: "Binary Buddy & Slab Memory Allocator (/allocator)", category: "Navigation", href: "/allocator", type: "action", icon: Cpu },
     { title: "Linux Zero-Copy DMA & PageCache Pipeline (/zerocopy)", category: "Navigation", href: "/zerocopy", type: "action", icon: Zap },
     { title: "Probabilistic Bloom & Counting Filter (/bloom)", category: "Navigation", href: "/bloom", type: "action", icon: Binary },
     { title: "Distributed Transactions: 2PC & Saga (/saga)", category: "Navigation", href: "/saga", type: "action", icon: Database },
