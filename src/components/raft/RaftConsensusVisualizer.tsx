@@ -622,7 +622,7 @@ export function RaftConsensusVisualizer() {
   return (
     <div className="space-y-8">
       {/* Header Banner */}
-      <div className="relative overflow-hidden rounded-2xl border border-border/40 bg-gradient-to-br from-card/80 via-card/40 to-background p-6 md:p-8 backdrop-blur-xl shadow-2xl">
+      <div className="relative overflow-hidden rounded-2xl border border-border/40 bg-linear-to-br from-card/80 via-card/40 to-background p-6 md:p-8 backdrop-blur-xl shadow-2xl">
         <div className="absolute top-0 right-0 -mt-8 -mr-8 h-48 w-48 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 -mb-8 -ml-8 h-48 w-48 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none" />
 
@@ -632,7 +632,7 @@ export function RaftConsensusVisualizer() {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/20 border border-cyan-500/30 text-cyan-400">
                 <Shield className="h-5 w-5" />
               </div>
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight bg-linear-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">
                 Raft Consensus & Log Replication Engine
               </h1>
             </div>
@@ -685,7 +685,7 @@ export function RaftConsensusVisualizer() {
               </div>
               <Button
                 onClick={proposeCommand}
-                className="gap-2 bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white font-medium text-xs h-9 shadow-lg shadow-cyan-500/20"
+                className="gap-2 bg-linear-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white font-medium text-xs h-9 shadow-lg shadow-cyan-500/20"
               >
                 <Plus className="h-3.5 w-3.5" />
                 Propose Write
@@ -799,7 +799,7 @@ export function RaftConsensusVisualizer() {
                   isCrashed
                     ? "border-rose-500/30 bg-rose-950/10 opacity-70"
                     : isLeader
-                    ? "border-cyan-500/50 bg-gradient-to-b from-cyan-950/20 to-card/60 shadow-cyan-500/10 ring-1 ring-cyan-500/30"
+                    ? "border-cyan-500/50 bg-linear-to-b from-cyan-950/20 to-card/60 shadow-cyan-500/10 ring-1 ring-cyan-500/30"
                     : isCandidate
                     ? "border-amber-500/50 bg-amber-950/15 shadow-amber-500/10"
                     : "border-border/60 bg-card/40"
@@ -972,7 +972,7 @@ export function RaftConsensusVisualizer() {
                 {/* Log entries horizontal strip */}
                 <div className="flex items-center gap-2 overflow-x-auto pb-1">
                   {node.snapshotIndex > 0 && (
-                    <div className="px-2.5 py-1.5 rounded bg-purple-500/10 border border-purple-500/30 text-[11px] font-mono text-purple-300 flex-shrink-0">
+                    <div className="px-2.5 py-1.5 rounded bg-purple-500/10 border border-purple-500/30 text-[11px] font-mono text-purple-300 shrink-0">
                       📦 Snapshot (1..{node.snapshotIndex})
                     </div>
                   )}
@@ -986,7 +986,7 @@ export function RaftConsensusVisualizer() {
                   {node.log.map((entry) => (
                     <div
                       key={entry.index}
-                      className={`px-3 py-1.5 rounded border text-xs font-mono flex-shrink-0 transition-all ${
+                      className={`px-3 py-1.5 rounded border text-xs font-mono shrink-0 transition-all ${
                         entry.committed
                           ? "bg-cyan-950/30 border-cyan-500/40 text-cyan-200"
                           : "bg-amber-950/20 border-amber-500/30 text-amber-200 border-dashed"
@@ -1066,7 +1066,7 @@ export function RaftConsensusVisualizer() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
+            <div className="space-y-2 max-h-100 overflow-y-auto pr-2">
               {rpcEvents.length === 0 ? (
                 <div className="text-xs text-muted-foreground font-mono text-center py-8">
                   No RPC traffic captured yet. Perform actions above to trigger Raft protocol RPCs.
@@ -1077,7 +1077,7 @@ export function RaftConsensusVisualizer() {
                     key={rpc.id}
                     className="p-2.5 rounded-lg border border-border/40 bg-background/40 flex items-start justify-between text-xs font-mono gap-4"
                   >
-                    <div className="flex items-center gap-2 flex-shrink-0">
+                    <div className="flex items-center gap-2 shrink-0">
                       <span className="text-muted-foreground text-[10px]">{rpc.timestamp}</span>
                       <Badge
                         variant="outline"
@@ -1098,7 +1098,7 @@ export function RaftConsensusVisualizer() {
 
                     <div className="flex-1 text-muted-foreground truncate">{rpc.details}</div>
 
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                       <Badge
                         variant="outline"
                         className={`text-[10px] ${

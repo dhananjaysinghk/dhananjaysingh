@@ -23,7 +23,7 @@ export function Footer() {
             </div>
 
             <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-              Software Engineer & Systems researcher focused on distributed architectures, low-level tooling, and high-performance interactive simulators.
+              Software Engineer & Computer Science Student at GLA University. Focused on distributed systems, low-latency backends, and high-performance infrastructure.
             </p>
 
             {/* Status Pill Badge */}
@@ -33,7 +33,7 @@ export function Footer() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
                 </span>
-                <span className="font-medium">Available for contract & remote roles</span>
+                <span className="font-medium">Available for Software Engineering Roles</span>
               </div>
             </div>
 
@@ -76,20 +76,54 @@ export function Footer() {
             </div>
           </div>
 
+          {/* Column: Work & Writing */}
+          <div className="flex flex-col space-y-3">
+            <h3 className="font-mono text-xs font-semibold uppercase tracking-wider text-foreground">
+              Work & Writing
+            </h3>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li>
+                <Link href="/projects" className="transition-colors hover:text-foreground">
+                  Featured Projects
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog" className="transition-colors hover:text-foreground">
+                  Technical Blog
+                </Link>
+              </li>
+              <li>
+                <Link href="/notes" className="transition-colors hover:text-foreground">
+                  Knowledge Notes
+                </Link>
+              </li>
+              <li>
+                <Link href="/adr" className="transition-colors hover:text-foreground">
+                  Architecture ADRs
+                </Link>
+              </li>
+              <li>
+                <Link href="/guestbook" className="transition-colors hover:text-foreground">
+                  Guestbook
+                </Link>
+              </li>
+            </ul>
+          </div>
+
           {/* Column: Interactive Labs */}
           <div className="flex flex-col space-y-3">
             <h3 className="font-mono text-xs font-semibold uppercase tracking-wider text-foreground">
-              Simulators & Labs
+              Systems Labs
             </h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
                 <Link href="/labs" className="font-semibold text-primary transition-colors hover:underline">
-                  All Systems Labs Directory →
+                  All Labs Directory →
                 </Link>
               </li>
               <li>
                 <Link href="/raft" className="transition-colors hover:text-foreground">
-                  Raft Consensus & Replication
+                  Raft Consensus Engine
                 </Link>
               </li>
               <li>
@@ -103,127 +137,32 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/bloom" className="transition-colors hover:text-foreground">
-                  Bloom & Counting Filter
-                </Link>
-              </li>
-              <li>
-                <Link href="/saga" className="transition-colors hover:text-foreground">
-                  Distributed Saga & 2PC
-                </Link>
-              </li>
-              <li>
-                <Link href="/actor" className="transition-colors hover:text-foreground">
-                  Actor Model & Supervision
-                </Link>
-              </li>
-              <li>
-                <Link href="/tcp" className="transition-colors hover:text-foreground">
-                  TCP Sliding Window
-                </Link>
-              </li>
-              <li>
-                <Link href="/disruptor" className="transition-colors hover:text-foreground">
-                  LMAX Disruptor
-                </Link>
-              </li>
-              <li>
-                <Link href="/kafka" className="transition-colors hover:text-foreground">
-                  Kafka Event Log
-                </Link>
-              </li>
-              <li>
-                <Link href="/mmu" className="transition-colors hover:text-foreground">
-                  Virtual Memory MMU
-                </Link>
-              </li>
-              <li>
-                <Link href="/gossip" className="transition-colors hover:text-foreground">
-                  SWIM Gossip Mesh
-                </Link>
-              </li>
-              <li>
-                <Link href="/merkle" className="transition-colors hover:text-foreground">
-                  Merkle Tree
-                </Link>
-              </li>
-              <li>
-                <Link href="/tracing" className="transition-colors hover:text-foreground">
-                  Distributed Tracing
-                </Link>
-              </li>
-              <li>
-                <Link href="/btree" className="transition-colors hover:text-foreground">
-                  B+ Tree Indexer
-                </Link>
-              </li>
-              <li>
-                <Link href="/crdt" className="transition-colors hover:text-foreground">
-                  CRDT Realtime Sync
-                </Link>
-              </li>
-              <li>
-                <Link href="/ebpf" className="transition-colors hover:text-foreground">
-                  eBPF Kernel Sandbox
-                </Link>
-              </li>
-              <li>
-                <Link href="/storage" className="transition-colors hover:text-foreground">
-                  LSM Storage Engine
-                </Link>
-              </li>
-              <li>
-                <Link href="/cache" className="transition-colors hover:text-foreground">
-                  LRU Cache Visualizer
-                </Link>
-              </li>
-              <li>
-                <Link href="/ratelimit" className="transition-colors hover:text-foreground">
-                  Token Bucket Limiter
-                </Link>
-              </li>
-              <li>
-                <Link href="/sql" className="transition-colors hover:text-foreground">
-                  SQL Query Profiler
-                </Link>
-              </li>
-              <li>
-                <Link href="/network" className="transition-colors hover:text-foreground">
-                  CDN Edge Routing
+                <Link href="/terminal" className="transition-colors hover:text-foreground">
+                  UNIX Interactive Shell
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Column: Engineering & Resources */}
+          {/* Column: Navigation & Info */}
           <div className="flex flex-col space-y-3">
             <h3 className="font-mono text-xs font-semibold uppercase tracking-wider text-foreground">
-              Architecture
+              Info & Connect
             </h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <Link href="/terminal" className="transition-colors hover:text-foreground">
-                  Interactive Terminal (CLI)
+                <Link href="/about" className="transition-colors hover:text-foreground">
+                  About Me
                 </Link>
               </li>
               <li>
-                <Link href="/tools" className="transition-colors hover:text-foreground">
-                  Systems Lab Suite
+                <Link href="/resume" className="transition-colors hover:text-foreground">
+                  Resume / CV
                 </Link>
               </li>
               <li>
-                <Link href="/adr" className="transition-colors hover:text-foreground">
-                  Architecture ADRs
-                </Link>
-              </li>
-              <li>
-                <Link href="/benchmark" className="transition-colors hover:text-foreground">
-                  Benchmark Engine
-                </Link>
-              </li>
-              <li>
-                <Link href="/roadmap" className="transition-colors hover:text-foreground">
-                  Public Roadmap
+                <Link href="/contact" className="transition-colors hover:text-foreground">
+                  Get in Touch
                 </Link>
               </li>
               <li>
@@ -239,67 +178,28 @@ export function Footer() {
               </li>
             </ul>
           </div>
-
-          {/* Column: Navigation & Legal */}
-          <div className="flex flex-col space-y-3">
-            <h3 className="font-mono text-xs font-semibold uppercase tracking-wider text-foreground">
-              Navigation
-            </h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>
-                <Link href="/about" className="transition-colors hover:text-foreground">
-                  About & Background
-                </Link>
-              </li>
-              <li>
-                <Link href="/projects" className="transition-colors hover:text-foreground">
-                  Featured Projects
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="transition-colors hover:text-foreground">
-                  Technical Articles
-                </Link>
-              </li>
-              <li>
-                <Link href="/notes" className="transition-colors hover:text-foreground">
-                  Research Notes
-                </Link>
-              </li>
-              <li>
-                <Link href="/resume" className="transition-colors hover:text-foreground">
-                  Resume & Experience
-                </Link>
-              </li>
-              <li>
-                <Link href="/guestbook" className="transition-colors hover:text-foreground">
-                  Interactive Guestbook
-                </Link>
-              </li>
-              <li className="pt-2 border-t border-border/40">
-                <Link href="/privacy" className="text-xs transition-colors hover:text-foreground">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="text-xs transition-colors hover:text-foreground">
-                  Terms of Service
-                </Link>
-              </li>
-            </ul>
-          </div>
-
         </div>
 
-        {/* Bottom Symmetrical Bar */}
+        {/* Bottom Bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border/40 pt-8 sm:flex-row">
-          <p className="font-mono text-xs text-muted-foreground text-center sm:text-left">
-            © {currentYear} Dhananjay Singh. All rights reserved.
+          <p className="text-xs text-muted-foreground">
+            &copy; {currentYear} Dhananjay Singh. Built with Next.js, TypeScript & Tailwind CSS.
           </p>
 
-          <p className="font-mono text-xs text-muted-foreground text-center sm:text-right">
-            Designed & engineered with precision
-          </p>
+          <div className="flex items-center space-x-6 text-xs text-muted-foreground">
+            <Link href="/privacy" className="hover:text-foreground transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-foreground transition-colors">
+              Terms of Service
+            </Link>
+            <Link href="/feed.xml" className="hover:text-foreground transition-colors">
+              RSS Feed
+            </Link>
+            <Link href="/sitemap.xml" className="hover:text-foreground transition-colors">
+              Sitemap
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
