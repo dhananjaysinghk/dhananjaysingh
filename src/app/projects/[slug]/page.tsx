@@ -92,6 +92,66 @@ const fallbackProjects: ProjectDetail[] = [
     ],
     category: "Cloud Infrastructure",
     date: "Jul 2024"
+  },
+  {
+    title: "Apex Rate Limiter",
+    slug: "apex-rate-limiter",
+    description: "Distributed traffic policing and rate-limiting middleware implementing dual Token Bucket and Leaky Bucket algorithms with sub-millisecond Redis state synchronization.",
+    problem: "High-volume microservices exposed to bursts and volumetric bot traffic experienced severe tail latency spikes when database connections were exhausted by unmetered endpoints.",
+    solution: "Engineered an in-memory dual-rate limiter middleware in Go with Redis sliding-window counters and local atomic CAS tokens for sub-100 microsecond decision latency.",
+    architecture: "Edge reverse proxy intercepting incoming HTTP/2 requests, evaluating local token bucket reservoirs, and syncing global rate limits via asynchronous Redis pipelined Lua scripts.",
+    techStack: ["Go", "Redis", "HTTP/2", "Docker", "Prometheus", "Lua"],
+    features: ["Dual Token Bucket & Leaky Bucket algorithms", "Sub-100 microsecond policy decisions", "Automatic IP-reputation penalty box", "Standardized RFC 6585 HTTP 429 headers"],
+    challenges: "Synchronizing high-frequency rate-limit counters across distributed geographic regions without causing race conditions or locking bottlenecks.",
+    lessons: "Atomic Lua scripts executed on Redis nodes eliminate distributed mutexes and ensure 100% atomic token decrement guarantees.",
+    github: "https://github.com/dhananjaysinghk",
+    roadmap: [
+      "Add eBPF/XDP socket level rate limiting",
+      "Implement dynamic AI anomaly traffic scoring",
+      "Introduce client-side proactive token caching"
+    ],
+    category: "Backend & Systems",
+    date: "Sep 2024"
+  },
+  {
+    title: "Hyperion eBPF Filter",
+    slug: "hyperion-ebpf",
+    description: "Programmable kernel packet filter and DDoS mitigation pipeline executing verified XDP bytecode directly inside the Linux network driver.",
+    problem: "Userspace network packet inspectors incurred high context-switching and socket buffer copy overheads, collapsing throughput at 10Gbps line rates during volumetric SYN floods.",
+    solution: "Developed an in-kernel eBPF filter running at the eXpress Data Path (XDP) layer that inspects Ethernet and IP headers before SKB allocation, dropping malicious traffic at wire speed.",
+    architecture: "C-based eBPF kernel program verified by the Linux kernel verifier, interacting with userspace telemetry and control daemons via BPF ring buffers and hash maps.",
+    techStack: ["C", "eBPF", "XDP", "Linux Kernel", "Rust", "BCC"],
+    features: ["Wire-speed 10Gbps packet filtering", "Zero userspace context switches", "In-kernel BPF hash map IP blocklists", "Live ring-buffer telemetry emission"],
+    challenges: "Satisfying the strict Linux in-kernel verifier constraints on bounded loops and stack allocation boundaries.",
+    lessons: "Dropping malicious traffic at XDP_DROP before kernel SKB allocation saves over 90% of CPU cycles during volumetric DDoS events.",
+    github: "https://github.com/dhananjaysinghk",
+    roadmap: [
+      "Integrate TC (Traffic Control) egress rate shaping",
+      "Add automated BGP flowspec router signaling",
+      "Implement packet payload deep inspection"
+    ],
+    category: "Backend & Systems",
+    date: "Nov 2024"
+  },
+  {
+    title: "Chronos Tracing Mesh",
+    slug: "chronos-tracing",
+    description: "High-throughput distributed tracing collector and critical-path latency visualizer implementing W3C TraceContext standards.",
+    problem: "Debugging microservice latency regressions across asynchronous message queues was difficult due to fragmented logs and broken context propagation.",
+    solution: "Constructed an end-to-end distributed tracing engine that injects and extracts W3C TraceContext headers, streaming span data into ClickHouse for instant percentile queries.",
+    architecture: "Lightweight OpenTelemetry-compatible sidecar collector aggregating traces, buffering spans in memory rings, and flushing columnar batches to ClickHouse.",
+    techStack: ["TypeScript", "OpenTelemetry", "ClickHouse", "Next.js", "Docker", "gRPC"],
+    features: ["W3C TraceContext propagation", "Nanosecond span precision", "Columnar ClickHouse trace storage", "Interactive critical path waterfall viewer"],
+    challenges: "Preventing tracing overhead from degrading primary application request latency during peak traffic spikes.",
+    lessons: "Probabilistic adaptive trace sampling combined with columnar storage allows monitoring 100% of errors while only recording 1% of normal requests.",
+    github: "https://github.com/dhananjaysinghk",
+    roadmap: [
+      "Add automatic root-cause bottleneck anomaly detection",
+      "Implement distributed deadlock visualization",
+      "Support OpenSearch secondary search indexing"
+    ],
+    category: "Cloud Infrastructure",
+    date: "Jan 2025"
   }
 ]
 

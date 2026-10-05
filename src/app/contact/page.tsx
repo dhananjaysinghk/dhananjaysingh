@@ -25,7 +25,7 @@ const contactInfo = [
   {
     icon: MapPin,
     label: "Current Base",
-    value: "Mathura / Mathura, India",
+    value: "Mathura, Uttar Pradesh, India",
   },
 ]
 

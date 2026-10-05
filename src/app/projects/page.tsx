@@ -15,7 +15,7 @@ const fallbackProjects = [
     id: "proj-1",
     title: "Nova Orchestrator",
     slug: "nova-orchestrator",
-    description: "A high-performance cloud container scheduler and mesh network orchestrator written in Go, featuring a sub-10ms scheduling latency and custom raft consensus consensus model.",
+    description: "A high-performance cloud container scheduler and mesh network orchestrator written in Go, featuring sub-10ms scheduling latency and a custom Raft consensus quorum engine.",
     techStack: ["Go", "Raft", "gRPC", "Protobuf", "Docker"],
     category: "Backend & Systems",
     github: "https://github.com/dhananjaysinghk",
@@ -33,11 +33,38 @@ const fallbackProjects = [
     id: "proj-3",
     title: "Vortex CDN",
     slug: "vortex-cdn",
-    description: "Edge server caching platform built on WebAssembly and Rust, reducing cold-start latency for severless edge workers by 70%.",
+    description: "Edge server caching platform built on WebAssembly and Rust, reducing cold-start latency for serverless edge workers by 70%.",
     techStack: ["Rust", "Wasm", "TypeScript", "Next.js"],
     category: "Cloud Infrastructure",
     github: "https://github.com/dhananjaysinghk",
     demo: "https://github.com/dhananjaysinghk",
+  },
+  {
+    id: "proj-4",
+    title: "Apex Rate Limiter",
+    slug: "apex-rate-limiter",
+    description: "Distributed traffic policing and rate-limiting middleware implementing dual Token Bucket and Leaky Bucket algorithms with sub-millisecond Redis state synchronization.",
+    techStack: ["Go", "Redis", "HTTP/2", "Docker"],
+    category: "Backend & Systems",
+    github: "https://github.com/dhananjaysinghk",
+  },
+  {
+    id: "proj-5",
+    title: "Hyperion eBPF Filter",
+    slug: "hyperion-ebpf",
+    description: "Programmable kernel packet filter and DDoS mitigation pipeline executing verified XDP bytecode directly inside the Linux network driver.",
+    techStack: ["C", "eBPF", "XDP", "Linux Kernel", "Rust"],
+    category: "Backend & Systems",
+    github: "https://github.com/dhananjaysinghk",
+  },
+  {
+    id: "proj-6",
+    title: "Chronos Tracing Mesh",
+    slug: "chronos-tracing",
+    description: "High-throughput distributed tracing collector and critical-path latency visualizer implementing W3C TraceContext standards.",
+    techStack: ["TypeScript", "OpenTelemetry", "ClickHouse", "Next.js"],
+    category: "Cloud Infrastructure",
+    github: "https://github.com/dhananjaysinghk",
   },
 ]
 
@@ -47,7 +74,7 @@ async function getProjects() {
       orderBy: { createdAt: "desc" },
     })
     
-    if (projects.length === 0) return []
+    if (projects.length === 0) return fallbackProjects
 
     return projects.map((p) => ({
       id: p.id,
@@ -60,8 +87,8 @@ async function getProjects() {
       demo: p.demo,
     }))
   } catch (error) {
-    console.error("Database query failed", error)
-    return []
+    console.error("Database query failed, utilizing fallback projects", error)
+    return fallbackProjects
   }
 }
 
