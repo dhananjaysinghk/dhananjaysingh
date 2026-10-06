@@ -222,6 +222,130 @@ With Tailwind CSS v4, custom theme parameters map straight into native CSS varia
 
 This setup enables us to perform dynamic theme mapping and contrast calculations inline without reloading scripts.`,
   },
+  "zero-copy-linux-io-uring": {
+    title: "Zero-Copy Linux I/O: sendfile(), splice(), and io_uring",
+    slug: "zero-copy-linux-io-uring",
+    excerpt: "Eliminating CPU buffer copying, minimizing kernel context switches, and utilizing DMA scatter-gather rings for 100Gbps network throughput.",
+    category: "Kernel & OS",
+    readingTime: "10 min read",
+    tags: ["linux", "kernel", "zero-copy", "io-uring"],
+    createdAt: "Aug 10, 2026",
+    content: `# Zero-Copy Linux I/O: sendfile(), splice(), and io_uring
+
+When serving static assets, streaming video chunks, or routing high-volume event streams, the conventional \`read()\` and \`write()\` system call workflow consumes massive CPU cycles solely copying bytes between kernel and userspace memory buffers.
+
+## The Traditional 4-Copy Penalty
+
+In a traditional \`read()\` + \`write()\` pipeline:
+1. **DMA Copy**: Disk controller copies file data into Kernel PageCache.
+2. **CPU Copy**: Kernel copies data into application Userspace Buffer.
+3. **CPU Copy**: Application writes data back into Kernel Socket Buffer.
+4. **DMA Copy**: Socket buffer data is transferred to the Network Interface Card (NIC).
+
+This incurs **4 Context Switches** and **2 CPU Buffer Copies**.
+
+:::warning
+At 100Gbps wire rates, copying memory across userspace saturates CPU memory bandwidth before reaching network capacity.
+:::
+
+## The Zero-Copy Solution: \`sendfile()\` with Gather DMA
+
+Linux introduced the \`sendfile()\` system call to stream descriptors directly within kernel space:
+
+\`\`\`c
+#include <sys/sendfile.h>
+
+ssize_t sendfile(int out_fd, int in_fd, off_t *offset, size_t count);
+\`\`\`
+
+With NIC hardware supporting **Scatter-Gather DMA**, no CPU data copying occurs at all. Only file descriptors and pointer offsets are copied into the socket queue, dropping CPU utilization to near zero.
+
+## Next-Generation Asynchronous I/O: \`io_uring\`
+
+Jens Axboe's \`io_uring\` interface eliminates syscall overhead entirely by establishing two lockless ring buffers shared between userspace and the Linux kernel:
+- **Submission Queue (SQ)**: Ring buffer where application enqueues read/write SQEs.
+- **Completion Queue (CQ)**: Ring buffer where kernel posts completed CQEs.
+
+With \`IORING_SETUP_SQPOLL\` kernel polling threads, applications can perform millions of zero-copy network transmissions without issuing a single system call.`,
+  },
+  "distributed-deadlocks-2pc-saga": {
+    title: "Preventing Distributed Deadlocks in 2PC & Saga Workflows",
+    slug: "distributed-deadlocks-2pc-saga",
+    excerpt: "Analyzing distributed transaction isolation anomalies, write-ahead log coordination, and building backward compensating rollback workflows.",
+    category: "Distributed Systems",
+    readingTime: "11 min read",
+    tags: ["consensus", "2pc", "saga", "transactions"],
+    createdAt: "Aug 18, 2026",
+    content: `# Preventing Distributed Deadlocks in 2PC & Saga Workflows
+
+Coordinating transactions across distributed microservices requires balancing strict ACID guarantees against availability and latency.
+
+## Two-Phase Commit (2PC): The Blocking Bottleneck
+
+Two-Phase Commit provides strict serializability across multiple database nodes:
+1. **Prepare Phase**: The coordinator asks all participants if they can commit. Participants acquire locks and write to their local Write-Ahead Log (WAL).
+2. **Commit Phase**: If all vote YES, coordinator logs COMMIT and broadcasts commit orders.
+
+:::danger
+2PC is a synchronous, blocking protocol. If the coordinator crashes while participants hold row locks, all affected partitions stall indefinitely.
+:::
+
+## Saga Orchestration: Eventual Consistency & Compensations
+
+The Saga pattern replaces synchronous distributed locks with a sequence of local transactions:
+- Each service executes its local transaction and publishes an event.
+- If step $N$ fails, the saga orchestrator executes backward **Compensating Transactions** ($C_{N-1}, C_{N-2}, \dots, C_1$) to undo partial state modifications.
+
+\`\`\`
+Order Created -> Payment Authorized -> Inventory Reserved -> Shippable
+     |                  |                   |
+  Cancel Order   <-  Refund Payment  <-  Release Inventory
+\`\`\`
+
+## Key Takeaways
+- Use **2PC** only for low-latency, single-datacenter financial clearance where strict serializability is mandatory.
+- Use **Sagas** with idempotent compensating handlers for scalable, distributed multi-region business workflows.`,
+  },
+  "cache-line-false-sharing-disruptor": {
+    title: "Mechanical Sympathy: Cache Line False Sharing & Ring Buffers",
+    slug: "cache-line-false-sharing-disruptor",
+    excerpt: "Understanding 64-byte L1 cache lines, MESI cache coherence protocols, and atomic CAS sequence barriers in high-frequency messaging.",
+    category: "Systems Engineering",
+    readingTime: "9 min read",
+    tags: ["concurrency", "lmax-disruptor", "hardware"],
+    createdAt: "Aug 25, 2026",
+    content: `# Mechanical Sympathy: Cache Line False Sharing & Ring Buffers
+
+Mechanical sympathy—a term coined by racing driver Jackie Stewart and applied to software by Martin Thompson—means designing software to work in harmony with the underlying hardware.
+
+## The 64-Byte Cache Line & False Sharing
+
+Modern x86-64 CPUs load memory into L1/L2 caches in chunks of **64 bytes** (a cache line). When two independent variables reside in the same 64-byte cache line and are modified by different CPU cores:
+
+1. Core 1 updates Variable A.
+2. The hardware **MESI / MOESI** cache coherence protocol invalidates the entire 64-byte cache line on Core 2.
+3. Core 2 experiences a mandatory cache miss when modifying Variable B, even though Variable B was never touched by Core 1!
+
+This phenomenon is known as **False Sharing** and causes catastrophic multi-threaded throughput degradation.
+
+## Cache Line Padding in Practice
+
+To prevent false sharing, low-latency concurrent queues pad atomic sequence counters to ensure they occupy distinct 64-byte boundaries:
+
+\`\`\`rust
+#[repr(align(64))]
+pub struct SequenceCursor {
+    pub value: std::sync::atomic::AtomicU64,
+    _padding: [u8; 56], // 64 bytes total
+}
+\`\`\`
+
+## The LMAX Disruptor Architecture
+
+The Disruptor eliminates mutex contention by using a pre-allocated circular ring buffer with power-of-two indexing (\`index & (capacity - 1)\`) and single-writer atomic CAS sequence barriers.
+
+By respecting CPU cache boundaries and avoiding heap allocations on the hot path, systems can process over **12+ million messages per second** per core with sub-microsecond latency.`,
+  },
 }
 
 async function getBlogPostDetail(slug: string): Promise<BlogPostDetail | null> {

@@ -41,6 +41,36 @@ const fallbackPosts = [
     tags: ["css", "oklch", "design-system"],
     createdAt: "Jun 30, 2026",
   },
+  {
+    id: "blog-4",
+    title: "Zero-Copy Linux I/O: sendfile(), splice(), and io_uring",
+    slug: "zero-copy-linux-io-uring",
+    excerpt: "Eliminating CPU buffer copying, minimizing kernel context switches, and utilizing DMA scatter-gather rings for 100Gbps network throughput.",
+    category: "Kernel & OS",
+    readingTime: "10 min read",
+    tags: ["linux", "kernel", "zero-copy", "io-uring"],
+    createdAt: "Aug 10, 2026",
+  },
+  {
+    id: "blog-5",
+    title: "Preventing Distributed Deadlocks in 2PC & Saga Workflows",
+    slug: "distributed-deadlocks-2pc-saga",
+    excerpt: "Analyzing distributed transaction isolation anomalies, write-ahead log coordination, and building backward compensating rollback workflows.",
+    category: "Distributed Systems",
+    readingTime: "11 min read",
+    tags: ["consensus", "2pc", "saga", "transactions"],
+    createdAt: "Aug 18, 2026",
+  },
+  {
+    id: "blog-6",
+    title: "Mechanical Sympathy: Cache Line False Sharing & Ring Buffers",
+    slug: "cache-line-false-sharing-disruptor",
+    excerpt: "Understanding 64-byte L1 cache lines, MESI cache coherence protocols, and atomic CAS sequence barriers in high-frequency messaging.",
+    category: "Systems Engineering",
+    readingTime: "9 min read",
+    tags: ["concurrency", "lmax-disruptor", "hardware"],
+    createdAt: "Aug 25, 2026",
+  },
 ]
 
 async function getBlogPosts() {

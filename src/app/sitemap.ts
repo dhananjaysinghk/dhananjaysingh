@@ -66,6 +66,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       "/blog/architecting-microsecond-latency-rust",
       "/blog/designing-custom-raft-go",
       "/blog/why-switched-oklch-css",
+      "/blog/zero-copy-linux-io-uring",
+      "/blog/distributed-deadlocks-2pc-saga",
+      "/blog/cache-line-false-sharing-disruptor",
     ]
     const mockEntries = mockSlugs.map((slug) => ({
       url: `${BASE_URL}${slug}`,
