@@ -39,6 +39,20 @@ const fallbackNotes = [
     category: "DevOps",
     tags: ["dns", "route53", "failover"],
   },
+  {
+    id: "note-5",
+    title: "Storage: LSM-Tree Leveled Compaction Mechanics",
+    slug: "lsm-tree-compaction-mechanics",
+    category: "Storage",
+    tags: ["lsm-tree", "rocksdb", "compaction", "sstable"],
+  },
+  {
+    id: "note-6",
+    title: "Networking: TCP BBR Congestion Control & Math",
+    slug: "bbr-congestion-control-math",
+    category: "Networking",
+    tags: ["tcp", "bbr", "congestion-control", "networking"],
+  },
 ]
 
 async function getNotes() {

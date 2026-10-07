@@ -238,6 +238,79 @@ Keep DNS TTL low (e.g. 30-60 seconds) so client caches expire quickly during fai
 
 - **Health Checks**: Dynamic endpoint endpoints polled by DNS agents every 10 seconds.
 - **Failover Threshold**: Trigger routing switch if endpoint fails 3 consecutive polls.`
+  },
+  "lsm-tree-compaction-mechanics": {
+    title: "Storage: LSM-Tree Leveled Compaction Mechanics",
+    slug: "lsm-tree-compaction-mechanics",
+    category: "Storage",
+    tags: ["lsm-tree", "rocksdb", "compaction", "sstable"],
+    updatedAt: "Aug 2026",
+    content: `# LSM-Tree Leveled Compaction Mechanics
+
+Log-Structured Merge-Trees (LSM) prioritize sequential disk writes over random writes, making them the architecture of choice for high-write storage engines like RocksDB, Cassandra, and CockroachDB.
+
+## The Ingestion Pipeline
+
+1. **Write-Ahead Log (WAL)**: All incoming writes are appended sequentially to the WAL for immediate durability.
+2. **MemTable**: Writes are inserted into an in-memory sorted skip-list (MemTable).
+3. **Immutable SSTable**: When the MemTable reaches capacity (e.g. 64MB), it is frozen and flushed to disk as Level 0 (L0) Sorted String Tables (SSTables).
+
+:::info
+SSTables on Level 0 may have overlapping key ranges. Levels 1 through N are strictly partitioned with non-overlapping key ranges.
+:::
+
+## Leveled Compaction Algorithm
+
+As Level $L$ grows beyond its capacity limit (typically $10^L \times \text{BaseSize}$):
+- Compaction selects an SSTable in Level $L$ with key range $[K_{\text{start}}, K_{\text{end}}]$.
+- Identifies all overlapping SSTables in Level $L+1$.
+- Performs a **Multi-way Merge Sort**, discarding tombstoned deleted keys and superseded duplicate values.
+- Writes new non-overlapping SSTables into Level $L+1$.
+
+## Write Amplification vs Space Amplification
+
+- **Leveled Compaction**: High write amplification ($10\text{--}30\times$), but low space amplification ($1.1\text{--}1.2\times$) and ultra-fast point lookups via Bloom Filters.
+- **Size-Tiered Compaction**: Low write amplification, but high space amplification (up to $2.0\times$) during compactions.`
+  },
+  "bbr-congestion-control-math": {
+    title: "Networking: TCP BBR Congestion Control & Math",
+    slug: "bbr-congestion-control-math",
+    category: "Networking",
+    tags: ["tcp", "bbr", "congestion-control", "networking"],
+    updatedAt: "Sep 2026",
+    content: `# TCP BBR Congestion Control & Math
+
+Google's BBR (Bottleneck Bandwidth and Round-trip propagation time) revolutionizes TCP throughput by moving away from loss-based congestion control algorithms (like Reno and CUBIC).
+
+## The Flaw of Loss-Based Congestion Control
+
+Traditional loss-based TCP (Reno/CUBIC) assumes that **packet drop = network congestion**:
+- It ramps up the congestion window (\`cwnd\`) until queues in network routers overflow and drop packets.
+- This causes **Bufferbloat** (high RTT latency) and severe throughput collapses on shallow-buffer wireless links.
+
+:::warning
+Packet loss often occurs due to transient wireless interference rather than queue saturation. Cutting cwnd in half on random loss causes massive bandwidth underutilization.
+:::
+
+## The BBR Control Model
+
+BBR models the physical network by continuously estimating two orthogonal physical limits:
+1. **Bottleneck Bandwidth ($BtlBw$)**: The maximum data rate the slowest link can deliver.
+2. **Round-Trip Propagation Time ($RTprop$)**: The minimum round-trip time with empty network queues.
+
+The optimal Bandwidth-Delay Product (BDP) in flight is:
+
+$$\text{BDP} = BtlBw \times RTprop$$
+
+$$\text{Pacing Rate} = \text{PacingGain} \times BtlBw$$
+
+$$\text{cwnd} = \max(2 \times \text{BDP}, 4 \times \text{MSS})$$
+
+## State Machine Phases
+- **Startup**: Exponential probe to discover $BtlBw$ (pacing gain $= 2/\ln(2) \approx 2.89$).
+- **Drain**: Drains any queue created during Startup.
+- **ProbeBW**: Cycles pacing gain ($[1.25, 0.75, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]$) to continuously discover extra bandwidth without bloating queues.
+- **ProbeRTT**: Drops in-flight packets every 10 seconds to measure true $RTprop$.`
   }
 }
 
