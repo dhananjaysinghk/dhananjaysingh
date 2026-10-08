@@ -59,6 +59,26 @@ const pinnedRepos: Repository[] = [
     languageColor: "bg-amber-600",
     topics: ["database-internals", "lsm-tree", "wal", "storage-engine"],
   },
+  {
+    name: "apex-ratelimiter-go",
+    description: "Distributed Token Bucket & Leaky Bucket traffic shaper with sub-millisecond Redis state synchronization.",
+    url: "https://github.com/dhananjaysinghk",
+    stars: 58,
+    forks: 6,
+    primaryLanguage: "Go",
+    languageColor: "bg-cyan-500",
+    topics: ["rate-limiting", "token-bucket", "redis", "go"],
+  },
+  {
+    name: "hyperion-ebpf-xdp",
+    description: "Wire-speed 10Gbps Linux kernel packet filter using eBPF/XDP for instantaneous volumetric DDoS mitigation.",
+    url: "https://github.com/dhananjaysinghk",
+    stars: 83,
+    forks: 11,
+    primaryLanguage: "C",
+    languageColor: "bg-slate-500",
+    topics: ["ebpf", "xdp", "linux-kernel", "networking", "c"],
+  },
 ]
 
 export function GithubRepositories() {

@@ -19,6 +19,7 @@ const fallbackProjects = [
     techStack: ["Go", "Raft", "gRPC", "Protobuf", "Docker"],
     category: "Backend & Systems",
     github: "https://github.com/dhananjaysinghk",
+    demo: "/raft",
   },
   {
     id: "proj-2",
@@ -28,6 +29,7 @@ const fallbackProjects = [
     techStack: ["Rust", "PostgreSQL", "Tokio", "Redis"],
     category: "Distributed Systems",
     github: "https://github.com/dhananjaysinghk",
+    demo: "/disruptor",
   },
   {
     id: "proj-3",
@@ -37,7 +39,7 @@ const fallbackProjects = [
     techStack: ["Rust", "Wasm", "TypeScript", "Next.js"],
     category: "Cloud Infrastructure",
     github: "https://github.com/dhananjaysinghk",
-    demo: "https://github.com/dhananjaysinghk",
+    demo: "/network",
   },
   {
     id: "proj-4",
@@ -47,6 +49,7 @@ const fallbackProjects = [
     techStack: ["Go", "Redis", "HTTP/2", "Docker"],
     category: "Backend & Systems",
     github: "https://github.com/dhananjaysinghk",
+    demo: "/ratelimit",
   },
   {
     id: "proj-5",
@@ -56,6 +59,7 @@ const fallbackProjects = [
     techStack: ["C", "eBPF", "XDP", "Linux Kernel", "Rust"],
     category: "Backend & Systems",
     github: "https://github.com/dhananjaysinghk",
+    demo: "/ebpf",
   },
   {
     id: "proj-6",
@@ -65,6 +69,7 @@ const fallbackProjects = [
     techStack: ["TypeScript", "OpenTelemetry", "ClickHouse", "Next.js"],
     category: "Cloud Infrastructure",
     github: "https://github.com/dhananjaysinghk",
+    demo: "/tracing",
   },
 ]
 

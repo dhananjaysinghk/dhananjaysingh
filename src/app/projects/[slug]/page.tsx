@@ -44,6 +44,7 @@ const fallbackProjects: ProjectDetail[] = [
     challenges: "Tuning Raft heartbeat intervals on lossy mesh networks without inducing cluster-wide election loops during packet loss spikes.",
     lessons: "Decoupling the transaction write-ahead-log (WAL) routing pipelines from primary network routing threads is vital to preventing scheduling head-of-line blocking.",
     github: "https://github.com/dhananjaysinghk",
+    demo: "/raft",
     roadmap: [
       "Support multi-region cluster federation",
       "Build custom WebAssembly sandbox container runtime",
@@ -64,6 +65,7 @@ const fallbackProjects: ProjectDetail[] = [
     challenges: "Handling thread contention on atomic balance updates without causing deadlocks on high-frequency account clearings.",
     lessons: "Lock-free ring buffers (disruptor pattern) offer orders of magnitude higher throughput than standard Mutex locking primitives in high-concurrency Rust environments.",
     github: "https://github.com/dhananjaysinghk",
+    demo: "/disruptor",
     roadmap: [
       "Implement zero-knowledge privacy audit proofs",
       "Create automatic currency-hedging routing nodes",
@@ -84,7 +86,7 @@ const fallbackProjects: ProjectDetail[] = [
     challenges: "Designing strict memory boundaries to prevent shared memory corruption across untrusted worker isolates.",
     lessons: "WebAssembly modules loaded in pre-initialized memory states cut activation latencies down to sub-10 microseconds.",
     github: "https://github.com/dhananjaysinghk",
-    demo: "https://github.com/dhananjaysinghk",
+    demo: "/network",
     roadmap: [
       "Integrate edge-native vector index caching",
       "Add global Geo-DNS route optimization routing",
@@ -105,6 +107,7 @@ const fallbackProjects: ProjectDetail[] = [
     challenges: "Synchronizing high-frequency rate-limit counters across distributed geographic regions without causing race conditions or locking bottlenecks.",
     lessons: "Atomic Lua scripts executed on Redis nodes eliminate distributed mutexes and ensure 100% atomic token decrement guarantees.",
     github: "https://github.com/dhananjaysinghk",
+    demo: "/ratelimit",
     roadmap: [
       "Add eBPF/XDP socket level rate limiting",
       "Implement dynamic AI anomaly traffic scoring",
@@ -125,6 +128,7 @@ const fallbackProjects: ProjectDetail[] = [
     challenges: "Satisfying the strict Linux in-kernel verifier constraints on bounded loops and stack allocation boundaries.",
     lessons: "Dropping malicious traffic at XDP_DROP before kernel SKB allocation saves over 90% of CPU cycles during volumetric DDoS events.",
     github: "https://github.com/dhananjaysinghk",
+    demo: "/ebpf",
     roadmap: [
       "Integrate TC (Traffic Control) egress rate shaping",
       "Add automated BGP flowspec router signaling",
@@ -145,6 +149,7 @@ const fallbackProjects: ProjectDetail[] = [
     challenges: "Preventing tracing overhead from degrading primary application request latency during peak traffic spikes.",
     lessons: "Probabilistic adaptive trace sampling combined with columnar storage allows monitoring 100% of errors while only recording 1% of normal requests.",
     github: "https://github.com/dhananjaysinghk",
+    demo: "/tracing",
     roadmap: [
       "Add automatic root-cause bottleneck anomaly detection",
       "Implement distributed deadlock visualization",
