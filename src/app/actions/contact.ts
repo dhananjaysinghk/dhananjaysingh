@@ -29,13 +29,12 @@ export async function submitContactForm(data: ContactInput) {
       },
     })
 
-    // 3. Dispatch email using Resend API
+    // 3. Dispatch email using Resend API if configured
     const resendApiKey = process.env.RESEND_API_KEY
     if (!resendApiKey) {
-      console.warn("RESEND_API_KEY is not defined in environment variables; email notification skipped.")
+      console.warn("RESEND_API_KEY is not defined in environment variables; email notification skipped but message recorded in DB.")
       return {
-        success: false,
-        error: "Message saved to database, but email failed to send: RESEND_API_KEY is missing in your .env file.",
+        success: true,
       }
     }
 
@@ -55,11 +54,7 @@ export async function submitContactForm(data: ContactInput) {
     })
 
     if (resendError) {
-      console.error("Resend API error dispatching email:", resendError)
-      return {
-        success: false,
-        error: `Message saved to database, but email failed: ${resendError.message}`,
-      }
+      console.error("Resend API error dispatching email notification:", resendError)
     }
 
     return { success: true }
