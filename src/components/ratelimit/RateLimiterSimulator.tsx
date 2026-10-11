@@ -31,32 +31,24 @@ export function RateLimiterSimulator() {
 
   const handleSendRequests = (count: number) => {
     soundFx.playClick()
-    let accepted = 0
-    let dropped = 0
+    const currentTokens = tokens
+    const accepted = Math.min(count, currentTokens)
+    const dropped = Math.max(0, count - currentTokens)
+    const newTokens = currentTokens - accepted
 
-    setTokens((prevTokens) => {
-      if (prevTokens >= count) {
-        accepted = count
-        return prevTokens - count
-      } else {
-        accepted = prevTokens
-        dropped = count - prevTokens
-        return 0
-      }
-    })
-
+    setTokens(newTokens)
     setAcceptedCount((p) => p + accepted)
     setDroppedCount((p) => p + dropped)
 
     if (dropped > 0) {
       soundFx.playToggle()
       setLogs((prev) => [
-        `🚨 HTTP 429: ${dropped} request(s) rate-limited (insufficient tokens). Accepted: ${accepted}`,
+        `🚨 HTTP 429: ${dropped} request(s) rate-limited (insufficient tokens). Accepted: ${accepted}. Remaining: ${newTokens}`,
         ...prev.slice(0, 4),
       ])
     } else {
       setLogs((prev) => [
-        `✅ HTTP 200: ${accepted} request(s) processed. Tokens remaining: ${Math.max(0, tokens - count)}`,
+        `✅ HTTP 200: ${accepted} request(s) processed. Tokens remaining: ${newTokens}`,
         ...prev.slice(0, 4),
       ])
     }

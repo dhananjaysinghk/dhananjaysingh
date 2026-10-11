@@ -19,15 +19,19 @@ export async function submitContactForm(data: ContactInput) {
     // 1. Validate inputs server-side
     const validated = contactSchema.parse(data)
 
-    // 2. Save record to PostgreSQL database via Prisma
-    const messageRecord = await db.contactMessage.create({
-      data: {
-        name: validated.name,
-        email: validated.email,
-        subject: validated.subject,
-        message: validated.message,
-      },
-    })
+    // 2. Save record to PostgreSQL database via Prisma (with resilient fallback)
+    try {
+      await db.contactMessage.create({
+        data: {
+          name: validated.name,
+          email: validated.email,
+          subject: validated.subject,
+          message: validated.message,
+        },
+      })
+    } catch (dbError) {
+      console.warn("Database storage for contact message skipped or unavailable:", dbError)
+    }
 
     // 3. Dispatch email using Resend API if configured
     const resendApiKey = process.env.RESEND_API_KEY

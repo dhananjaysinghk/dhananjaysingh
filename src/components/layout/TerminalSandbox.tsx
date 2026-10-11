@@ -57,7 +57,9 @@ export function TerminalSandbox() {
             <div><span className="text-emerald-400">help</span> - List system commands</div>
             <div><span className="text-emerald-400">about</span> - Summary profile schema</div>
             <div><span className="text-emerald-400">projects</span> - Showcase code structures</div>
+            <div><span className="text-emerald-400">labs</span> - Interactive systems simulators</div>
             <div><span className="text-emerald-400">skills</span> - Neofetch-style technology stats</div>
+            <div><span className="text-emerald-400">contact</span> - Direct contact information</div>
             <div><span className="text-emerald-400">clear</span> - Flush terminal outputs</div>
             <div><span className="text-emerald-400">close</span> - Deactivate terminal drawer</div>
           </div>
@@ -69,15 +71,15 @@ export function TerminalSandbox() {
           <pre className="text-indigo-300 font-mono text-xs whitespace-pre-wrap leading-relaxed">
 {`{
   "name": "Dhananjay Singh",
-  "role": "Software Engineer & Student",
-  "location": "Mathura, India",
+  "role": "Software Engineer & Computer Science Student",
+  "location": "Mathura, Uttar Pradesh, India",
   "education": {
     "degree": "B.Tech Computer Science & Engineering",
     "institution": "GLA University",
     "graduation": "Expected May 2027"
   },
-  "focus": ["Backend Infrastructures", "Distributed Consensus Routing"],
-  "status": "Seeking summer software internship roles"
+  "focus": ["Distributed Systems", "Low-Latency Backend", "Cloud Infrastructure"],
+  "status": "Available for Software Engineering Roles"
 }`}
           </pre>
         )
@@ -85,10 +87,40 @@ export function TerminalSandbox() {
 
       case "projects":
         output = (
-          <div className="flex flex-col gap-2 font-mono text-zinc-300">
-            <p>• <span className="text-indigo-400 font-bold">Nova Orchestrator</span> (Go, gRPC) - Sub-10ms cloud job scheduler</p>
-            <p>• <span className="text-indigo-400 font-bold">Aura Ledger</span> (Rust, PostgreSQL) - Distributed transactional balance log</p>
-            <p>• <span className="text-indigo-400 font-bold">Vortex CDN</span> (Rust, Wasmtime) - Pre-initialized memory isolate edge cache</p>
+          <div className="flex flex-col gap-1.5 font-mono text-xs text-zinc-300">
+            <p>• <span className="text-indigo-400 font-bold">Nova Orchestrator</span> (Go, Raft, gRPC) - Sub-10ms cloud container scheduler</p>
+            <p>• <span className="text-indigo-400 font-bold">Aura Ledger</span> (Rust, Tokio, Redis) - Microsecond transactional balance log</p>
+            <p>• <span className="text-indigo-400 font-bold">Vortex CDN</span> (Rust, Wasm, Next.js) - WebAssembly edge server cache</p>
+            <p>• <span className="text-indigo-400 font-bold">Apex Rate Limiter</span> (Go, Redis) - Dual Token & Leaky Bucket traffic shaper</p>
+            <p>• <span className="text-indigo-400 font-bold">Hyperion eBPF Filter</span> (C, XDP, Rust) - Wire-speed 10Gbps Linux packet filter</p>
+            <p>• <span className="text-indigo-400 font-bold">Chronos Tracing Mesh</span> (TypeScript, ClickHouse) - W3C TraceContext collector</p>
+          </div>
+        )
+        break
+
+      case "labs":
+        output = (
+          <div className="flex flex-col gap-1.5 font-mono text-xs text-zinc-300">
+            <p className="text-emerald-400 font-bold">Interactive Systems Engineering Simulators (/labs):</p>
+            <p>• <span className="text-cyan-400">/raft</span> - 5-Node Raft Consensus, Quorum & Split-Brain Healing</p>
+            <p>• <span className="text-cyan-400">/allocator</span> - Binary Buddy Splitting & Slab Object Caches</p>
+            <p>• <span className="text-cyan-400">/zerocopy</span> - Linux Zero-Copy DMA & io_uring Ring Queues</p>
+            <p>• <span className="text-cyan-400">/disruptor</span> - LMAX Lock-Free Ring Buffer & Cache Padding</p>
+            <p>• <span className="text-cyan-400">/bloom</span> - Probabilistic Bloom & Counting Filter Bitmaps</p>
+            <p>• <span className="text-cyan-400">/saga</span> - Distributed Transactions: Two-Phase Commit & Saga</p>
+            <p>• <span className="text-cyan-400">/mmu</span> - Virtual Memory 4-Level Page Table Translation</p>
+            <p>• <span className="text-cyan-400">/ebpf</span> - In-Kernel eBPF Packet Filter & XDP Sandbox</p>
+          </div>
+        )
+        break
+
+      case "contact":
+        output = (
+          <div className="flex flex-col gap-1 font-mono text-xs text-zinc-300">
+            <p>• <span className="text-emerald-400">Email</span>: dhananjay6903@gmail.com</p>
+            <p>• <span className="text-emerald-400">GitHub</span>: https://github.com/dhananjaysinghk</p>
+            <p>• <span className="text-emerald-400">LinkedIn</span>: https://linkedin.com/in/dhananjaysinghk</p>
+            <p>• <span className="text-emerald-400">Twitter/X</span>: https://x.com/dhananjay_real</p>
           </div>
         )
         break
@@ -112,8 +144,9 @@ export function TerminalSandbox() {
               <p><span className="text-emerald-400">Host</span>: GlaUniversity-BTechCS</p>
               <p><span className="text-emerald-400">Kernel</span>: Go-Raft-Client-16</p>
               <p><span className="text-emerald-400">Uptime</span>: 342,112 compiles</p>
-              <p><span className="text-emerald-400">Shell</span>: pwsh / Honodb</p>
-              <p><span className="text-emerald-400">Stack</span>: Go, Rust, TypeScript, SQL, Docker</p>
+              <p><span className="text-emerald-400">Shell</span>: pwsh / SystemsTerminal</p>
+              <p><span className="text-emerald-400">Languages</span>: Go, Rust, TypeScript, C++, Python, SQL</p>
+              <p><span className="text-emerald-400">Stack</span>: Docker, Kubernetes, PostgreSQL, Redis, Linux</p>
             </div>
           </div>
         )
