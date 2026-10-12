@@ -8,10 +8,28 @@ import { ScrollReveal } from "@/components/animation/motion-wrapper"
 import { FileText, Download, Briefcase, GraduationCap, Trophy, Globe, Mail, Phone, MapPin } from "lucide-react"
 
 const skills = {
-  languages: ["Go", "TypeScript", "Rust", "Java", "Python", "SQL", "C++"],
-  frameworks: ["React", "Next.js (App Router)", "Node.js", "Express", "Hono", "Tailwind CSS"],
-  infrastructure: ["Docker", "Kubernetes", "PostgreSQL", "Redis", "Prisma ORM", "AWS", "Git"],
+  languages: ["Go", "Rust", "TypeScript", "C++", "Python", "SQL", "Java"],
+  frameworks: ["Tokio (Async)", "gRPC / Protobuf", "Next.js", "Node.js", "Hono", "React"],
+  infrastructure: ["Docker", "Kubernetes", "PostgreSQL", "Redis", "Linux eBPF", "Prisma ORM", "AWS"],
 }
+
+const projects = [
+  {
+    name: "Nova Orchestrator",
+    tech: "Go, Raft Consensus, gRPC, Protobuf",
+    description: "Distributed container scheduling engine managing 50k+ cluster heartbeats with leader election and sub-10ms task placement.",
+  },
+  {
+    name: "Aura Ledger",
+    tech: "Rust, Tokio, Redis, PostgreSQL",
+    description: "Microsecond-latency financial balance ledger utilizing lock-free SPSC ring buffers and transactional balance tracking.",
+  },
+  {
+    name: "Apex Rate Limiter",
+    tech: "Go, Redis, Sliding Window",
+    description: "Distributed rate-limiting gateway shaper enforcing Token Bucket algorithms with sub-millisecond synchronized state.",
+  },
+]
 
 const experience = [
   {
@@ -199,6 +217,24 @@ export default function ResumePage() {
                           <li key={bIdx}>{b}</li>
                         ))}
                       </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Projects */}
+              <div className="flex flex-col gap-4">
+                <h3 className="font-heading text-xs font-bold uppercase tracking-wider text-muted-foreground print:text-zinc-800 border-b border-border/25 pb-2">
+                  Featured Systems Projects
+                </h3>
+                <div className="flex flex-col gap-4">
+                  {projects.map((proj, idx) => (
+                    <div key={idx} className="flex flex-col gap-1 text-xs">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                        <span className="font-bold text-foreground print:text-black text-sm">{proj.name}</span>
+                        <span className="font-mono text-[10px] text-muted-foreground print:text-zinc-600">{proj.tech}</span>
+                      </div>
+                      <p className="text-muted-foreground print:text-zinc-600 leading-relaxed font-sans">{proj.description}</p>
                     </div>
                   ))}
                 </div>
