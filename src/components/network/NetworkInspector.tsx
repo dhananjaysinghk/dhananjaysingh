@@ -68,6 +68,11 @@ export function NetworkInspector() {
               onClick={() => {
                 soundFx.playClick()
                 setSelectedNode(node)
+                setTraceLogs([
+                  `BGP Anycast routing switched to ${node.city} (${node.code})`,
+                  `Measured RTT: ~${node.latency}ms over ${node.httpVersion}`,
+                  `TLS Session: 0-RTT resumption active (${node.tls})`,
+                ])
               }}
               className={`cursor-pointer rounded-2xl border p-5 transition-all flex flex-col gap-3 ${
                 isSelected

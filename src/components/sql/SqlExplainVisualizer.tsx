@@ -88,6 +88,41 @@ const scenarios: QueryScenario[] = [
       rowsScanned: 150000,
     },
   },
+  {
+    id: "composite-sort",
+    title: "Multi-Tenant Orders Sort & Limit (5M Rows)",
+    query: "SELECT order_id, total_amount, created_at FROM orders WHERE tenant_id = 'tenant_902' AND status = 'COMPLETED' ORDER BY created_at DESC LIMIT 20;",
+    unoptimized: {
+      plan: [
+        "-> Limit (cost=142650.00..142650.05 rows=20 width=36)",
+        "   -> Sort (cost=142650.00..142690.00 rows=16000 width=36)",
+        "      Sort Key: created_at DESC",
+        "      Sort Method: external merge Disk: 1840kB (Spilled)",
+        "      -> Bitmap Heap Scan on orders (cost=420.00..141200.00 rows=16000)",
+        "         Recheck Cond: (tenant_id = 'tenant_902')",
+        "         Filter: (status = 'COMPLETED')",
+        "         Rows Removed by Filter: 84000",
+      ],
+      cost: 142650,
+      timeMs: 194.2,
+      scanType: "Disk Spill External Sort",
+      rowsScanned: 100000,
+    },
+    optimized: {
+      index: "CREATE INDEX idx_orders_tenant_status_created ON orders(tenant_id, status, created_at DESC) INCLUDE (total_amount);",
+      plan: [
+        "-> Limit (cost=0.43..2.85 rows=20 width=36)",
+        "   -> Index Only Scan using idx_orders_tenant_status_created on orders (cost=0.43..2240.00 rows=16000 width=36)",
+        "      Index Cond: ((tenant_id = 'tenant_902') AND (status = 'COMPLETED'))",
+        "      Buffers: shared hit=4",
+        "      Heap Fetches: 0 (Direct B-Tree reverse walk, zero sort overhead)",
+      ],
+      cost: 2.85,
+      timeMs: 0.06,
+      scanType: "Direct Index B-Tree Walk",
+      rowsScanned: 20,
+    },
+  },
 ]
 
 export function SqlExplainVisualizer() {
