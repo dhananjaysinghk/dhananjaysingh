@@ -205,24 +205,42 @@ export function KafkaPartitionVisualizer() {
     setRebalanceCount((r) => r + 1)
   }
 
-  // 4. Crash Consumer C2 (Failover)
+  // Helper to reassign partitions across active consumers
+  const computePartitionAssignments = (activeList: Consumer[]) => {
+    const numPartitions = 3
+    const map = new Map<string, number[]>()
+    activeList.forEach((c) => map.set(c.id, []))
+
+    for (let p = 0; p < numPartitions; p++) {
+      if (activeList.length > 0) {
+        const assignedIdx = p % activeList.length
+        map.get(activeList[assignedIdx].id)?.push(p)
+      }
+    }
+    return map
+  }
+
+  // 4. Crash Consumer (Failover)
   const handleCrashConsumer = (consumerId: string) => {
     soundFx.playToggle()
-    const crashedConsumer = consumers.find((c) => c.id === consumerId)
-    if (!crashedConsumer) return
-
-    const orphanedPartitions = crashedConsumer.assignedPartitions
+    const target = consumers.find((c) => c.id === consumerId)
+    if (!target || target.status === "crashed") return
 
     const remainingActive = consumers.filter((c) => c.id !== consumerId && c.status === "active")
-    if (remainingActive.length === 0) return
+    if (remainingActive.length === 0) {
+      appendLog("⚠️ All consumers in group are now offline! Partitions unassigned.")
+      setConsumers(consumers.map((c) => ({ ...c, status: "crashed", assignedPartitions: [] })))
+      setRebalanceCount((r) => r + 1)
+      return
+    }
 
-    // Reassign orphaned partitions to active consumers
+    const assignments = computePartitionAssignments(remainingActive)
     const updatedConsumers = consumers.map((c) => {
       if (c.id === consumerId) {
         return { ...c, status: "crashed" as const, assignedPartitions: [] }
       }
-      if (c.id === remainingActive[0].id) {
-        return { ...c, assignedPartitions: Array.from(new Set([...c.assignedPartitions, ...orphanedPartitions])) }
+      if (c.status === "active") {
+        return { ...c, assignedPartitions: assignments.get(c.id) || [] }
       }
       return c
     })
@@ -230,7 +248,30 @@ export function KafkaPartitionVisualizer() {
     setConsumers(updatedConsumers)
     setRebalanceCount((r) => r + 1)
     appendLog(
-      `🚨 HEARTBEAT TIMEOUT: ${crashedConsumer.name} crashed! Failover triggered: Partition #${orphanedPartitions.join(", ")} reassigned to ${remainingActive[0].name}.`
+      `🚨 HEARTBEAT TIMEOUT: ${target.name} crashed! Failover triggered: Active members rebalanced partitions.`
+    )
+  }
+
+  // 5. Revive Consumer
+  const handleReviveConsumer = (consumerId: string) => {
+    soundFx.playChime()
+    const target = consumers.find((c) => c.id === consumerId)
+    if (!target || target.status === "active") return
+
+    const activeList = [...consumers.filter((c) => c.status === "active" && c.id !== consumerId), { ...target, status: "active" as const }]
+    const assignments = computePartitionAssignments(activeList)
+
+    const updatedConsumers = consumers.map((c) => {
+      if (c.id === consumerId || c.status === "active") {
+        return { ...c, status: "active" as const, assignedPartitions: assignments.get(c.id) || [] }
+      }
+      return c
+    })
+
+    setConsumers(updatedConsumers)
+    setRebalanceCount((r) => r + 1)
+    appendLog(
+      `✅ JOIN_GROUP: ${target.name} recovered and joined 'order-workers'. Partition assignment synchronized successfully.`
     )
   }
 
@@ -541,7 +582,15 @@ export function KafkaPartitionVisualizer() {
                             Simulate Crash
                           </Button>
                         ) : (
-                          <span className="text-[9px] text-red-400 font-bold">Failed / Evicted</span>
+                          <Button
+                            size="xs"
+                            variant="outline"
+                            onClick={() => handleReviveConsumer(c.id)}
+                            className="text-[9px] font-mono h-6 gap-1 border-emerald-500/40 text-emerald-400 hover:bg-emerald-950/20"
+                          >
+                            <RefreshCw className="h-3 w-3" />
+                            Revive Worker
+                          </Button>
                         )}
                       </div>
                     </motion.div>
