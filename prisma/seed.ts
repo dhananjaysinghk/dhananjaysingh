@@ -128,6 +128,69 @@ async function main() {
     }
   })
 
+  await prisma.project.create({
+    data: {
+      title: "Apex Rate Limiter",
+      slug: "apex-ratelimiter",
+      description: "Distributed Token Bucket & Leaky Bucket traffic shaper with sub-millisecond synchronized Redis state, enforcing multi-tier backpressure on inbound API gateway bursts.",
+      problem: "Sudden traffic spikes overloaded downstream databases and caused cascading gateway timeouts across microservices.",
+      solution: "Engineered a low-latency distributed rate limiter in Go, utilizing Lua scripts executed atomically inside Redis clusters and sliding window counters.",
+      architecture: "Reverse proxy ingress gateway intercepting HTTP requests, computing token replenishment, and emitting HTTP 429 Too Many Requests responses when burst thresholds are breached.",
+      techStack: ["Go", "Redis", "Lua", "Docker", "Prometheus"],
+      features: ["Token Bucket algorithm", "Atomic Redis Lua script execution", "Sub-millisecond latency check", "Per-client sliding window tracking"],
+      challenges: "Preventing race conditions and split-brain token allowances across distributed Redis read replicas.",
+      lessons: "Atomic server-side Lua scripts eliminate round-trip overhead and guarantee thread-safe token decrements.",
+      github: "https://github.com/dhananjaysinghk",
+      demo: "/ratelimit",
+      roadmap: ["Add distributed Leaky Bucket shaping", "Implement dynamic quota adjustments based on CPU load"],
+      category: "Backend & Systems",
+      featured: true,
+      images: []
+    }
+  })
+
+  await prisma.project.create({
+    data: {
+      title: "Hyperion eBPF Filter",
+      slug: "hyperion-ebpf",
+      description: "Programmable kernel packet filter and volumetric DDoS mitigation pipeline executing verified XDP bytecode directly inside the Linux network driver.",
+      problem: "Traditional iptables and userspace firewall proxies incurred excessive CPU context-switching overhead, degrading throughput at 10Gbps+ packet ingestion rates.",
+      solution: "Built an eBPF program hooked into the eXpress Data Path (XDP) driver layer, inspecting Ethernet and IP headers before sk_buff socket allocation.",
+      architecture: "C/eBPF kernel bytecode attached to NIC network drivers communicating via BPF_MAP_TYPE_HASH maps with a Rust userspace daemon.",
+      techStack: ["C", "eBPF", "XDP", "Linux Kernel", "Rust"],
+      features: ["Zero-copy NIC driver packet inspection", "Sub-microsecond XDP_DROP mitigation", "Lockless ring buffer event streaming"],
+      challenges: "Passing the Linux kernel in-kernel eBPF verifier while performing complex header boundary and packet length calculations.",
+      lessons: "Validating pointer arithmetic bounds against data_end is mandatory before dereferencing raw packet buffers in XDP programs.",
+      github: "https://github.com/dhananjaysinghk",
+      demo: "/ebpf",
+      roadmap: ["Implement stateful SYN-cookie challenge generation", "Integrate automated BGP blackholing"],
+      category: "Backend & Systems",
+      featured: true,
+      images: []
+    }
+  })
+
+  await prisma.project.create({
+    data: {
+      title: "Chronos Tracing Mesh",
+      slug: "chronos-tracing",
+      description: "High-throughput distributed tracing collector and critical-path latency visualizer implementing W3C TraceContext standards and OpenTelemetry instrumentation.",
+      problem: "Debugging microsecond latency anomalies across microservices was difficult due to fragmented application logs lacking correlated parent-child request contexts.",
+      solution: "Constructed an OpenTelemetry-compatible tracing collector that ingests span telemetry into ClickHouse and renders live Gantt waterfall graphs.",
+      architecture: "gRPC OpenTelemetry collector pipeline streaming spans into ClickHouse columnar storage with a Next.js visualization front-end.",
+      techStack: ["TypeScript", "OpenTelemetry", "ClickHouse", "Next.js", "gRPC"],
+      features: ["W3C TraceContext header propagation", "Critical path bottleneck analysis", "Interactive Gantt span timeline waterfall"],
+      challenges: "Aggregating millions of concurrent span events without backpressuring the tracing collector ingest pipelines.",
+      lessons: "Batching spans into memory buffers before performing columnar database flushes increases ingestion throughput by 10x.",
+      github: "https://github.com/dhananjaysinghk",
+      demo: "/tracing",
+      roadmap: ["Add automated anomaly detection on span durations", "Support distributed profiling integration"],
+      category: "Cloud Infrastructure",
+      featured: true,
+      images: []
+    }
+  })
+
   // 4. Seed Blog Posts
   console.log("Seeding Blog Posts...")
   await prisma.blogPost.create({
@@ -175,6 +238,51 @@ async function main() {
     }
   })
 
+  await prisma.blogPost.create({
+    data: {
+      title: "Zero-Copy Linux I/O: sendfile(), splice(), and io_uring",
+      slug: "zero-copy-linux-io-uring",
+      excerpt: "Eliminating CPU buffer copying, minimizing kernel context switches, and utilizing DMA scatter-gather rings for 100Gbps network throughput.",
+      category: "Kernel & OS",
+      readingTime: "10 min read",
+      tags: ["linux", "kernel", "zero-copy", "io-uring"],
+      featured: true,
+      published: true,
+      coverImage: "",
+      content: `# Zero-Copy Linux I/O: sendfile(), splice(), and io_uring\n\nWhen serving static assets, streaming video chunks, or routing high-volume event streams, the conventional \`read()\` and \`write()\` system call workflow consumes massive CPU cycles solely copying bytes between kernel and userspace memory buffers.\n\n## The Traditional 4-Copy Penalty\n\nIn a traditional \`read()\` + \`write()\` pipeline:\n1. **DMA Copy**: Disk controller copies file data into Kernel PageCache.\n2. **CPU Copy**: Kernel copies data into application Userspace Buffer.\n3. **CPU Copy**: Application writes data back into Kernel Socket Buffer.\n4. **DMA Copy**: Socket buffer data is transferred to the Network Interface Card (NIC).\n\nThis incurs **4 Context Switches** and **2 CPU Buffer Copies**.\n\n## The Zero-Copy Solution: sendfile() with Gather DMA\n\nWith NIC hardware supporting Scatter-Gather DMA, no CPU data copying occurs at all. Only file descriptors and pointer offsets are copied into the socket queue, dropping CPU utilization to near zero.\n\n## Next-Generation Asynchronous I/O: io_uring\n\nJens Axboe's io_uring interface eliminates syscall overhead entirely by establishing two lockless ring buffers shared between userspace and the Linux kernel: Submission Queue (SQ) and Completion Queue (CQ).`
+    }
+  })
+
+  await prisma.blogPost.create({
+    data: {
+      title: "Preventing Distributed Deadlocks in 2PC & Saga Workflows",
+      slug: "distributed-deadlocks-2pc-saga",
+      excerpt: "Analyzing distributed transaction isolation anomalies, write-ahead log coordination, and building backward compensating rollback workflows.",
+      category: "Distributed Systems",
+      readingTime: "11 min read",
+      tags: ["consensus", "2pc", "saga", "transactions"],
+      featured: true,
+      published: true,
+      coverImage: "",
+      content: `# Preventing Distributed Deadlocks in 2PC & Saga Workflows\n\nCoordinating transactions across distributed microservices requires balancing strict ACID guarantees against availability and latency.\n\n## Two-Phase Commit (2PC): The Blocking Bottleneck\n\nTwo-Phase Commit provides strict serializability across multiple database nodes with Prepare and Commit phases. However, 2PC is synchronous and blocking.\n\n## Saga Orchestration: Eventual Consistency & Compensations\n\nThe Saga pattern replaces synchronous distributed locks with a sequence of local transactions with backward compensating rollbacks if any step fails.`
+    }
+  })
+
+  await prisma.blogPost.create({
+    data: {
+      title: "Mechanical Sympathy: Cache Line False Sharing & Ring Buffers",
+      slug: "cache-line-false-sharing-disruptor",
+      excerpt: "Understanding 64-byte L1 cache lines, MESI cache coherence protocols, and atomic CAS sequence barriers in high-frequency messaging.",
+      category: "Systems Engineering",
+      readingTime: "9 min read",
+      tags: ["concurrency", "lmax-disruptor", "hardware"],
+      featured: false,
+      published: true,
+      coverImage: "",
+      content: `# Mechanical Sympathy: Cache Line False Sharing & Ring Buffers\n\nMechanical sympathy means designing software to work in harmony with the underlying hardware.\n\n## The 64-Byte Cache Line & False Sharing\n\nWhen two independent variables reside in the same 64-byte cache line and are modified by different CPU cores, hardware MESI cache coherence invalidates the line repeatedly, degrading throughput.\n\n## Cache Line Padding in Practice\n\nPadding atomic sequence counters ensures they occupy distinct 64-byte boundaries, eliminating false sharing completely.`
+    }
+  })
+
   // 5. Seed Notes
   console.log("Seeding Knowledge Notes...")
   await prisma.note.create({
@@ -184,7 +292,7 @@ async function main() {
       category: "System Design",
       tags: ["consistent-hashing", "scaling", "caching"],
       published: true,
-      content: `# Consistent Hashing Rings\n\nConsistent hashing is a crucial algorithm for scaling distributed database caching clusters. It solves the key remapping problem when servers are added or removed...\n\n## The Re-mapping Problem\n\nWith traditional modulo hashing (\`hash(key) % N\`):\n- When \`N\` (number of servers) changes, **almost all keys** map to new nodes.\n- This causes cache stampedes and database overloads.\n\n## The Ring Solution\n\n1. **Hash Range**: The hash space is mapped to a circular ring (e.g. 0 to 2^32 - 1).\n2. **Node Placement**: Nodes are hashed and placed on points on the ring.\n3. **Key Mapping**: Keys are hashed onto the ring, then mapped to the first node encountered moving clockwise.\n\n:::info\nTo balance key distribution, we introduce **Virtual Nodes (vnodes)**. Each physical node is hashed multiple times (e.g. 100-200 times) and mapped to multiple ring points.\n:::\n\n## Go Implementation\n\n\`\`\`go\npackage hashing\n\nimport (\n\t"hash/fnv"\n\t"sort"\n\t"strconv"\n)\n\ntype HashRing struct {\n\tvnodes  int\n\tring    []uint32\n\tnodeMap map[uint32]string\n}\n\`\`\``
+      content: `# Consistent Hashing Rings\n\nConsistent hashing is a crucial algorithm for scaling distributed database caching clusters. It solves the key remapping problem when servers are added or removed using virtual nodes on a circular hash ring.`
     }
   })
 
@@ -195,7 +303,51 @@ async function main() {
       category: "DSA",
       tags: ["queues", "concurrency", "lock-free"],
       published: true,
-      content: `# Lock-free Ring Buffers\n\nA high-throughput queue utilizing atomic sequence pointers instead of locks (Mutexes), matching LMAX Disruptor performance.\n\n## Design Principles\n\n- **Fixed Size**: Array size must be a power of 2 to allow fast bitwise modulo: \`index = sequence & (size - 1)\`.\n- **Sequence Counters**: Atomic write and read cursors that increment infinitely.\n\n:::warning\nBe careful of CPU cache line false sharing. Pad the atomic sequences to prevent concurrent cores from locking the same L1/L2 cache line.\n:::\n\n## Rust Concurrent Ring Buffer Outline\n\n\`\`\`rust\nuse std::sync::atomic::{AtomicUsize, Ordering};\n\npub struct RingBuffer<T> {\n    buffer: Vec<Option<T>>,\n    size: usize,\n    write_cursor: AtomicUsize,\n    read_cursor: AtomicUsize,\n}\n\`\`\``
+      content: `# Lock-free Ring Buffers\n\nA high-throughput queue utilizing atomic sequence pointers instead of locks (Mutexes), matching LMAX Disruptor performance.`
+    }
+  })
+
+  await prisma.note.create({
+    data: {
+      title: "Backend: Goroutine Scheduling & Thread-Pinning",
+      slug: "goroutine-scheduling-thread-pinning",
+      category: "Backend",
+      tags: ["go", "concurrency", "scheduler"],
+      published: true,
+      content: `# Goroutine Scheduling & Thread-Pinning\n\nDeep dive into the Go runtime M:N scheduler (GOMAXPROCS, P, M, G states), work-stealing algorithms, and runtime.LockOSThread() for hardware cache locality.`
+    }
+  })
+
+  await prisma.note.create({
+    data: {
+      title: "DevOps: Multi-region DNS Failover Architecture",
+      slug: "multi-region-dns-failover",
+      category: "DevOps",
+      tags: ["dns", "route53", "failover"],
+      published: true,
+      content: `# Multi-region DNS Failover Architecture\n\nConfiguring Anycast BGP routing, Route53 health checks, TTL caching trade-offs, and multi-region active-active disaster recovery setups.`
+    }
+  })
+
+  await prisma.note.create({
+    data: {
+      title: "Storage: LSM-Tree Leveled Compaction Mechanics",
+      slug: "lsm-tree-compaction-mechanics",
+      category: "Storage",
+      tags: ["lsm-tree", "rocksdb", "compaction", "sstable"],
+      published: true,
+      content: `# LSM-Tree Leveled Compaction Mechanics\n\nHow Log-Structured Merge-Trees write to MemTable and Write-Ahead Logs before flushing immutable SSTables to disk across leveled compaction tiers.`
+    }
+  })
+
+  await prisma.note.create({
+    data: {
+      title: "Networking: TCP BBR Congestion Control & Math",
+      slug: "bbr-congestion-control-math",
+      category: "Networking",
+      tags: ["tcp", "bbr", "congestion-control", "networking"],
+      published: true,
+      content: `# TCP BBR Congestion Control & Math\n\nGoogle's Bottleneck Bandwidth and RTT (BBR) congestion control algorithm vs loss-based Cubic, preventing bufferbloat over lossy WAN links.`
     }
   })
 
@@ -204,18 +356,46 @@ async function main() {
   await prisma.certificate.createMany({
     data: [
       {
-        title: "Distributed Systems Architecture Certificate",
-        issuer: "Cloud Computing Alliance",
+        title: "Distributed Systems Architecture Specialist",
+        issuer: "Cloud & Systems Computing Institute",
         issueDate: new Date("2025-12-01"),
-        credentialId: "CCA-DSAC-928",
-        credentialUrl: "https://example.com"
+        credentialId: "CSCI-DSAS-9281",
+        credentialUrl: "https://github.com/dhananjaysinghk"
       },
       {
-        title: "Advanced Go Programming Certificate",
-        issuer: "Go Developers Guild",
+        title: "AWS Certified Solutions Architect – Associate",
+        issuer: "Amazon Web Services (AWS)",
+        issueDate: new Date("2025-09-01"),
+        credentialId: "AWS-SAA-88402",
+        credentialUrl: "https://github.com/dhananjaysinghk"
+      },
+      {
+        title: "Advanced Go Concurrency & Microservices",
+        issuer: "Go Software Engineering Guild",
+        issueDate: new Date("2025-05-01"),
+        credentialId: "GSEG-CONCUR-519",
+        credentialUrl: "https://github.com/dhananjaysinghk"
+      },
+      {
+        title: "Linux Foundation Systems Engineering (LFCS)",
+        issuer: "The Linux Foundation",
+        issueDate: new Date("2025-01-01"),
+        credentialId: "LFCS-SYS-10492",
+        credentialUrl: "https://github.com/dhananjaysinghk"
+      },
+      {
+        title: "PostgreSQL High-Performance Indexing & Tuning",
+        issuer: "Database Professionals Consortium",
+        issueDate: new Date("2024-08-01"),
+        credentialId: "DPC-PG-PERF-338",
+        credentialUrl: "https://github.com/dhananjaysinghk"
+      },
+      {
+        title: "Rust Systems Programming & Memory Safety",
+        issuer: "Rust Systems Institute",
         issueDate: new Date("2024-03-01"),
-        credentialId: "GDG-ADVGO-412",
-        credentialUrl: "https://example.com"
+        credentialId: "RSI-MEMSAFE-772",
+        credentialUrl: "https://github.com/dhananjaysinghk"
       }
     ]
   })
