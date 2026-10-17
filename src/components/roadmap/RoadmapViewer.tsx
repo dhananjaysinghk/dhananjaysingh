@@ -94,6 +94,21 @@ const milestones: Milestone[] = [
     ],
     technologies: ["Go", "Kubernetes", "CRDs", "controller-runtime"],
   },
+  {
+    id: "m-6",
+    title: "Zero-Copy Linux Event Pipeline & io_uring Ring Queues",
+    quarter: "2027",
+    status: "Planned",
+    category: "Kernel & Networking",
+    description:
+      "Architecting zero-syscall network streaming daemons leveraging Linux io_uring SQ/CQ lockless ring buffers and Scatter-Gather DMA.",
+    deliverables: [
+      "IORING_SETUP_SQPOLL kernel polling worker loops",
+      "Zero-copy splice() and vmsplice() memory pipelines",
+      "Benchmarks comparing epoll() vs io_uring at 100k+ concurrent TCP streams",
+    ],
+    technologies: ["C", "Rust", "Linux io_uring", "TCP/IP", "DMA"],
+  },
 ]
 
 export function RoadmapViewer() {
