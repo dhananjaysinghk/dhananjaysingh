@@ -378,6 +378,12 @@ async function getBlogPostDetail(slug: string): Promise<BlogPostDetail | null> {
   }
 }
 
+export function generateStaticParams() {
+  return Object.keys(fallbackBlogDetails).map((slug) => ({
+    slug,
+  }))
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const post = await getBlogPostDetail(slug)

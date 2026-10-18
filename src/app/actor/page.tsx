@@ -2,7 +2,7 @@ import React from "react"
 import { Metadata } from "next"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
 import { ActorMeshVisualizer } from "@/components/actor/ActorMeshVisualizer"
-import { Users, Shield, Zap, Layers, Cpu, Sparkles } from "lucide-react"
+import { Users, Shield, Zap, Cpu } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Distributed Actor Model & Supervision Tree Simulator | Dhananjay Singh",
@@ -52,7 +52,7 @@ export default function ActorPage() {
             <span>&apos;Let It Crash&apos; Philosophy</span>
           </div>
           <p className="text-muted-foreground font-sans leading-relaxed">
-            Instead of defensive defensive programming, actors crash immediately upon unexpected panics. Dedicated supervisor nodes monitor health and automatically apply structured restart backoff policies.
+            Instead of defensive programming, actors crash immediately upon unexpected panics. Dedicated supervisor nodes monitor health and automatically apply structured restart backoff policies.
           </p>
         </div>
 

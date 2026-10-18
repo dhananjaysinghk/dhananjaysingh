@@ -338,6 +338,13 @@ async function getNoteDetail(slug: string): Promise<NoteDetail | null> {
   }
 }
 
+export function generateStaticParams() {
+  return Object.values(fallbackNoteDetails).map((note) => ({
+    category: note.category.toLowerCase().replace(/\s+/g, "-"),
+    slug: note.slug,
+  }))
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const note = await getNoteDetail(slug)

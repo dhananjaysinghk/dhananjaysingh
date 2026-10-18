@@ -193,6 +193,12 @@ async function getProjectDetail(slug: string): Promise<ProjectDetail | null> {
   }
 }
 
+export function generateStaticParams() {
+  return fallbackProjects.map((p) => ({
+    slug: p.slug,
+  }))
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const project = await getProjectDetail(slug)
