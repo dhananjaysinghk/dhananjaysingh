@@ -152,14 +152,14 @@ impl<T> RingBuffer<T> {
     }
 
     pub fn push(&mut self, item: T) -> Result<(), &'static str> {
-        let write = h.write_cursor.load(Ordering::Relaxed);
-        let read = h.read_cursor.load(Ordering::Acquire);
-        if write - read >= h.size {
+        let write = self.write_cursor.load(Ordering::Relaxed);
+        let read = self.read_cursor.load(Ordering::Acquire);
+        if write - read >= self.size {
             return Err("Queue is full");
         }
-        let index = write & (h.size - 1);
-        h.buffer[index] = Some(item);
-        h.write_cursor.store(write + 1, Ordering::Release);
+        let index = write & (self.size - 1);
+        self.buffer[index] = Some(item);
+        self.write_cursor.store(write + 1, Ordering::Release);
         Ok(())
     }
 }

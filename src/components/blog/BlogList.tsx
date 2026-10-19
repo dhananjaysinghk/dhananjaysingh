@@ -21,12 +21,19 @@ interface BlogListProps {
   initialPosts: BlogPost[]
 }
 
-const categories = ["All", "Systems Engineering", "Distributed Systems", "Frontend Architecture"]
-
 export function BlogList({ initialPosts }: BlogListProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
+
+  // Dynamically extract all unique categories from posts, keeping "All" at the front
+  const categories = useMemo(() => {
+    const cats = new Set<string>()
+    initialPosts.forEach((post) => {
+      if (post.category) cats.add(post.category)
+    })
+    return ["All", ...Array.from(cats)]
+  }, [initialPosts])
 
   // Get all unique tags across all posts
   const allTags = useMemo(() => {

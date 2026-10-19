@@ -309,12 +309,12 @@ async function main() {
 
   await prisma.note.create({
     data: {
-      title: "Backend: Goroutine Scheduling & Thread-Pinning",
-      slug: "goroutine-scheduling-thread-pinning",
-      category: "Backend",
-      tags: ["go", "concurrency", "scheduler"],
+      title: "Go: Advanced Goroutine Thread-Pinning Strategies",
+      slug: "go-goroutine-thread-pinning",
+      category: "Go",
+      tags: ["go", "concurrency", "scheduler", "runtime"],
       published: true,
-      content: `# Goroutine Scheduling & Thread-Pinning\n\nDeep dive into the Go runtime M:N scheduler (GOMAXPROCS, P, M, G states), work-stealing algorithms, and runtime.LockOSThread() for hardware cache locality.`
+      content: `# Goroutine Thread Pinning\n\nDeep dive into the Go runtime M:N scheduler (GOMAXPROCS, P, M, G states), work-stealing algorithms, and runtime.LockOSThread() for hardware cache locality.`
     }
   })
 

@@ -229,15 +229,29 @@ export function MerkleTreeVisualizer() {
               {/* Internal Node H_01 */}
               <motion.div
                 layout
-                className={`rounded-xl border p-3 flex flex-col items-center gap-1 grow transition-colors ${
+                className={`rounded-xl border p-3 flex flex-col items-center gap-1 grow transition-all ${
                   tamperedIndex === 0 || tamperedIndex === 1
                     ? "border-red-500/70 bg-red-950/20 text-red-300"
-                    : selectedProofLeaf === 2 || selectedProofLeaf === 3
+                    : selectedProofLeaf !== null && selectedProofLeaf < 2
+                    ? "border-emerald-500/70 bg-emerald-950/25 text-emerald-300"
+                    : selectedProofLeaf !== null && selectedProofLeaf >= 2
                     ? "border-indigo-500/70 bg-indigo-950/30 text-indigo-300"
                     : "border-border/40 bg-card/30 text-foreground"
                 }`}
               >
-                <span className="text-[10px] text-zinc-400 font-bold">Node H_01</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-bold">Node H_01</span>
+                  {selectedProofLeaf !== null && selectedProofLeaf >= 2 && (
+                    <Badge variant="outline" className="text-[8px] px-1 py-0 border-indigo-400/40 text-indigo-300">
+                      Sibling Branch
+                    </Badge>
+                  )}
+                  {selectedProofLeaf !== null && selectedProofLeaf < 2 && (
+                    <Badge variant="outline" className="text-[8px] px-1 py-0 border-emerald-400/40 text-emerald-300">
+                      Calculated Parent
+                    </Badge>
+                  )}
+                </div>
                 <span className="text-xs font-bold truncate max-w-40">{h01}</span>
                 <span className="text-[8px] text-zinc-500">SHA256(h0 + h1)</span>
               </motion.div>
@@ -245,15 +259,29 @@ export function MerkleTreeVisualizer() {
               {/* Internal Node H_23 */}
               <motion.div
                 layout
-                className={`rounded-xl border p-3 flex flex-col items-center gap-1 grow transition-colors ${
+                className={`rounded-xl border p-3 flex flex-col items-center gap-1 grow transition-all ${
                   tamperedIndex === 2 || tamperedIndex === 3
                     ? "border-red-500/70 bg-red-950/20 text-red-300"
-                    : selectedProofLeaf === 0 || selectedProofLeaf === 1
+                    : selectedProofLeaf !== null && selectedProofLeaf >= 2
+                    ? "border-emerald-500/70 bg-emerald-950/25 text-emerald-300"
+                    : selectedProofLeaf !== null && selectedProofLeaf < 2
                     ? "border-indigo-500/70 bg-indigo-950/30 text-indigo-300"
                     : "border-border/40 bg-card/30 text-foreground"
                 }`}
               >
-                <span className="text-[10px] text-zinc-400 font-bold">Node H_23</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-bold">Node H_23</span>
+                  {selectedProofLeaf !== null && selectedProofLeaf < 2 && (
+                    <Badge variant="outline" className="text-[8px] px-1 py-0 border-indigo-400/40 text-indigo-300">
+                      Sibling Branch
+                    </Badge>
+                  )}
+                  {selectedProofLeaf !== null && selectedProofLeaf >= 2 && (
+                    <Badge variant="outline" className="text-[8px] px-1 py-0 border-emerald-400/40 text-emerald-300">
+                      Calculated Parent
+                    </Badge>
+                  )}
+                </div>
                 <span className="text-xs font-bold truncate max-w-40">{h23}</span>
                 <span className="text-[8px] text-zinc-500">SHA256(h2 + h3)</span>
               </motion.div>
@@ -273,6 +301,9 @@ export function MerkleTreeVisualizer() {
                 const leafHash = idx === 0 ? h0 : idx === 1 ? h1 : idx === 2 ? h2 : h3
                 const isTampered = tamperedIndex === idx
                 const isSelectedProof = selectedProofLeaf === idx
+                const siblingIdx = selectedProofLeaf !== null ? (selectedProofLeaf % 2 === 0 ? selectedProofLeaf + 1 : selectedProofLeaf - 1) : null
+                const isSibling = siblingIdx === idx
+                const isPruned = selectedProofLeaf !== null && !isSelectedProof && !isSibling
 
                 return (
                   <motion.div
@@ -282,12 +313,33 @@ export function MerkleTreeVisualizer() {
                       isTampered
                         ? "border-red-500/80 bg-red-950/30 text-red-300 shadow-sm"
                         : isSelectedProof
-                        ? "border-emerald-500/80 bg-emerald-950/25 shadow-sm"
+                        ? "border-emerald-500/80 bg-emerald-950/25 shadow-md shadow-emerald-500/10"
+                        : isSibling
+                        ? "border-indigo-500/80 bg-indigo-950/25 shadow-sm"
+                        : isPruned
+                        ? "border-border/20 bg-card/15 opacity-40 hover:opacity-80"
                         : "border-border/40 bg-card/30"
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-[11px] text-foreground">Leaf #{idx}</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-bold text-[11px] text-foreground">Leaf #{idx}</span>
+                        {isSelectedProof && (
+                          <Badge variant="outline" className="text-[7px] px-1 py-0 border-emerald-500 text-emerald-400">
+                            Target
+                          </Badge>
+                        )}
+                        {isSibling && (
+                          <Badge variant="outline" className="text-[7px] px-1 py-0 border-indigo-400 text-indigo-300">
+                            Sibling
+                          </Badge>
+                        )}
+                        {isPruned && (
+                          <Badge variant="outline" className="text-[7px] px-1 py-0 border-zinc-700 text-zinc-500">
+                            Pruned
+                          </Badge>
+                        )}
+                      </div>
                       <Badge variant="outline" className="text-[8px] px-1 py-0 font-mono">
                         {leafHash.slice(0, 8)}...
                       </Badge>
@@ -317,28 +369,59 @@ export function MerkleTreeVisualizer() {
 
           {/* Audit Proof Inspection Box (When proof is selected) */}
           {selectedProofLeaf !== null && (
-            <div className="rounded-xl border border-indigo-500/40 bg-indigo-950/15 p-4 space-y-3">
-              <div className="flex items-center justify-between border-b border-border/20 pb-2">
+            <div className="rounded-xl border border-indigo-500/40 bg-indigo-950/15 p-5 space-y-4 shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/20 pb-3">
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="h-4 w-4 text-emerald-400" />
                   <span className="font-bold text-xs text-foreground">
                     Cryptographic Inclusion Proof (Audit Path for Leaf #{selectedProofLeaf})
                   </span>
                 </div>
-                <Badge variant="outline" className="text-[10px] text-emerald-400 border-emerald-500/30">
-                  Status: MATHEMATICALLY PROVEN
+                <Badge
+                  variant="outline"
+                  className={`text-[10px] font-mono ${
+                    tamperedIndex !== null
+                      ? "text-red-400 border-red-500/40 bg-red-950/20"
+                      : "text-emerald-400 border-emerald-500/40 bg-emerald-950/20"
+                  }`}
+                >
+                  {tamperedIndex !== null ? "STATUS: TAMPER INTEGRITY FAILED" : "STATUS: MATHEMATICALLY VERIFIED"}
                 </Badge>
               </div>
 
-              <div className="space-y-1.5 text-[11px] leading-relaxed text-zinc-300 font-sans">
+              <div className="space-y-3 text-[11px] leading-relaxed text-zinc-300 font-sans">
                 <p>
-                  To prove that <code className="font-mono text-emerald-300">{leaves[selectedProofLeaf]}</code> exists inside the Merkle Tree, a light client only requires <strong>2 sibling hashes ($O(\log_2 4) = 2$)</strong>:
+                  To verify that <code className="font-mono text-emerald-300">{leaves[selectedProofLeaf]}</code> exists in the tree, a light client only needs <strong>2 sibling hashes ($O(\log_2 4) = 2$)</strong> rather than downloading all {leaves.length} blocks:
                 </p>
-                <div className="bg-zinc-950 p-2 rounded border border-border/30 font-mono text-[10px] space-y-1 text-zinc-400">
-                  <div>1. Calculate h_self = SHA256(Leaf #{selectedProofLeaf})</div>
-                  <div>2. Fetch adjacent sibling hash h_sibling and compute intermediate node hash.</div>
-                  <div>3. Fetch parent sibling branch hash and compute reconstructed Root.</div>
-                  <div className="text-emerald-400 font-bold">4. Assert reconstructed Root == {merkleRoot} (Match!)</div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 font-mono text-[10px]">
+                  {/* Step 1 */}
+                  <div className="bg-zinc-950 p-3 rounded-lg border border-border/30 space-y-1.5">
+                    <span className="text-[9px] text-zinc-500 uppercase font-bold">Step 1: Leaf Hash</span>
+                    <div className="text-zinc-300 truncate">h_{selectedProofLeaf} = {simpleHash(leaves[selectedProofLeaf])}</div>
+                    <div className="text-[9px] text-zinc-500">Computed locally from raw leaf payload</div>
+                  </div>
+
+                  {/* Step 2 */}
+                  <div className="bg-zinc-950 p-3 rounded-lg border border-border/30 space-y-1.5">
+                    <span className="text-[9px] text-zinc-500 uppercase font-bold">Step 2: Adjacent Sibling Pair</span>
+                    <div className="text-indigo-300 truncate">
+                      h_pair = {selectedProofLeaf < 2 ? h01 : h23}
+                    </div>
+                    <div className="text-[9px] text-zinc-500">Combined with sibling Leaf #{selectedProofLeaf % 2 === 0 ? selectedProofLeaf + 1 : selectedProofLeaf - 1}</div>
+                  </div>
+
+                  {/* Step 3 */}
+                  <div className="bg-zinc-950 p-3 rounded-lg border border-border/30 space-y-1.5">
+                    <span className="text-[9px] text-zinc-500 uppercase font-bold">Step 3: Root Reconstruction</span>
+                    <div className="text-emerald-400 font-bold truncate">h_root = {merkleRoot}</div>
+                    <div className="text-[9px] text-zinc-500">Combined with sibling branch {selectedProofLeaf < 2 ? "H_23" : "H_01"}</div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between bg-zinc-950/60 p-2.5 rounded border border-border/20 text-xs font-mono">
+                  <span className="text-zinc-400">Total Transferred Data:</span>
+                  <span className="text-emerald-400 font-bold">64 Bytes (2 x 32-byte hashes) vs 128+ Bytes full tree</span>
                 </div>
               </div>
             </div>

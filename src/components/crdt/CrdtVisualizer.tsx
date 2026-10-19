@@ -51,14 +51,16 @@ const INITIAL_NODES: NodeCounterState[] = [
   { id: "C", name: "Node C", region: "Silicon Valley (SJC)", isOnline: true, p: [0, 0, 2], n: [0, 0, 0], vectorClock: [0, 0, 2] },
 ]
 
+const INITIAL_LWW_STORE: Record<"A" | "B" | "C", LwwEntry[]> = {
+  A: [{ key: "doc:title", value: "Distributed Mesh", nodeId: "A", timestamp: 100, vectorClock: [1, 0, 0] }],
+  B: [{ key: "doc:title", value: "Distributed Mesh", nodeId: "B", timestamp: 100, vectorClock: [1, 0, 0] }],
+  C: [{ key: "doc:title", value: "Distributed Mesh", nodeId: "C", timestamp: 100, vectorClock: [1, 0, 0] }],
+}
+
 export function CrdtVisualizer() {
   const [mode, setMode] = useState<CrdtMode>("pn_counter")
   const [nodes, setNodes] = useState<NodeCounterState[]>(INITIAL_NODES)
-  const [lwwStore, setLwwStore] = useState<Record<"A" | "B" | "C", LwwEntry[]>>({
-    A: [{ key: "doc:title", value: "Distributed Mesh", nodeId: "A", timestamp: 100, vectorClock: [1, 0, 0] }],
-    B: [{ key: "doc:title", value: "Distributed Mesh", nodeId: "B", timestamp: 100, vectorClock: [1, 0, 0] }],
-    C: [{ key: "doc:title", value: "Distributed Mesh", nodeId: "C", timestamp: 100, vectorClock: [1, 0, 0] }],
-  })
+  const [lwwStore, setLwwStore] = useState<Record<"A" | "B" | "C", LwwEntry[]>>(INITIAL_LWW_STORE)
   const [inputVal, setInputVal] = useState("")
   const [syncCount, setSyncCount] = useState(4)
   const [logTrace, setLogTrace] = useState<string[]>([
@@ -147,9 +149,42 @@ export function CrdtVisualizer() {
 
     setNodes(newNodes)
     setSyncCount((c) => c + 1)
-    appendLog(
-      `⚡ GOSSIP MERGE COMPLETE: Reconciled ${onlineNodes.length} online nodes. Converged on Vector Clock [${maxClock.join(", ")}].`
-    )
+
+    // Reconcile LWW-Registers across online nodes: Pick entry with highest timestamp (or tie-break by nodeId)
+    const winningByKey: Record<string, LwwEntry> = {}
+    onlineNodes.forEach((n) => {
+      const entries = lwwStore[n.id] || []
+      entries.forEach((e) => {
+        const currentBest = winningByKey[e.key]
+        if (
+          !currentBest ||
+          e.timestamp > currentBest.timestamp ||
+          (e.timestamp === currentBest.timestamp && e.nodeId > currentBest.nodeId)
+        ) {
+          winningByKey[e.key] = e
+        }
+      })
+    })
+
+    const updatedLwwStore = { ...lwwStore }
+    const winningList = Object.values(winningByKey)
+    if (winningList.length > 0) {
+      onlineNodes.forEach((n) => {
+        updatedLwwStore[n.id] = winningList
+      })
+      setLwwStore(updatedLwwStore)
+    }
+
+    if (mode === "lww_kv" && winningList.length > 0) {
+      const latest = winningList[0]
+      appendLog(
+        `⚡ GOSSIP MERGE COMPLETE: Reconciled ${onlineNodes.length} online nodes. LWW register converged on "${latest.key}" = "${latest.value}" (from Node ${latest.nodeId}).`
+      )
+    } else {
+      appendLog(
+        `⚡ GOSSIP MERGE COMPLETE: Reconciled ${onlineNodes.length} online nodes. Converged on Vector Clock [${maxClock.join(", ")}].`
+      )
+    }
   }
 
   // 4. LWW Key-Value Mutation
@@ -188,6 +223,7 @@ export function CrdtVisualizer() {
   const handleReset = () => {
     soundFx.playChime()
     setNodes(INITIAL_NODES)
+    setLwwStore(INITIAL_LWW_STORE)
     setSyncCount(0)
     setLogTrace(["CRDT Mesh reset to initial baseline state."])
   }
