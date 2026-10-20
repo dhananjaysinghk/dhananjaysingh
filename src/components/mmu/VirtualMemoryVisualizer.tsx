@@ -40,6 +40,7 @@ interface PageTableLevel {
 
 export function VirtualMemoryVisualizer() {
   const [addressInput, setAddressInput] = useState("0x7fff_a041_c280")
+  const [accessMode, setAccessMode] = useState<"READ" | "WRITE">("READ")
   const [tlb, setTlb] = useState<TlbEntry[]>([
     { vpn: "0x7fff_a041", pfn: "0x14e0_9000", permissions: "R/W", hitCount: 14 },
     { vpn: "0x5555_a102", pfn: "0x02a1_8000", permissions: "R-O", hitCount: 6 },
@@ -80,19 +81,20 @@ export function VirtualMemoryVisualizer() {
   }
 
   // 1. Translate Virtual Address
-  const handleTranslate = (addrOverride?: string) => {
+  const handleTranslate = (addrOverride?: string, modeOverride?: "READ" | "WRITE") => {
     const addr = addrOverride || addressInput
+    const mode = modeOverride || accessMode
     soundFx.playClick()
     const breakdown = parseAddress(addr)
 
-    // Check NULL or invalid address for Page Fault
-    if (addr.includes("0x0000_0000") || breakdown.pml4 === 0 && breakdown.pdpt === 0) {
+    // Check NULL or invalid address for Page Fault (Non-present page)
+    if (addr.includes("0x0000_0000") || (breakdown.pml4 === 0 && breakdown.pdpt === 0)) {
       soundFx.playToggle()
       setPageFaults((pf) => pf + 1)
       setTlbMisses((m) => m + 1)
       setLastTranslation({
         virtualAddress: addr,
-        physicalAddress: "PAGE_FAULT (#PF Vector 14)",
+        physicalAddress: "PAGE_FAULT (#PF Vector 14 - Present bit P=0)",
         isTlbHit: false,
         isPageFault: true,
         latency: "850 µs (Disk Swap / Kernel Trap)",
@@ -105,9 +107,28 @@ export function VirtualMemoryVisualizer() {
     // Check TLB Cache
     const inTlbIndex = tlb.findIndex((e) => e.vpn === breakdown.vpn)
     if (inTlbIndex !== -1) {
+      const hitEntry = tlb[inTlbIndex]
+
+      // Check Protection Violation (Write to Read-Only frame)
+      if (mode === "WRITE" && hitEntry.permissions === "R-O") {
+        soundFx.playToggle()
+        setPageFaults((pf) => pf + 1)
+        setLastTranslation({
+          virtualAddress: addr,
+          physicalAddress: "PROTECTION_FAULT (#PF W/R=1, P=1, SEGV_ACCERR)",
+          isTlbHit: true,
+          isPageFault: true,
+          latency: "120 µs (Kernel Signal Handler)",
+          breakdown,
+        })
+        appendLog(
+          `🚨 MEMORY PROTECTION FAULT: Attempted WRITE to read-only page frame ${hitEntry.pfn}! MMU raised #PF (ErrorCode W/R=1, P=1).`
+        )
+        return
+      }
+
       soundFx.playChime()
       setTlbHits((h) => h + 1)
-      const hitEntry = tlb[inTlbIndex]
       const updatedTlb = [...tlb]
       updatedTlb[inTlbIndex] = { ...hitEntry, hitCount: hitEntry.hitCount + 1 }
       setTlb(updatedTlb)
@@ -121,11 +142,29 @@ export function VirtualMemoryVisualizer() {
         latency: "0.5 ns (1 CPU Cycle • L1 TLB Hit)",
         breakdown,
       })
-      appendLog(`⚡ TLB HIT (0.5ns): Virtual Page ${breakdown.vpn} -> Physical Frame ${hitEntry.pfn} (Fast-path).`)
+      appendLog(`⚡ TLB HIT (0.5ns): Virtual Page ${breakdown.vpn} -> Physical Frame ${hitEntry.pfn} [${hitEntry.permissions}] (Fast-path).`)
     } else {
       // TLB Miss -> 4-Level Page Table Walk
       soundFx.playToggle()
       setTlbMisses((m) => m + 1)
+      const isReadOnlyPreset = addr.includes("0x7f88")
+      const permissions: "R/W" | "R-O" = isReadOnlyPreset ? "R-O" : "R/W"
+
+      // Check Protection Violation if PTE is Read-Only and mode is Write
+      if (mode === "WRITE" && permissions === "R-O") {
+        setPageFaults((pf) => pf + 1)
+        setLastTranslation({
+          virtualAddress: addr,
+          physicalAddress: "PROTECTION_FAULT (#PF W/R=1, P=1, SEGV_ACCERR)",
+          isTlbHit: false,
+          isPageFault: true,
+          latency: "145 ns (4-Level Walk + Kernel Signal Trap)",
+          breakdown,
+        })
+        appendLog(`🚨 PROTECTION FAULT: 4-level walk resolved Read-Only PTE for ${addr}. Denied WRITE access (W/R=1).`)
+        return
+      }
+
       const generatedPfn = `0x${Math.floor(0x1000 + Math.random() * 0x8fff).toString(16)}_0000`
       const physAddr = `${generatedPfn.slice(0, 6)}_${breakdown.offset.toString(16).padStart(3, "0")}`
 
@@ -133,7 +172,7 @@ export function VirtualMemoryVisualizer() {
       const newTlbEntry: TlbEntry = {
         vpn: breakdown.vpn,
         pfn: generatedPfn,
-        permissions: "R/W",
+        permissions,
         hitCount: 1,
       }
       setTlb([newTlbEntry, ...tlb.slice(0, 3)])
@@ -147,7 +186,7 @@ export function VirtualMemoryVisualizer() {
         breakdown,
       })
       appendLog(
-        `🔍 TLB MISS: Executed 4-level MMU page walk [PML4[${breakdown.pml4}] -> PDPT[${breakdown.pdpt}] -> PD[${breakdown.pd}] -> PT[${breakdown.pt}]]. Populated TLB.`
+        `🔍 TLB MISS: Executed 4-level MMU page walk [PML4[${breakdown.pml4}] -> PDPT[${breakdown.pdpt}] -> PD[${breakdown.pd}] -> PT[${breakdown.pt}]]. Populated TLB [${permissions}].`
       )
     }
   }
@@ -162,6 +201,8 @@ export function VirtualMemoryVisualizer() {
   // 3. Reset
   const handleReset = () => {
     soundFx.playChime()
+    setAddressInput("0x7fff_a041_c280")
+    setAccessMode("READ")
     setTlb([
       { vpn: "0x7fff_a041", pfn: "0x14e0_9000", permissions: "R/W", hitCount: 14 },
       { vpn: "0x5555_a102", pfn: "0x02a1_8000", permissions: "R-O", hitCount: 6 },
@@ -218,10 +259,43 @@ export function VirtualMemoryVisualizer() {
         <CardContent className="pt-6 flex flex-col gap-8 font-mono">
           {/* Controls: Address Input & Presets */}
           <div className="rounded-xl border border-border/30 bg-card/20 p-4 space-y-4">
-            <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-              <Binary className="h-3.5 w-3.5 text-cyan-400" />
-              Memory Bus: 64-Bit Virtual Address Translation
-            </span>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border/20 pb-3">
+              <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                <Binary className="h-3.5 w-3.5 text-cyan-400" />
+                Memory Bus: 64-Bit Virtual Address Translation
+              </span>
+              <div className="flex items-center gap-1.5 text-[11px]">
+                <span className="text-muted-foreground mr-1 text-[10px] uppercase font-mono">Access Mode:</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFx.playClick()
+                    setAccessMode("READ")
+                  }}
+                  className={`px-2.5 py-1 rounded text-xs transition-colors cursor-pointer font-bold ${
+                    accessMode === "READ"
+                      ? "bg-cyan-500 text-cyan-950 shadow-xs"
+                      : "bg-card/40 border border-border/30 text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  READ (mov rax, [addr])
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    soundFx.playClick()
+                    setAccessMode("WRITE")
+                  }}
+                  className={`px-2.5 py-1 rounded text-xs transition-colors cursor-pointer font-bold ${
+                    accessMode === "WRITE"
+                      ? "bg-amber-500 text-amber-950 shadow-xs"
+                      : "bg-card/40 border border-border/30 text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  WRITE (mov [addr], rax)
+                </button>
+              </div>
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-3 items-center">
               <Input
@@ -246,21 +320,23 @@ export function VirtualMemoryVisualizer() {
             <div className="flex flex-wrap items-center gap-2 pt-1 text-[10px] text-muted-foreground">
               <span>Quick Memory Targets:</span>
               {[
-                { label: "Stack Top", addr: "0x7fff_fffe_4010" },
-                { label: "Heap Chunk", addr: "0x5555_a102_0080" },
-                { label: "Shared Lib (mmap)", addr: "0x7f88_3200_1000" },
-                { label: "Unmapped (NULL #PF)", addr: "0x0000_0000_0000" },
+                { label: "Stack Top (R/W)", addr: "0x7fff_fffe_4010", mode: "READ" as const },
+                { label: "Heap Chunk (R/W)", addr: "0x7fff_a041_c280", mode: "READ" as const },
+                { label: "Read-Only Data (.rodata)", addr: "0x5555_a102_0080", mode: "WRITE" as const },
+                { label: "Shared Lib (.text R-O)", addr: "0x7f88_3200_1000", mode: "WRITE" as const },
+                { label: "Unmapped (NULL #PF)", addr: "0x0000_0000_0000", mode: "READ" as const },
               ].map((preset) => (
                 <button
                   key={preset.label}
                   type="button"
                   onClick={() => {
                     setAddressInput(preset.addr)
-                    handleTranslate(preset.addr)
+                    setAccessMode(preset.mode)
+                    handleTranslate(preset.addr, preset.mode)
                   }}
                   className="px-2 py-1 rounded bg-card/60 border border-border/40 text-zinc-300 hover:text-foreground font-mono transition-colors"
                 >
-                  {preset.label} ({preset.addr})
+                  {preset.label}
                 </button>
               ))}
             </div>
