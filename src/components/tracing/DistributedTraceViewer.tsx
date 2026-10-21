@@ -34,6 +34,7 @@ interface TraceSpan {
   durationMs: number
   status: "ok" | "error" | "warning"
   serviceColor: string
+  isCriticalPath?: boolean
   tags: Record<string, string>
   events: Array<{ timeMs: number; name: string }>
 }
@@ -62,6 +63,7 @@ const SCENARIOS: TraceScenario[] = [
         durationMs: 52,
         status: "ok",
         serviceColor: "text-indigo-400 border-indigo-500/40 bg-indigo-950/20",
+        isCriticalPath: true,
         tags: { "http.method": "POST", "http.status_code": "200", "net.peer.ip": "172.56.21.9" },
         events: [
           { timeMs: 1, name: "TLS 1.3 Handshake completed" },
@@ -77,6 +79,7 @@ const SCENARIOS: TraceScenario[] = [
         durationMs: 12,
         status: "ok",
         serviceColor: "text-cyan-400 border-cyan-500/40 bg-cyan-950/20",
+        isCriticalPath: true,
         tags: { "rpc.service": "Auth.SessionValidator", "cache.hit": "true" },
         events: [{ timeMs: 8, name: "Redis L1 JWT Token Verified" }],
       },
@@ -89,6 +92,7 @@ const SCENARIOS: TraceScenario[] = [
         durationMs: 32,
         status: "ok",
         serviceColor: "text-emerald-400 border-emerald-500/40 bg-emerald-950/20",
+        isCriticalPath: true,
         tags: { "order.id": "ord_99014", "user.tier": "enterprise" },
         events: [{ timeMs: 20, name: "Saga transaction started" }],
       },
@@ -101,6 +105,7 @@ const SCENARIOS: TraceScenario[] = [
         durationMs: 14,
         status: "ok",
         serviceColor: "text-amber-400 border-amber-500/40 bg-amber-950/20",
+        isCriticalPath: true,
         tags: { "db.system": "postgresql", "db.statement": "INSERT INTO orders (id, amount) VALUES ($1, $2)" },
         events: [{ timeMs: 25, name: "WAL flush committed (L0)" }],
       },
@@ -113,6 +118,7 @@ const SCENARIOS: TraceScenario[] = [
         durationMs: 10,
         status: "ok",
         serviceColor: "text-purple-400 border-purple-500/40 bg-purple-950/20",
+        isCriticalPath: false,
         tags: { "messaging.destination": "order.created", "messaging.partition": "2" },
         events: [{ timeMs: 44, name: "Leader replica ACK (acks=all)" }],
       },
@@ -133,6 +139,7 @@ const SCENARIOS: TraceScenario[] = [
         durationMs: 840,
         status: "warning",
         serviceColor: "text-indigo-400 border-indigo-500/40 bg-indigo-950/20",
+        isCriticalPath: true,
         tags: { "http.method": "POST", "http.status_code": "200 (Degraded)", "latency.sla": "BREACHED (>500ms)" },
         events: [{ timeMs: 2, name: "Ingress proxy dispatch" }],
       },
@@ -145,6 +152,7 @@ const SCENARIOS: TraceScenario[] = [
         durationMs: 820,
         status: "warning",
         serviceColor: "text-emerald-400 border-emerald-500/40 bg-emerald-950/20",
+        isCriticalPath: true,
         tags: { "stock.sku": "SKU_GPU_RTX5090", "warehouse.region": "us-west" },
         events: [{ timeMs: 25, name: "Acquiring row lock..." }],
       },
@@ -157,6 +165,7 @@ const SCENARIOS: TraceScenario[] = [
         durationMs: 800,
         status: "warning",
         serviceColor: "text-amber-400 border-amber-500/40 bg-amber-950/20",
+        isCriticalPath: true,
         tags: { "db.system": "postgresql", "db.lock_wait_ms": "775ms", "db.contention": "HIGH" },
         events: [
           { timeMs: 35, name: "Lock wait queue position #4" },
@@ -180,6 +189,7 @@ const SCENARIOS: TraceScenario[] = [
         durationMs: 310,
         status: "error",
         serviceColor: "text-indigo-400 border-indigo-500/40 bg-indigo-950/20",
+        isCriticalPath: true,
         tags: { "http.status_code": "504 Gateway Timeout", "error": "true" },
         events: [{ timeMs: 305, name: "Emitted error response to client" }],
       },
@@ -192,6 +202,7 @@ const SCENARIOS: TraceScenario[] = [
         durationMs: 295,
         status: "error",
         serviceColor: "text-pink-400 border-pink-500/40 bg-pink-950/20",
+        isCriticalPath: true,
         tags: { "net.peer.name": "api.stripe.com", "circuit_breaker.state": "TRIPPED_OPEN", "error.message": "ETIMEDOUT after 3 retries" },
         events: [
           { timeMs: 100, name: "Retry #1 timeout" },
@@ -201,11 +212,72 @@ const SCENARIOS: TraceScenario[] = [
       },
     ],
   },
+  {
+    id: "async_fanout_event_stream",
+    name: "Kafka Async Fan-out & Event Stream (120ms)",
+    totalDurationMs: 120,
+    description: "Asynchronous event-driven architecture propagating W3C TraceContext headers across message broker partitions into parallel consumer worker pools.",
+    spans: [
+      {
+        id: "span_30",
+        parentId: null,
+        service: "event-collector",
+        operation: "POST /v1/telemetry/ingest",
+        startTimeMs: 0,
+        durationMs: 25,
+        status: "ok",
+        serviceColor: "text-indigo-400 border-indigo-500/40 bg-indigo-950/20",
+        isCriticalPath: true,
+        tags: { "http.status_code": "202 Accepted", "payload.size_kb": "14.2" },
+        events: [{ timeMs: 2, name: "Payload deserialized" }, { timeMs: 22, name: "Dispatched to Kafka" }],
+      },
+      {
+        id: "span_31",
+        parentId: "span_30",
+        service: "kafka-broker",
+        operation: "PRODUCE topic:telemetry.events",
+        startTimeMs: 12,
+        durationMs: 13,
+        status: "ok",
+        serviceColor: "text-purple-400 border-purple-500/40 bg-purple-950/20",
+        isCriticalPath: true,
+        tags: { "messaging.destination": "telemetry.events", "messaging.partition": "4", "acks": "all" },
+        events: [{ timeMs: 18, name: "Committed to ISR quorum" }],
+      },
+      {
+        id: "span_32",
+        parentId: "span_31",
+        service: "worker-pool-fraud",
+        operation: "CONSUME RiskScoreEvaluator",
+        startTimeMs: 28,
+        durationMs: 38,
+        status: "ok",
+        serviceColor: "text-cyan-400 border-cyan-500/40 bg-cyan-950/20",
+        isCriticalPath: false,
+        tags: { "consumer.group": "fraud-detection-v2", "risk.score": "0.02" },
+        events: [{ timeMs: 35, name: "Vector similarity search" }],
+      },
+      {
+        id: "span_33",
+        parentId: "span_31",
+        service: "worker-pool-indexer",
+        operation: "CONSUME OpenSearchIndexer",
+        startTimeMs: 28,
+        durationMs: 92,
+        status: "ok",
+        serviceColor: "text-emerald-400 border-emerald-500/40 bg-emerald-950/20",
+        isCriticalPath: true,
+        tags: { "consumer.group": "search-indexing", "opensearch.shards": "5" },
+        events: [{ timeMs: 40, name: "Bulk bulk_index request dispatched" }, { timeMs: 118, name: "Index refreshed" }],
+      },
+    ],
+  },
 ]
 
 export function DistributedTraceViewer() {
   const [selectedScenarioId, setSelectedScenarioId] = useState<string>("checkout_fast")
   const [selectedSpan, setSelectedSpan] = useState<TraceSpan | null>(null)
+  const [highlightCriticalPath, setHighlightCriticalPath] = useState(false)
 
   const activeScenario = SCENARIOS.find((s) => s.id === selectedScenarioId) || SCENARIOS[0]
 
@@ -239,6 +311,22 @@ export function DistributedTraceViewer() {
           </div>
 
           <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant={highlightCriticalPath ? "default" : "outline"}
+              onClick={() => {
+                soundFx.playToggle()
+                setHighlightCriticalPath((prev) => !prev)
+              }}
+              className={`text-xs font-mono gap-1.5 ${
+                highlightCriticalPath
+                  ? "bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold border-amber-400 shadow-sm"
+                  : "border-border/40 text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Zap className="h-3.5 w-3.5" />
+              {highlightCriticalPath ? "Critical Path Active" : "Highlight Critical Path"}
+            </Button>
             <Badge variant="outline" className="text-xs font-mono border-indigo-500/30 text-indigo-300">
               Trace ID: 4bf92f3577b34da6
             </Badge>
@@ -275,6 +363,18 @@ export function DistributedTraceViewer() {
             </p>
           </div>
 
+          {/* Critical Path Explanation Banner */}
+          {highlightCriticalPath && (
+            <div className="rounded-xl border border-amber-500/40 bg-amber-950/20 p-3 flex items-center justify-between text-amber-300 text-xs font-mono">
+              <div className="flex items-center gap-2">
+                <Zap className="h-4 w-4 text-amber-400 shrink-0" />
+                <span>
+                  <strong>Critical Path Analysis Active:</strong> Spans directly bounding total request latency ({activeScenario.totalDurationMs}ms) are isolated in gold. Downstream optimizations here yield immediate TTFB improvements.
+                </span>
+              </div>
+            </div>
+          )}
+
           {/* ================= GANTT WATERFALL TIMELINE ================= */}
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between text-[10px] text-zinc-500 border-b border-border/20 pb-2">
@@ -292,6 +392,7 @@ export function DistributedTraceViewer() {
             <div className="flex flex-col gap-2">
               {activeScenario.spans.map((span, idx) => {
                 const isSelected = selectedSpan?.id === span.id
+                const isCritical = Boolean(span.isCriticalPath)
                 const startPct = (span.startTimeMs / activeScenario.totalDurationMs) * 100
                 const widthPct = Math.max((span.durationMs / activeScenario.totalDurationMs) * 100, 4)
                 const indent = span.parentId ? "pl-6" : "pl-0"
@@ -303,6 +404,10 @@ export function DistributedTraceViewer() {
                     className={`group flex items-center justify-between p-2.5 rounded-xl border transition-all cursor-pointer ${
                       isSelected
                         ? "bg-muted/80 border-indigo-500/80 shadow-sm"
+                        : highlightCriticalPath && isCritical
+                        ? "bg-amber-950/20 border-amber-500/60 shadow-sm shadow-amber-500/10"
+                        : highlightCriticalPath && !isCritical
+                        ? "bg-card/20 border-border/20 opacity-40 hover:opacity-90"
                         : "bg-card/30 border-border/30 hover:border-border/60 hover:bg-card/50"
                     }`}
                   >
@@ -317,7 +422,14 @@ export function DistributedTraceViewer() {
                       )}
 
                       <div className="flex flex-col truncate">
-                        <span className="font-bold text-foreground text-xs truncate">{span.service}</span>
+                        <div className="flex items-center gap-1.5 truncate">
+                          <span className="font-bold text-foreground text-xs truncate">{span.service}</span>
+                          {highlightCriticalPath && isCritical && (
+                            <Badge variant="outline" className="text-[7px] px-1 py-0 font-mono text-amber-400 border-amber-500/40 bg-amber-950/30">
+                              Critical
+                            </Badge>
+                          )}
+                        </div>
                         <span className="text-[10px] text-muted-foreground truncate">{span.operation}</span>
                       </div>
                     </div>
@@ -329,7 +441,11 @@ export function DistributedTraceViewer() {
                         initial={{ opacity: 0, width: 0 }}
                         animate={{ opacity: 1, width: `${widthPct}%`, left: `${startPct}%` }}
                         transition={{ duration: 0.3 }}
-                        className={`absolute h-4 rounded-md border flex items-center px-2 text-[9px] font-bold truncate ${span.serviceColor}`}
+                        className={`absolute h-4 rounded-md border flex items-center px-2 text-[9px] font-bold truncate ${
+                          highlightCriticalPath && isCritical
+                            ? "border-amber-400 text-amber-200 bg-amber-950/60 shadow-xs shadow-amber-400/20"
+                            : span.serviceColor
+                        }`}
                       >
                         {span.durationMs}ms
                       </motion.div>
