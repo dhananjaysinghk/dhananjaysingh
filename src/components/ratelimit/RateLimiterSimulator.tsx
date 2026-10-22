@@ -1,8 +1,8 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { ShieldAlert, Zap, RefreshCw, Send, CheckCircle2, XCircle, Droplets, Sliders } from "lucide-react"
+import { motion } from "framer-motion"
+import { ShieldAlert, Zap, RefreshCw, Send, Droplets } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"

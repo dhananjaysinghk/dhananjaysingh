@@ -2,7 +2,6 @@
 
 import React, { useState } from "react"
 import { motion } from "framer-motion"
-import { Laptop, Terminal, Wrench, Database, Sparkles, Monitor, Cpu, Keyboard, Headphones, Check } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { soundFx } from "@/lib/sound"

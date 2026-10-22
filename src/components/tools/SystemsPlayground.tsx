@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import { motion } from "framer-motion"
-import { Cpu, Network, Binary, ShieldCheck, Zap, RefreshCw, Layers, Sliders, Box, Trash2, Plus, Terminal, FileCode, Check } from "lucide-react"
+import { Cpu, Network, Binary, RefreshCw, Layers, Box, Trash2, Plus, Terminal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -46,7 +46,7 @@ export function SystemsPlayground() {
 
   // Hash Ring State
   const [nodes, setNodes] = useState<string[]>(["Node Alpha (0°)", "Node Beta (120°)", "Node Gamma (240°)"])
-  const [testKey, setTestKey] = useState("user_session_9921")
+  const testKey = "user_session_9921"
 
   // Bitmask State
   const [flags, setFlags] = useState({

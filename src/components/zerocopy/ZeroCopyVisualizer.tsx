@@ -1,21 +1,12 @@
 "use client"
 
 import React, { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
 import {
   Layers,
   Zap,
-  Shield,
-  RotateCcw,
-  AlertTriangle,
-  CheckCircle2,
-  Sliders,
   Play,
-  Flame,
   HardDrive,
   Cpu,
-  Radio,
-  ArrowRight,
   TrendingUp,
   RefreshCw,
   Server,
@@ -27,15 +18,6 @@ import { Badge } from "@/components/ui/badge"
 import { soundFx } from "@/lib/sound"
 
 type IoMode = "TRADITIONAL" | "ZERO_COPY" | "IO_URING"
-
-interface StepNode {
-  id: string
-  name: string
-  layer: "HARDWARE" | "KERNEL" | "USER"
-  icon: React.ComponentType<{ className?: string }>
-  active: boolean
-  dataType: string
-}
 
 export function ZeroCopyVisualizer() {
   const [mode, setMode] = useState<IoMode>("ZERO_COPY")

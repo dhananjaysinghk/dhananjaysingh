@@ -3,8 +3,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
-import { motion } from "framer-motion"
-import { Terminal, Maximize2, Minimize2, Trash2, HelpCircle, Sparkles, CornerDownLeft, Volume2, VolumeX } from "lucide-react"
+import { Terminal, Maximize2, Minimize2, Trash2, CornerDownLeft } from "lucide-react"
 import { soundFx } from "@/lib/sound"
 
 interface TerminalHistoryItem {
@@ -17,7 +16,7 @@ interface TerminalHistoryItem {
 
 export function InteractiveTerminal() {
   const router = useRouter()
-  const { setTheme, resolvedTheme } = useTheme()
+  const { setTheme } = useTheme()
   const [inputVal, setInputVal] = useState("")
   const [history, setHistory] = useState<TerminalHistoryItem[]>([])
   const [commandHistory, setCommandHistory] = useState<string[]>([])
@@ -401,7 +400,7 @@ export function InteractiveTerminal() {
     <div
       onClick={focusInput}
       className={`rounded-2xl border border-border/50 bg-zinc-950 shadow-2xl backdrop-blur-md flex flex-col font-mono text-xs overflow-hidden transition-all duration-300 ${
-        isFullscreen ? "fixed inset-4 z-50 h-[calc(100vh-2rem)]" : "w-full min-h-[520px] max-h-[640px]"
+        isFullscreen ? "fixed inset-4 z-50 h-[calc(100vh-2rem)]" : "w-full min-h-130 max-h-160"
       }`}
     >
       {/* Top Terminal Bar */}

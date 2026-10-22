@@ -5,20 +5,11 @@ import { motion, AnimatePresence } from "framer-motion"
 import {
   Activity,
   Layers,
-  Clock,
   AlertTriangle,
   CheckCircle2,
   XCircle,
-  Database,
-  Server,
   Zap,
   Radio,
-  RefreshCw,
-  Search,
-  ExternalLink,
-  ChevronRight,
-  Shield,
-  FileCode,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
@@ -390,7 +381,7 @@ export function DistributedTraceViewer() {
 
             {/* Spans List */}
             <div className="flex flex-col gap-2">
-              {activeScenario.spans.map((span, idx) => {
+              {activeScenario.spans.map((span) => {
                 const isSelected = selectedSpan?.id === span.id
                 const isCritical = Boolean(span.isCriticalPath)
                 const startPct = (span.startTimeMs / activeScenario.totalDurationMs) * 100

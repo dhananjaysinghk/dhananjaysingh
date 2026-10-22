@@ -2,7 +2,7 @@ import React from "react"
 import { Metadata } from "next"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
 import { RateLimiterSimulator } from "@/components/ratelimit/RateLimiterSimulator"
-import { ShieldAlert, Droplets } from "lucide-react"
+import { Droplets } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Distributed Rate Limiter & Token Bucket Simulator | Dhananjay Singh",

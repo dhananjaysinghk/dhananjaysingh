@@ -4,18 +4,13 @@ import React, { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   Cpu,
-  Shield,
-  Zap,
   Activity,
   Radio,
   Terminal,
   RefreshCw,
   Play,
   Flame,
-  CheckCircle2,
-  AlertTriangle,
   FileCode,
-  Sliders,
   Layers,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -113,6 +108,12 @@ int BPF_KRETPROBE(trace_tcp_connect_ret, int ret) {
   },
 }
 
+function formatCycles(cycles: number): string {
+  if (cycles >= 1_000_000) return `${(cycles / 1_000_000).toFixed(2)}M`
+  if (cycles >= 1_000) return `${(cycles / 1_000).toFixed(1)}K`
+  return `${cycles}`
+}
+
 export function EbpfSandbox() {
   const [selectedProgram, setSelectedProgram] = useState<EbpfProgramType>("xdp_firewall")
   const [events, setEvents] = useState<Array<{ id: number; text: string; type: "pass" | "drop" | "audit" | "info"; latency: string }>>([
@@ -122,7 +123,6 @@ export function EbpfSandbox() {
   const [stats, setStats] = useState({
     processed: 1420,
     dropped: 382,
-    cyclesSaved: "1.84M",
     ringbufEvents: 89,
   })
 
@@ -134,7 +134,7 @@ export function EbpfSandbox() {
   }
 
   // Simulate traffic action
-  const simulatePacket = (actionType: "legit" | "attack" | "syscall") => {
+  const simulatePacket = (actionType: "legit" | "attack" | "syscall" | "tcp_connect") => {
     soundFx.playClick()
     const id = Date.now()
 
@@ -162,7 +162,7 @@ export function EbpfSandbox() {
         dropped: s.dropped + 1,
         ringbufEvents: s.ringbufEvents + 1,
       }))
-    } else {
+    } else if (actionType === "syscall") {
       soundFx.playChime()
       const bins = ["/usr/bin/python3 app.py", "/usr/bin/curl -s https://api", "/bin/bash -c deploy.sh", "/usr/bin/git commit"]
       const chosen = bins[Math.floor(Math.random() * bins.length)]
@@ -174,6 +174,19 @@ export function EbpfSandbox() {
       }
       setEvents((prev) => [newEvent, ...prev.slice(0, 11)])
       setStats((s) => ({ ...s, ringbufEvents: s.ringbufEvents + 1 }))
+    } else if (actionType === "tcp_connect") {
+      soundFx.playChime()
+      const destIps = ["142.250.190.46:443", "104.16.132.229:443", "151.101.65.140:443"]
+      const target = destIps[Math.floor(Math.random() * destIps.length)]
+      const rttMs = (0.8 + Math.random() * 1.4).toFixed(2)
+      const newEvent = {
+        id,
+        text: `🌐 TCP Handshake: kprobe/tcp_v4_connect -> ${target} (RTT: ${rttMs}ms • CWND: 10)`,
+        type: "info" as const,
+        latency: `${rttMs} ms`,
+      }
+      setEvents((prev) => [newEvent, ...prev.slice(0, 11)])
+      setStats((s) => ({ ...s, processed: s.processed + 1, ringbufEvents: s.ringbufEvents + 1 }))
     }
   }
 
@@ -182,7 +195,7 @@ export function EbpfSandbox() {
     setEvents([
       { id: 1, text: "Kernel Verifier: Safety verified. 41 instructions approved. JIT compiled.", type: "info", latency: "0 ns" },
     ])
-    setStats({ processed: 0, dropped: 0, cyclesSaved: "0", ringbufEvents: 0 })
+    setStats({ processed: 0, dropped: 0, ringbufEvents: 0 })
   }
 
   return (
@@ -241,33 +254,42 @@ export function EbpfSandbox() {
           </div>
 
           {/* Interactive Simulation Controls */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <Button
               size="sm"
               variant="outline"
               onClick={() => simulatePacket("legit")}
-              className="font-mono text-xs gap-2 border-emerald-500/30 text-emerald-300 hover:bg-emerald-950/20"
+              className="font-mono text-xs gap-1.5 border-emerald-500/30 text-emerald-300 hover:bg-emerald-950/20"
             >
               <Play className="h-3.5 w-3.5 text-emerald-400" />
-              Send Valid Packet (TCP:443)
+              Send Valid (TCP:443)
             </Button>
             <Button
               size="sm"
               variant="outline"
               onClick={() => simulatePacket("attack")}
-              className="font-mono text-xs gap-2 border-red-500/30 text-red-300 hover:bg-red-950/20"
+              className="font-mono text-xs gap-1.5 border-red-500/30 text-red-300 hover:bg-red-950/20"
             >
               <Flame className="h-3.5 w-3.5 text-red-400" />
-              Simulate DDoS Flood (XDP_DROP)
+              Simulate DDoS (XDP_DROP)
             </Button>
             <Button
               size="sm"
               variant="outline"
               onClick={() => simulatePacket("syscall")}
-              className="font-mono text-xs gap-2 border-indigo-500/30 text-indigo-300 hover:bg-indigo-950/20"
+              className="font-mono text-xs gap-1.5 border-indigo-500/30 text-indigo-300 hover:bg-indigo-950/20"
             >
               <Terminal className="h-3.5 w-3.5 text-indigo-400" />
-              Trigger Syscall (sys_enter_execve)
+              Audit Syscall (execve)
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => simulatePacket("tcp_connect")}
+              className="font-mono text-xs gap-1.5 border-cyan-500/30 text-cyan-300 hover:bg-cyan-950/20"
+            >
+              <Activity className="h-3.5 w-3.5 text-cyan-400" />
+              Profile TCP RTT (kprobe)
             </Button>
           </div>
 
@@ -351,7 +373,7 @@ export function EbpfSandbox() {
             </div>
             <div className="rounded-xl border border-border/30 bg-card/20 p-4 flex flex-col gap-1">
               <span className="text-[10px] uppercase text-zinc-500">Kernel Cycles Saved</span>
-              <span className="text-xl font-bold text-emerald-400">{stats.cyclesSaved}</span>
+              <span className="text-xl font-bold text-emerald-400">{formatCycles(stats.dropped * 4500)}</span>
             </div>
             <div className="rounded-xl border border-border/30 bg-card/20 p-4 flex flex-col gap-1">
               <span className="text-[10px] uppercase text-zinc-500">RingBuffer Events</span>

@@ -1,21 +1,14 @@
 "use client"
 
 import React, { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
 import {
-  Share2,
-  Globe,
-  Radio,
   RefreshCw,
   Plus,
   Minus,
   Zap,
   ArrowRightLeft,
-  CheckCircle2,
-  AlertTriangle,
   Layers,
   Network,
-  Cpu,
   Wifi,
   WifiOff,
 } from "lucide-react"

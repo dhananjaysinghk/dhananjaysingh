@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import {
   FolderTree,
   Search,
@@ -9,33 +9,13 @@ import {
   RefreshCw,
   Zap,
   ArrowRight,
-  Database,
-  Layers,
   ArrowLeftRight,
-  Activity,
-  CheckCircle2,
-  Sliders,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { soundFx } from "@/lib/sound"
-
-interface LeafNode {
-  id: string
-  keys: number[]
-  isLeaf: true
-}
-
-interface InternalNode {
-  id: string
-  keys: number[]
-  children: (InternalNode | LeafNode)[]
-  isLeaf: false
-}
-
-type BTreeNode = InternalNode | LeafNode
 
 export function BTreeVisualizer() {
   // Simple B+ tree demo model state

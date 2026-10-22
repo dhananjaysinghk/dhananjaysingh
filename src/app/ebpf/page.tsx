@@ -2,7 +2,7 @@ import React from "react"
 import { Metadata } from "next"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
 import { EbpfSandbox } from "@/components/ebpf/EbpfSandbox"
-import { Cpu, Shield, Zap, Radio, Activity } from "lucide-react"
+import { Cpu, Shield, Zap, Activity } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "eBPF Kernel & Packet Inspection Sandbox | Dhananjay Singh",

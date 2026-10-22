@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Layers, Zap, RefreshCw, Plus, Search, Trash2, ArrowRight, ArrowLeftRight, CheckCircle2 } from "lucide-react"
+import { Layers, RefreshCw, Plus, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
