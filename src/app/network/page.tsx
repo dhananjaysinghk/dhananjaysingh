@@ -2,7 +2,7 @@ import React from "react"
 import { Metadata } from "next"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
 import { NetworkInspector } from "@/components/network/NetworkInspector"
-import { Globe, Radio } from "lucide-react"
+import { Globe } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Global CDN Edge Network & Latency Inspector | Dhananjay Singh",

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useMemo } from "react"
 import { motion } from "framer-motion"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -13,6 +13,15 @@ interface GearItem {
   tags: string[]
   link?: string
 }
+
+const CATEGORIES = [
+  "All",
+  "Workstation",
+  "Editor & Terminal",
+  "Systems & Profiling",
+  "Backend & DB",
+  "Productivity",
+] as const
 
 const gearItems: GearItem[] = [
   // Workstation
@@ -113,25 +122,17 @@ const gearItems: GearItem[] = [
 export function UsesGrid() {
   const [filterCategory, setFilterCategory] = useState<string>("All")
 
-  const categories = [
-    "All",
-    "Workstation",
-    "Editor & Terminal",
-    "Systems & Profiling",
-    "Backend & DB",
-    "Productivity",
-  ]
-
-  const filtered =
-    filterCategory === "All"
+  const filtered = useMemo(() => {
+    return filterCategory === "All"
       ? gearItems
       : gearItems.filter((g) => g.category === filterCategory)
+  }, [filterCategory])
 
   return (
     <div className="flex flex-col gap-8">
       {/* Category Pills */}
       <div className="flex flex-wrap gap-2 border-b border-border/30 pb-4">
-        {categories.map((cat) => (
+        {CATEGORIES.map((cat) => (
           <button
             key={cat}
             onClick={() => {

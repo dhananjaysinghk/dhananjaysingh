@@ -1,30 +1,27 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useMemo } from "react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import {
-  Layers,
-  RotateCcw,
-  Cpu,
-  Share2,
-  Binary,
   Activity,
-  FolderTree,
+  ArrowRight,
+  Binary,
+  Cpu,
   Database,
   Droplets,
-  Globe,
+  FolderTree,
   Gauge,
-  Wrench,
+  Globe,
+  Layers,
+  RotateCcw,
   Search,
-  Sparkles,
-  ArrowRight,
-  ExternalLink,
-  Zap,
-  SlidersHorizontal,
-  Wifi,
-  Users,
+  Share2,
   Shield,
+  Users,
+  Wifi,
+  Wrench,
+  Zap,
 } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -336,17 +333,19 @@ export function LabsDirectory() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All")
   const [searchQuery, setSearchQuery] = useState("")
 
-  const filteredLabs = LAB_ITEMS.filter((item) => {
-    const matchesCategory =
-      selectedCategory === "All" || item.category === selectedCategory
-    const matchesQuery =
-      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.techStack.some((t) =>
-        t.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    return matchesCategory && matchesQuery
-  })
+  const filteredLabs = useMemo(() => {
+    return LAB_ITEMS.filter((item) => {
+      const matchesCategory =
+        selectedCategory === "All" || item.category === selectedCategory
+      const matchesQuery =
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.techStack.some((t) =>
+          t.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      return matchesCategory && matchesQuery
+    })
+  }, [selectedCategory, searchQuery])
 
   return (
     <div className="flex flex-col gap-10">

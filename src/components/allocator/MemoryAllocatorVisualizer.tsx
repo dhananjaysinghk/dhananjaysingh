@@ -1,23 +1,13 @@
 "use client"
 
-import React, { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import React, { useState, useMemo } from "react"
+import { motion } from "framer-motion"
 import {
   Cpu,
   Layers,
-  Zap,
-  Shield,
-  RotateCcw,
-  AlertTriangle,
-  CheckCircle2,
-  Sliders,
-  Play,
-  Flame,
-  HardDrive,
   RefreshCw,
   Plus,
   Trash2,
-  Sparkles,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
@@ -282,11 +272,13 @@ export function MemoryAllocatorVisualizer() {
   }
 
   // Metrics calculation
-  const totalAllocatedBuddy = buddyBlocks.filter((b) => b.allocated).reduce((acc, b) => acc + b.size, 0)
-  const totalFreeBuddy = 256 - totalAllocatedBuddy
-  const largestFreeBlock = Math.max(0, ...buddyBlocks.filter((b) => !b.allocated).map((b) => b.size))
-  const externalFragmentation =
-    totalFreeBuddy > 0 ? (((totalFreeBuddy - largestFreeBlock) / totalFreeBuddy) * 100).toFixed(1) : "0.0"
+  const { totalAllocatedBuddy, totalFreeBuddy, externalFragmentation } = useMemo(() => {
+    const allocated = buddyBlocks.filter((b) => b.allocated).reduce((acc, b) => acc + b.size, 0)
+    const free = 256 - allocated
+    const largest = Math.max(0, ...buddyBlocks.filter((b) => !b.allocated).map((b) => b.size))
+    const frag = free > 0 ? (((free - largest) / free) * 100).toFixed(1) : "0.0"
+    return { totalAllocatedBuddy: allocated, totalFreeBuddy: free, externalFragmentation: frag }
+  }, [buddyBlocks])
 
   return (
     <div className="flex flex-col gap-8 font-mono text-xs">

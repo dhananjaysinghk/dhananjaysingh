@@ -1,21 +1,15 @@
 "use client"
 
-import React, { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import React, { useState, useMemo } from "react"
+import { motion } from "framer-motion"
 import {
   Users,
   Shield,
-  Zap,
-  RotateCcw,
   AlertTriangle,
-  CheckCircle2,
-  Sliders,
   Play,
   Flame,
-  Radio,
   Send,
   Layers,
-  Sparkles,
   RefreshCw,
   Cpu,
 } from "lucide-react"
@@ -38,88 +32,90 @@ interface ActorNode {
 
 type SupervisionStrategy = "OneForOne" | "AllForOne"
 
+const INITIAL_ACTORS: ActorNode[] = [
+  {
+    id: "root",
+    name: "RootSupervisor",
+    role: "supervisor",
+    status: "IDLE",
+    mailbox: [],
+    processedCount: 142,
+    restartCount: 0,
+    stateSummary: "Cluster Health: OK (MaxRestarts=5/10s)",
+  },
+  {
+    id: "order-sup",
+    name: "OrderSupervisor",
+    role: "supervisor",
+    parentId: "root",
+    status: "IDLE",
+    mailbox: [],
+    processedCount: 98,
+    restartCount: 0,
+    stateSummary: "Managing [Payment, Inventory]",
+  },
+  {
+    id: "payment",
+    name: "PaymentWorker",
+    role: "worker",
+    parentId: "order-sup",
+    status: "IDLE",
+    mailbox: ["ChargeCard($120)", "VerifyStripeToken()"],
+    processedCount: 45,
+    restartCount: 0,
+    stateSummary: "Balance: $4,520 (Active)",
+  },
+  {
+    id: "inventory",
+    name: "InventoryWorker",
+    role: "worker",
+    parentId: "order-sup",
+    status: "IDLE",
+    mailbox: ["DeductStock(SKU-902, qty: 1)"],
+    processedCount: 53,
+    restartCount: 0,
+    stateSummary: "ReservedItems: 12",
+  },
+  {
+    id: "notify-sup",
+    name: "NotifySupervisor",
+    role: "supervisor",
+    parentId: "root",
+    status: "IDLE",
+    mailbox: [],
+    processedCount: 44,
+    restartCount: 0,
+    stateSummary: "Managing [Email, Push]",
+  },
+  {
+    id: "email",
+    name: "EmailWorker",
+    role: "worker",
+    parentId: "notify-sup",
+    status: "IDLE",
+    mailbox: ["SendReceipt(order_88)"],
+    processedCount: 22,
+    restartCount: 0,
+    stateSummary: "SMTP Queue: 0 pending",
+  },
+  {
+    id: "push",
+    name: "PushWorker",
+    role: "worker",
+    parentId: "notify-sup",
+    status: "IDLE",
+    mailbox: [],
+    processedCount: 22,
+    restartCount: 0,
+    stateSummary: "APNS Socket: Connected",
+  },
+]
+
 export function ActorMeshVisualizer() {
   const [strategy, setStrategy] = useState<SupervisionStrategy>("OneForOne")
   const [deadLetterQueue, setDeadLetterQueue] = useState<string[]>([])
   
-  const [actors, setActors] = useState<ActorNode[]>([
-    {
-      id: "root",
-      name: "RootSupervisor",
-      role: "supervisor",
-      status: "IDLE",
-      mailbox: [],
-      processedCount: 142,
-      restartCount: 0,
-      stateSummary: "Cluster Health: OK (MaxRestarts=5/10s)",
-    },
-    {
-      id: "order-sup",
-      name: "OrderSupervisor",
-      role: "supervisor",
-      parentId: "root",
-      status: "IDLE",
-      mailbox: [],
-      processedCount: 98,
-      restartCount: 0,
-      stateSummary: "Managing [Payment, Inventory]",
-    },
-    {
-      id: "payment",
-      name: "PaymentWorker",
-      role: "worker",
-      parentId: "order-sup",
-      status: "IDLE",
-      mailbox: ["ChargeCard($120)", "VerifyStripeToken()"],
-      processedCount: 45,
-      restartCount: 0,
-      stateSummary: "Balance: $4,520 (Active)",
-    },
-    {
-      id: "inventory",
-      name: "InventoryWorker",
-      role: "worker",
-      parentId: "order-sup",
-      status: "IDLE",
-      mailbox: ["DeductStock(SKU-902, qty: 1)"],
-      processedCount: 53,
-      restartCount: 0,
-      stateSummary: "ReservedItems: 12",
-    },
-    {
-      id: "notify-sup",
-      name: "NotifySupervisor",
-      role: "supervisor",
-      parentId: "root",
-      status: "IDLE",
-      mailbox: [],
-      processedCount: 44,
-      restartCount: 0,
-      stateSummary: "Managing [Email, Push]",
-    },
-    {
-      id: "email",
-      name: "EmailWorker",
-      role: "worker",
-      parentId: "notify-sup",
-      status: "IDLE",
-      mailbox: ["SendReceipt(order_88)"],
-      processedCount: 22,
-      restartCount: 0,
-      stateSummary: "SMTP Queue: 0 pending",
-    },
-    {
-      id: "push",
-      name: "PushWorker",
-      role: "worker",
-      parentId: "notify-sup",
-      status: "IDLE",
-      mailbox: [],
-      processedCount: 22,
-      restartCount: 0,
-      stateSummary: "APNS Socket: Connected",
-    },
-  ])
+  const [actors, setActors] = useState<ActorNode[]>(INITIAL_ACTORS)
 
   const [eventLogs, setEventLogs] = useState<string[]>([
     "Erlang/OTP Actor Supervision Tree initialized. Mailbox queues active.",
@@ -234,89 +230,12 @@ export function ActorMeshVisualizer() {
   const handleReset = () => {
     soundFx.playChime()
     setDeadLetterQueue([])
-    setActors([
-      {
-        id: "root",
-        name: "RootSupervisor",
-        role: "supervisor",
-        status: "IDLE",
-        mailbox: [],
-        processedCount: 142,
-        restartCount: 0,
-        stateSummary: "Cluster Health: OK (MaxRestarts=5/10s)",
-      },
-      {
-        id: "order-sup",
-        name: "OrderSupervisor",
-        role: "supervisor",
-        parentId: "root",
-        status: "IDLE",
-        mailbox: [],
-        processedCount: 98,
-        restartCount: 0,
-        stateSummary: "Managing [Payment, Inventory]",
-      },
-      {
-        id: "payment",
-        name: "PaymentWorker",
-        role: "worker",
-        parentId: "order-sup",
-        status: "IDLE",
-        mailbox: ["ChargeCard($120)", "VerifyStripeToken()"],
-        processedCount: 45,
-        restartCount: 0,
-        stateSummary: "Balance: $4,520 (Active)",
-      },
-      {
-        id: "inventory",
-        name: "InventoryWorker",
-        role: "worker",
-        parentId: "order-sup",
-        status: "IDLE",
-        mailbox: ["DeductStock(SKU-902, qty: 1)"],
-        processedCount: 53,
-        restartCount: 0,
-        stateSummary: "ReservedItems: 12",
-      },
-      {
-        id: "notify-sup",
-        name: "NotifySupervisor",
-        role: "supervisor",
-        parentId: "root",
-        status: "IDLE",
-        mailbox: [],
-        processedCount: 44,
-        restartCount: 0,
-        stateSummary: "Managing [Email, Push]",
-      },
-      {
-        id: "email",
-        name: "EmailWorker",
-        role: "worker",
-        parentId: "notify-sup",
-        status: "IDLE",
-        mailbox: ["SendReceipt(order_88)"],
-        processedCount: 22,
-        restartCount: 0,
-        stateSummary: "SMTP Queue: 0 pending",
-      },
-      {
-        id: "push",
-        name: "PushWorker",
-        role: "worker",
-        parentId: "notify-sup",
-        status: "IDLE",
-        mailbox: [],
-        processedCount: 22,
-        restartCount: 0,
-        stateSummary: "APNS Socket: Connected",
-      },
-    ])
+    setActors(INITIAL_ACTORS)
     setEventLogs(["Actor Supervision Tree restored to baseline state."])
   }
 
-  const totalRestarts = actors.reduce((acc, a) => acc + a.restartCount, 0)
-  const totalMessagesProcessed = actors.reduce((acc, a) => acc + a.processedCount, 0)
+  const totalRestarts = useMemo(() => actors.reduce((acc, a) => acc + a.restartCount, 0), [actors])
+  const totalMessagesProcessed = useMemo(() => actors.reduce((acc, a) => acc + a.processedCount, 0), [actors])
 
   return (
     <div className="flex flex-col gap-8 font-mono text-xs">

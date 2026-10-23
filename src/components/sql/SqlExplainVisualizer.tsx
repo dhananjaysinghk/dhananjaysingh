@@ -1,11 +1,9 @@
 "use client"
 
 import React, { useState } from "react"
-import { motion } from "framer-motion"
-import { Database, Search, Zap, Layers, Server, Play, FileText, CheckCircle2, ArrowRight } from "lucide-react"
+import { Database, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { soundFx } from "@/lib/sound"
 
 interface QueryScenario {

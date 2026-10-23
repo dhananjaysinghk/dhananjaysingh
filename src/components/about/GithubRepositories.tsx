@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 import { motion } from "framer-motion"
-import { Github, Star, GitFork, Copy, Check, Terminal, ExternalLink, Code2 } from "lucide-react"
+import { Star, GitFork, Copy, Check, ExternalLink, Code2 } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { soundFx } from "@/lib/sound"
