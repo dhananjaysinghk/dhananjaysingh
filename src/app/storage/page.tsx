@@ -2,7 +2,7 @@ import React from "react"
 import { Metadata } from "next"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
 import { LsmTreeVisualizer } from "@/components/storage/LsmTreeVisualizer"
-import { Database, Cpu, HardDrive, Filter, Flame } from "lucide-react"
+import { Database, Cpu, Filter, Flame } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "LSM-Tree Storage Engine & Compaction Simulator | Dhananjay Singh",

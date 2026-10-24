@@ -2,8 +2,7 @@
 
 import React from "react"
 import Link from "next/link"
-import { motion } from "framer-motion"
-import { ArrowRight, Terminal, Github, Linkedin, Twitter, Mail } from "lucide-react"
+import { ArrowRight, Github, Linkedin, Twitter, Mail } from "lucide-react"
 import { FadeIn, SlideUp } from "@/components/animation/motion-wrapper"
 
 export function Hero() {

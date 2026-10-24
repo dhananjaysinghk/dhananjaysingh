@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
 import {
   Database,
   HardDrive,
@@ -14,9 +13,6 @@ import {
   Search,
   Filter,
   Flame,
-  CheckCircle2,
-  AlertCircle,
-  Play,
   FileSpreadsheet,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"

@@ -1,8 +1,7 @@
 "use client"
 
-import React, { useState } from "react"
+import React from "react"
 import Link from "next/link"
-import { motion } from "framer-motion"
 import {
   RotateCcw,
   Layers,
@@ -13,7 +12,6 @@ import {
   Zap,
   Terminal,
   Activity,
-  FolderTree,
   Shield,
 } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"

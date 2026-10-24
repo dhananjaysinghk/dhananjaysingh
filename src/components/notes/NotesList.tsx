@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react"
 import Link from "next/link"
-import { Search, FolderOpen, Inbox, FileText } from "lucide-react"
+import { Search, Inbox, FileText } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 

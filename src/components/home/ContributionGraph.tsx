@@ -1,53 +1,48 @@
 "use client"
 
-import React, { useMemo } from "react"
+import React from "react"
 import { motion } from "framer-motion"
 import { GitCommit, Info } from "lucide-react"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
 
-export function ContributionGraph() {
-  // Generate mock contribution grid data (53 weeks * 7 days)
-  const gridData = useMemo(() => {
-    const data: number[] = []
-    // 0 = no commits, 1 = low, 2 = medium, 3 = high, 4 = very high
-    // Custom probability distribution to look like a realistic commit graph
-    for (let i = 0; i < 371; i++) {
-      const rand = Math.random()
-      if (rand < 0.3) data.push(0)
-      else if (rand < 0.6) data.push(1)
-      else if (rand < 0.85) data.push(2)
-      else if (rand < 0.95) data.push(3)
-      else data.push(4)
-    }
-    return data
-  }, [])
-
-  // Color mappings based on contribution level
-  const getColorClass = (level: number) => {
-    switch (level) {
-      case 0:
-        return "bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50"
-      case 1:
-        return "bg-emerald-200 dark:bg-emerald-950 border border-emerald-300/30 dark:border-emerald-900/30"
-      case 2:
-        return "bg-emerald-300 dark:bg-emerald-800 border border-emerald-400/30 dark:border-emerald-700/30"
-      case 3:
-        return "bg-emerald-400 dark:bg-emerald-600"
-      case 4:
-        return "bg-emerald-500 dark:bg-emerald-400"
-      default:
-        return "bg-zinc-100 dark:bg-zinc-900"
-    }
+// Color mappings based on contribution level
+const getColorClass = (level: number) => {
+  switch (level) {
+    case 0:
+      return "bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50"
+    case 1:
+      return "bg-emerald-200 dark:bg-emerald-950 border border-emerald-300/30 dark:border-emerald-900/30"
+    case 2:
+      return "bg-emerald-300 dark:bg-emerald-800 border border-emerald-400/30 dark:border-emerald-700/30"
+    case 3:
+      return "bg-emerald-400 dark:bg-emerald-600"
+    case 4:
+      return "bg-emerald-500 dark:bg-emerald-400"
+    default:
+      return "bg-zinc-100 dark:bg-zinc-900"
   }
+}
 
-  // Split into columns of 7 days
-  const columns = useMemo(() => {
-    const cols = []
-    for (let i = 0; i < gridData.length; i += 7) {
-      cols.push(gridData.slice(i, i + 7))
-    }
-    return cols
-  }, [gridData])
+// Generate static deterministic contribution grid data (53 weeks * 7 days)
+const STATIC_COLUMNS: number[][] = (() => {
+  const data: number[] = []
+  for (let i = 0; i < 371; i++) {
+    // Deterministic pseudo-random seed based on index
+    const pseudo = ((i * 1664525 + 1013904223) >>> 0) / 4294967296
+    if (pseudo < 0.3) data.push(0)
+    else if (pseudo < 0.6) data.push(1)
+    else if (pseudo < 0.85) data.push(2)
+    else if (pseudo < 0.95) data.push(3)
+    else data.push(4)
+  }
+  const cols: number[][] = []
+  for (let i = 0; i < data.length; i += 7) {
+    cols.push(data.slice(i, i + 7))
+  }
+  return cols
+})()
+
+export function ContributionGraph() {
 
   return (
     <section className="py-20">
@@ -81,7 +76,7 @@ export function ContributionGraph() {
               {/* Grid Scroll Wrapper */}
               <div className="overflow-x-auto pb-2 scrollbar-thin">
                 <div className="flex gap-0.75 min-w-175 select-none justify-between">
-                  {columns.map((col, colIdx) => (
+                  {STATIC_COLUMNS.map((col, colIdx) => (
                     <div key={colIdx} className="flex flex-col gap-0.75">
                       {col.map((level, dayIdx) => (
                         <motion.div

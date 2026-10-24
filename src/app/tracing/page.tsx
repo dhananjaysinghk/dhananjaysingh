@@ -2,7 +2,7 @@ import React from "react"
 import { Metadata } from "next"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
 import { DistributedTraceViewer } from "@/components/tracing/DistributedTraceViewer"
-import { Activity, Layers, Server, Shield, Zap } from "lucide-react"
+import { Activity, Layers, Server, Shield } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Distributed Tracing & OpenTelemetry Waterfall | Dhananjay Singh",

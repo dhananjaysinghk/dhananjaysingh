@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Terminal, X, Minimize2, Maximize2, RefreshCw } from "lucide-react"
+import { Terminal, X, Minimize2 } from "lucide-react"
 
 interface CommandHistory {
   input: string

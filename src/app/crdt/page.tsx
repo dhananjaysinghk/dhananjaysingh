@@ -2,7 +2,7 @@ import React from "react"
 import { Metadata } from "next"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
 import { CrdtVisualizer } from "@/components/crdt/CrdtVisualizer"
-import { Network, Share2, Layers, Cpu, Globe } from "lucide-react"
+import { Network, Layers, Cpu, Globe } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "CRDT & Vector Clock Distributed Sync Mesh | Dhananjay Singh",
