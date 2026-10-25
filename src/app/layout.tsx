@@ -4,7 +4,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CommandMenu } from "@/components/layout/CommandMenu";
-import { TerminalSandbox } from "@/components/layout/TerminalSandbox";
 import { ConsoleEasterEgg } from "@/components/layout/ConsoleEasterEgg";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { QuickContactModal } from "@/components/contact/QuickContactModal";
@@ -65,7 +64,6 @@ export default function RootLayout({
           </main>
           <Footer />
           <CommandMenu />
-          <TerminalSandbox />
           <ConsoleEasterEgg />
           <ScrollToTop />
           <QuickContactModal />

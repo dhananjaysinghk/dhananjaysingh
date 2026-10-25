@@ -97,57 +97,13 @@ export function Footer() {
                   Knowledge Notes
                 </Link>
               </li>
-              <li>
-                <Link href="/adr" className="transition-colors hover:text-foreground">
-                  Architecture ADRs
-                </Link>
-              </li>
-              <li>
-                <Link href="/guestbook" className="transition-colors hover:text-foreground">
-                  Guestbook
-                </Link>
-              </li>
             </ul>
           </div>
 
-          {/* Column: Interactive Labs */}
+          {/* Column: Navigation */}
           <div className="flex flex-col space-y-3">
             <h3 className="font-mono text-xs font-semibold uppercase tracking-wider text-foreground">
-              Systems Labs
-            </h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>
-                <Link href="/labs" className="font-semibold text-primary transition-colors hover:underline">
-                  All Labs Directory →
-                </Link>
-              </li>
-              <li>
-                <Link href="/raft" className="transition-colors hover:text-foreground">
-                  Raft Consensus Engine
-                </Link>
-              </li>
-              <li>
-                <Link href="/allocator" className="transition-colors hover:text-foreground">
-                  Buddy & Slab Allocator
-                </Link>
-              </li>
-              <li>
-                <Link href="/zerocopy" className="transition-colors hover:text-foreground">
-                  Linux Zero-Copy DMA
-                </Link>
-              </li>
-              <li>
-                <Link href="/terminal" className="transition-colors hover:text-foreground">
-                  UNIX Interactive Shell
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column: Navigation & Info */}
-          <div className="flex flex-col space-y-3">
-            <h3 className="font-mono text-xs font-semibold uppercase tracking-wider text-foreground">
-              Info & Connect
+              Navigation
             </h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
@@ -165,15 +121,23 @@ export function Footer() {
                   Get in Touch
                 </Link>
               </li>
+            </ul>
+          </div>
+
+          {/* Column: Resources & Info */}
+          <div className="flex flex-col space-y-3">
+            <h3 className="font-mono text-xs font-semibold uppercase tracking-wider text-foreground">
+              Resources
+            </h3>
+            <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
                 <Link href="/uses" className="transition-colors hover:text-foreground">
                   Hardware & Setup
                 </Link>
               </li>
               <li>
-                <Link href="/status" className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                  System Status
+                <Link href="/guestbook" className="transition-colors hover:text-foreground">
+                  Guestbook
                 </Link>
               </li>
             </ul>

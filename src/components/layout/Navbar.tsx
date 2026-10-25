@@ -5,14 +5,13 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, Sun, Moon, Volume2, VolumeX, Terminal } from "lucide-react"
+import { Menu, X, Sun, Moon, Volume2, VolumeX } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { soundFx } from "@/lib/sound"
 
 const navItems = [
   { name: "About", href: "/about" },
   { name: "Projects", href: "/projects" },
-  { name: "Labs", href: "/labs" },
   { name: "Blog", href: "/blog" },
   { name: "Notes", href: "/notes" },
   { name: "Resume", href: "/resume" },
@@ -81,18 +80,8 @@ export function Navbar() {
             })}
           </nav>
 
-          {/* Actions: Terminal CLI, Sound Switcher, Theme Switcher & Mobile Menu Button */}
+          {/* Actions: Sound Switcher, Theme Switcher & Mobile Menu Button */}
           <div className="flex items-center space-x-2 sm:space-x-3">
-            {/* Terminal CLI Button */}
-            <Link
-              href="/terminal"
-              onClick={() => soundFx.playClick()}
-              className="relative rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground focus:outline-none transition-all"
-              title="Open Interactive Systems Terminal"
-              aria-label="Open Interactive Systems Terminal"
-            >
-              <Terminal className="h-4 w-4 text-emerald-500" />
-            </Link>
 
             {/* Sound FX Toggle Button */}
             {mounted && (
