@@ -189,15 +189,19 @@ export default async function Home() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {projects.map((project) => (
-                  <Card key={project.slug} className="flex flex-col h-full bg-card/25 backdrop-blur-sm border-border/40 hover:border-border/80 transition-all hover:bg-card/45 group">
+                  <Card
+                    key={project.slug}
+                    className="flex flex-col h-full bg-card/30 backdrop-blur-sm border-border/40 hover:border-primary/40 transition-all duration-300 hover:bg-card/60 hover:shadow-xl hover:shadow-primary/5 group relative overflow-hidden"
+                  >
+                    <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <CardHeader className="pb-4">
                       <div className="flex items-center justify-between gap-2 mb-2">
-                        <span className="text-xs font-mono tracking-tight text-muted-foreground uppercase">
+                        <span className="text-[11px] font-mono tracking-wider text-muted-foreground uppercase px-2 py-0.5 rounded-full border border-border/20 bg-muted/30">
                           {project.category}
                         </span>
                       </div>
                       <CardTitle className="font-heading text-lg font-bold group-hover:text-primary transition-colors">
-                        <Link href={`/projects/${project.slug}`}>
+                        <Link href={`/projects/${project.slug}`} className="hover:underline underline-offset-4">
                           {project.title}
                         </Link>
                       </CardTitle>
@@ -208,19 +212,31 @@ export default async function Home() {
                       </CardDescription>
                       <div className="flex flex-wrap gap-1.5 mt-4">
                         {project.techStack.map((tech) => (
-                          <Badge key={tech} variant="outline" className="px-2 py-0.5 text-[10px] font-mono border-border/30 text-muted-foreground">
+                          <Badge
+                            key={tech}
+                            variant="secondary"
+                            className="px-2 py-0.5 text-[10px] font-mono border border-border/20 bg-muted/40 text-foreground/80 hover:bg-muted"
+                          >
                             {tech}
                           </Badge>
                         ))}
                       </div>
                     </CardContent>
                     <CardFooter className="pt-4 border-t border-border/20 flex gap-4 text-xs font-medium">
-                      <Link href={`/projects/${project.slug}`} className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors">
+                      <Link
+                        href={`/projects/${project.slug}`}
+                        className="inline-flex items-center gap-1.5 font-medium text-foreground/80 group-hover:text-primary transition-colors"
+                      >
                         View Case Study
-                        <ArrowRight className="h-3.5 w-3.5" />
+                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                       </Link>
                       {project.github && (
-                        <a href={project.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 ml-auto text-muted-foreground hover:text-foreground transition-colors">
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 ml-auto text-muted-foreground hover:text-foreground transition-colors p-1 rounded hover:bg-muted/30"
+                        >
                           <Github className="h-3.5 w-3.5" />
                           Source
                         </a>
@@ -302,12 +318,12 @@ export default async function Home() {
                   <Link
                     key={note.slug}
                     href={`/notes/${note.category.toLowerCase().replace(/\s+/g, "-")}/${note.slug}`}
-                    className="p-4 rounded-lg border border-border/30 bg-card/25 hover:border-border/80 transition-all hover:bg-card/45 group"
+                    className="p-4 rounded-xl border border-border/40 bg-card/30 hover:border-purple-500/40 transition-all duration-300 hover:bg-card/60 hover:shadow-md hover:shadow-purple-500/5 group"
                   >
-                    <span className="text-[10px] font-mono font-semibold text-purple-500 uppercase tracking-wider block mb-1">
+                    <span className="text-[10px] font-mono font-semibold text-purple-400 bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded-full inline-block mb-2">
                       {note.category}
                     </span>
-                    <h4 className="font-heading text-sm font-bold text-foreground/90 group-hover:text-primary transition-colors leading-tight">
+                    <h4 className="font-heading text-sm font-bold text-foreground/90 group-hover:text-primary transition-colors leading-snug">
                       {note.title}
                     </h4>
                   </Link>
