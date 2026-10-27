@@ -175,7 +175,7 @@ export function ProjectsShowcase({ initialProjects }: ProjectsShowcaseProps) {
               transition={{ duration: 0.3 }}
             >
               <Card className="flex flex-col h-full bg-card/30 backdrop-blur-sm border-border/40 hover:border-primary/40 transition-all duration-300 hover:bg-card/60 hover:shadow-xl hover:shadow-primary/5 group relative overflow-hidden">
-                <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <CardHeader className="pb-4">
                   <div className="flex items-center justify-between gap-2 mb-2">
                     <span className="text-[11px] font-mono tracking-wider text-muted-foreground uppercase px-2 py-0.5 rounded-full border border-border/20 bg-muted/30">
