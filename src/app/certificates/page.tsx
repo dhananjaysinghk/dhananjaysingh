@@ -119,26 +119,34 @@ export default async function CertificatesPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {certificates.map((cert) => (
           <ScrollReveal key={cert.id}>
-            <Card className="h-full bg-card/25 border-border/40 hover:border-border/80 transition-all hover:bg-card/45 group">
+            <Card className="h-full flex flex-col justify-between bg-card/30 border-border/40 hover:border-primary/40 transition-all duration-300 hover:bg-card/60 hover:shadow-xl hover:shadow-primary/5 group relative overflow-hidden">
+              <div className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <CardHeader className="pb-3 flex flex-row items-start justify-between gap-4">
-                <div className="flex flex-col gap-1.5">
+                <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground font-mono">
-                    <Calendar className="h-3.5 w-3.5" />
+                    <Calendar className="h-3.5 w-3.5 text-primary" />
                     <span>Issued {cert.issueDate}</span>
                   </div>
                   <CardTitle className="font-heading text-lg font-bold text-foreground group-hover:text-primary transition-colors leading-tight">
                     {cert.title}
                   </CardTitle>
                 </div>
-                <div className="rounded-lg bg-primary/10 p-2 text-primary border border-primary/20 shrink-0">
+                <div className="rounded-xl bg-primary/10 p-2.5 text-primary border border-primary/20 shrink-0 group-hover:scale-105 transition-transform">
                   <Award className="h-5 w-5" />
                 </div>
               </CardHeader>
-              <CardContent className="pb-4">
-                <div className="flex flex-col gap-1 text-sm font-sans text-muted-foreground">
-                  <span>Authorized Issuer: <strong className="text-foreground/90">{cert.issuer}</strong></span>
+              <CardContent className="pb-4 grow">
+                <div className="flex flex-col gap-2 text-sm font-sans text-muted-foreground">
+                  <span>
+                    Authorized Issuer:{" "}
+                    <strong className="text-foreground/90 font-medium">{cert.issuer}</strong>
+                  </span>
                   {cert.credentialId && (
-                    <span className="font-mono text-xs mt-1">Credential ID: {cert.credentialId}</span>
+                    <div className="inline-flex items-center gap-1.5 self-start mt-1">
+                      <span className="text-[11px] font-mono px-2 py-0.5 rounded-md border border-border/30 bg-muted/40 text-foreground/80">
+                        ID: {cert.credentialId}
+                      </span>
+                    </div>
                   )}
                 </div>
               </CardContent>
@@ -148,10 +156,10 @@ export default async function CertificatesPage() {
                     href={cert.credentialUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors group/link"
                   >
-                    Verify Credential Authority
-                    <ExternalLink className="h-3.5 w-3.5" />
+                    <span>Verify Credential Authority</span>
+                    <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-0.5" />
                   </a>
                 </CardFooter>
               )}

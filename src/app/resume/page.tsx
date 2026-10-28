@@ -107,7 +107,8 @@ export default function ResumePage() {
 
       {/* Resume Card Frame */}
       <ScrollReveal delay={0.1}>
-        <div className="bg-card/20 border border-border/40 rounded-2xl p-8 sm:p-12 backdrop-blur-sm shadow-sm print:border-none print:bg-white print:text-black print:p-0 print:shadow-none">
+        <div className="relative overflow-hidden bg-card/30 border border-border/40 rounded-2xl p-8 sm:p-12 backdrop-blur-md shadow-xl print:border-none print:bg-white print:text-black print:p-0 print:shadow-none">
+          <div className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-primary/20 via-primary to-primary/20 print:hidden" />
           
           {/* Header */}
           <div className="flex flex-col md:flex-row justify-between gap-6 pb-8 border-b border-border/20 print:border-zinc-300">

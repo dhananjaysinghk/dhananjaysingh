@@ -109,7 +109,7 @@ export function PostInteractions({ title, slug, type = "blog" }: PostInteraction
                 className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-mono border transition-all ${
                   hasReacted
                     ? "bg-primary/20 text-primary border-primary/50 shadow-xs"
-                    : "border-border/30 bg-card/25 text-muted-foreground hover:text-foreground hover:border-border/60"
+                    : "border-border/40 bg-card/30 text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-card/50"
                 }`}
                 title={r.label}
               >
@@ -129,7 +129,7 @@ export function PostInteractions({ title, slug, type = "blog" }: PostInteraction
         <div className="flex items-center gap-2">
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1.5 rounded-lg border border-border/30 bg-card/25 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:border-border/60 transition-all"
+            className="flex items-center gap-1.5 rounded-lg border border-border/40 bg-card/30 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-card/50 transition-all"
             title="Copy link to clipboard"
           >
             {copied ? (
@@ -149,7 +149,7 @@ export function PostInteractions({ title, slug, type = "blog" }: PostInteraction
             href={twitterShareUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg border border-border/30 bg-card/25 p-2 text-muted-foreground hover:text-foreground hover:border-border/60 transition-all"
+            className="rounded-lg border border-border/40 bg-card/30 p-2 text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-card/50 transition-all"
             title="Share on X"
           >
             <Twitter className="h-3.5 w-3.5" />
@@ -159,7 +159,7 @@ export function PostInteractions({ title, slug, type = "blog" }: PostInteraction
             href={linkedinShareUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg border border-border/30 bg-card/25 p-2 text-muted-foreground hover:text-foreground hover:border-border/60 transition-all"
+            className="rounded-lg border border-border/40 bg-card/30 p-2 text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-card/50 transition-all"
             title="Share on LinkedIn"
           >
             <Linkedin className="h-3.5 w-3.5" />

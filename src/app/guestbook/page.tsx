@@ -108,14 +108,14 @@ export default async function GuestbookPage() {
         <div className="flex flex-col gap-4">
           {entries.map((entry, idx) => (
             <ScrollReveal key={entry.id} delay={idx * 0.04}>
-              <Card className="bg-card/20 border-border/30 hover:border-border/60 transition-all">
+              <Card className="bg-card/30 border-border/40 hover:border-primary/40 hover:bg-card/50 transition-all duration-300 backdrop-blur-sm group">
                 <CardHeader className="pb-2 flex flex-row items-center justify-between gap-4">
-                  <div className="flex items-center gap-2.5">
-                    <div className="h-7 w-7 rounded-full bg-primary/10 text-primary border border-primary/20 flex items-center justify-center font-bold text-xs font-mono">
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-full bg-primary/10 text-primary border border-primary/20 flex items-center justify-center font-bold text-xs font-mono shadow-xs">
                       {entry.name[0]?.toUpperCase()}
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-heading text-sm font-bold text-foreground">
+                      <span className="font-heading text-sm font-bold text-foreground group-hover:text-primary transition-colors">
                         {entry.name}
                       </span>
                       {entry.handle && (
@@ -126,12 +126,12 @@ export default async function GuestbookPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1 text-[11px] font-mono text-muted-foreground">
-                    <Calendar className="h-3 w-3" />
+                  <div className="flex items-center gap-1.5 text-[11px] font-mono text-muted-foreground px-2 py-0.5 rounded-md border border-border/20 bg-muted/30">
+                    <Calendar className="h-3 w-3 text-primary" />
                     <span>{entry.createdAt}</span>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed font-sans">
+                <CardContent className="pt-2 text-xs sm:text-sm text-foreground/80 leading-relaxed font-sans">
                   &ldquo;{entry.message}&rdquo;
                 </CardContent>
               </Card>

@@ -159,14 +159,15 @@ export function UsesGrid() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.04 }}
           >
-            <Card className="h-full bg-card/25 border-border/40 backdrop-blur-sm hover:border-border/70 transition-all flex flex-col justify-between">
+            <Card className="h-full bg-card/30 border-border/40 backdrop-blur-sm hover:border-primary/40 hover:bg-card/60 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
+              <div className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between gap-2">
-                  <Badge variant="outline" className="text-[10px] font-mono border-border/40 text-muted-foreground">
+                  <Badge variant="secondary" className="text-[10px] font-mono border border-border/20 bg-muted/40 text-foreground/80">
                     {item.category}
                   </Badge>
                 </div>
-                <CardTitle className="font-heading text-base font-bold text-foreground mt-1">
+                <CardTitle className="font-heading text-base font-bold text-foreground group-hover:text-primary transition-colors mt-1">
                   {item.name}
                 </CardTitle>
               </CardHeader>
@@ -180,7 +181,7 @@ export function UsesGrid() {
                   {item.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-md bg-card/30 border border-border/25 px-2 py-0.5 text-[10px] font-mono text-muted-foreground"
+                      className="rounded-md bg-muted/40 border border-border/25 px-2 py-0.5 text-[10px] font-mono text-foreground/80"
                     >
                       {tag}
                     </span>
