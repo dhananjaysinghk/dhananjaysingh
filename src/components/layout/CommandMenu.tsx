@@ -17,6 +17,8 @@ import {
   MessageSquare,
   User,
   Mail,
+  Award,
+  Activity,
 } from "lucide-react"
 
 interface SearchItem {
@@ -46,6 +48,8 @@ export function CommandMenu() {
     { title: "Get in Touch & Contact (/contact)", category: "Navigation", href: "/contact", type: "action", icon: Mail },
     { title: "Sign Developer Guestbook (/guestbook)", category: "Navigation", href: "/guestbook", type: "action", icon: MessageSquare },
     { title: "Developer Setup & Gear (/uses)", category: "Navigation", href: "/uses", type: "action", icon: Laptop },
+    { title: "View Certificates & Credentials (/certificates)", category: "Navigation", href: "/certificates", type: "action", icon: Award },
+    { title: "System Telemetry & Live Status (/status)", category: "Navigation", href: "/status", type: "action", icon: Activity },
     { title: "Nova Orchestrator Case Study", category: "Projects", href: "/projects/nova-orchestrator", type: "project", icon: Briefcase },
     { title: "Aura Ledger Case Study", category: "Projects", href: "/projects/aura-ledger", type: "project", icon: Briefcase },
     { title: "Vortex CDN Case Study", category: "Projects", href: "/projects/vortex-cdn", type: "project", icon: Briefcase },

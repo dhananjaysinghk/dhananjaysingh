@@ -131,6 +131,16 @@ export function Footer() {
             </h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
+                <Link href="/certificates" className="transition-colors hover:text-foreground">
+                  Certifications
+                </Link>
+              </li>
+              <li>
+                <Link href="/status" className="transition-colors hover:text-foreground">
+                  System Status
+                </Link>
+              </li>
+              <li>
                 <Link href="/uses" className="transition-colors hover:text-foreground">
                   Hardware & Setup
                 </Link>

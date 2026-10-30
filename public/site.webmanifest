@@ -1,6 +1,8 @@
 {
   "name": "Dhananjay Singh | Software Engineer",
   "short_name": "Dhananjay S.",
+  "start_url": "/",
+  "scope": "/",
   "icons": [
     {
       "src": "/icon.png",
