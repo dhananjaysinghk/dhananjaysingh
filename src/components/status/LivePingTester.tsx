@@ -1,8 +1,8 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Activity, RefreshCw, Zap, Server, Clock } from "lucide-react"
+import { Activity, RefreshCw, Zap, Server, Clock, Wifi } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 
@@ -11,6 +11,7 @@ export function LivePingTester() {
     latency: number
     serverTimestamp: string
     status: string
+    history: number[]
   } | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -23,21 +24,31 @@ export function LivePingTester() {
       const t1 = performance.now()
       const roundTrip = Math.round(t1 - t0)
 
-      setPingResult({
-        latency: roundTrip,
-        serverTimestamp: data.timestamp,
-        status: data.status,
+      setPingResult((prev) => {
+        const history = prev ? [...prev.history.slice(-7), roundTrip] : [roundTrip]
+        return {
+          latency: roundTrip,
+          serverTimestamp: data.timestamp,
+          status: data.status,
+          history,
+        }
       })
     } catch {
-      setPingResult({
+      setPingResult((prev) => ({
         latency: -1,
         serverTimestamp: new Date().toISOString(),
         status: "unreachable",
-      })
+        history: prev ? [...prev.history.slice(-7), -1] : [-1],
+      }))
     } finally {
       setLoading(false)
     }
   }
+
+  // Auto-measure once on initial mount for instant feedback
+  useEffect(() => {
+    testPing()
+  }, [])
 
   return (
     <Card className="bg-card/30 border-border/40 backdrop-blur-md shadow-lg relative overflow-hidden">
@@ -73,54 +84,82 @@ export function LivePingTester() {
           <motion.div
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+            className="flex flex-col gap-4"
           >
-            <div className="rounded-xl border border-border/40 bg-card/40 p-4 flex flex-col gap-1 backdrop-blur-sm">
-              <span className="text-[10px] font-mono uppercase text-muted-foreground flex items-center gap-1.5">
-                <Zap className="h-3 w-3 text-emerald-400" />
-                Round-Trip Time
-              </span>
-              <span className="font-mono text-2xl font-bold text-emerald-400">
-                {pingResult.latency >= 0 ? `${pingResult.latency} ms` : "Error"}
-              </span>
-              <span className="text-[10px] text-muted-foreground font-mono">
-                {pingResult.latency < 50
-                  ? "Ultra-low edge response"
-                  : pingResult.latency < 150
-                  ? "Optimal network speed"
-                  : "High latency region"}
-              </span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="rounded-xl border border-border/40 bg-card/40 p-4 flex flex-col gap-1 backdrop-blur-sm">
+                <span className="text-[10px] font-mono uppercase text-muted-foreground flex items-center gap-1.5">
+                  <Zap className="h-3 w-3 text-emerald-400" />
+                  Round-Trip Time
+                </span>
+                <span className="font-mono text-2xl font-bold text-emerald-400">
+                  {pingResult.latency >= 0 ? `${pingResult.latency} ms` : "Error"}
+                </span>
+                <span className="text-[10px] text-muted-foreground font-mono">
+                  {pingResult.latency < 50
+                    ? "Ultra-low edge response"
+                    : pingResult.latency < 150
+                    ? "Optimal network speed"
+                    : "High latency region"}
+                </span>
+              </div>
+
+              <div className="rounded-xl border border-border/40 bg-card/40 p-4 flex flex-col gap-1 backdrop-blur-sm">
+                <span className="text-[10px] font-mono uppercase text-muted-foreground flex items-center gap-1.5">
+                  <Server className="h-3 w-3 text-indigo-400" />
+                  Node Health Status
+                </span>
+                <span className="font-mono text-2xl font-bold uppercase text-foreground">
+                  {pingResult.status}
+                </span>
+                <span className="text-[10px] text-muted-foreground font-mono">
+                  All microservices healthy
+                </span>
+              </div>
+
+              <div className="rounded-xl border border-border/40 bg-card/40 p-4 flex flex-col gap-1 backdrop-blur-sm">
+                <span className="text-[10px] font-mono uppercase text-muted-foreground flex items-center gap-1.5">
+                  <Clock className="h-3 w-3 text-purple-400" />
+                  Server Sync Time
+                </span>
+                <span className="font-mono text-sm font-semibold text-foreground truncate mt-1">
+                  {new Date(pingResult.serverTimestamp).toLocaleTimeString()}
+                </span>
+                <span className="text-[10px] text-muted-foreground font-mono">
+                  NTP synchronized clock
+                </span>
+              </div>
             </div>
 
-            <div className="rounded-xl border border-border/40 bg-card/40 p-4 flex flex-col gap-1 backdrop-blur-sm">
-              <span className="text-[10px] font-mono uppercase text-muted-foreground flex items-center gap-1.5">
-                <Server className="h-3 w-3 text-indigo-400" />
-                Node Health Status
-              </span>
-              <span className="font-mono text-2xl font-bold uppercase text-foreground">
-                {pingResult.status}
-              </span>
-              <span className="text-[10px] text-muted-foreground font-mono">
-                All microservices healthy
-              </span>
-            </div>
-
-            <div className="rounded-xl border border-border/40 bg-card/40 p-4 flex flex-col gap-1 backdrop-blur-sm">
-              <span className="text-[10px] font-mono uppercase text-muted-foreground flex items-center gap-1.5">
-                <Clock className="h-3 w-3 text-purple-400" />
-                Server Sync Time
-              </span>
-              <span className="font-mono text-sm font-semibold text-foreground truncate mt-1">
-                {new Date(pingResult.serverTimestamp).toLocaleTimeString()}
-              </span>
-              <span className="text-[10px] text-muted-foreground font-mono">
-                NTP synchronized clock
-              </span>
-            </div>
+            {/* Sparkline History */}
+            {pingResult.history.length > 1 && (
+              <div className="flex items-center justify-between px-4 py-2.5 rounded-lg border border-border/30 bg-muted/20 text-xs font-mono">
+                <span className="text-muted-foreground text-[11px] flex items-center gap-1.5">
+                  <Wifi className="h-3.5 w-3.5 text-primary" />
+                  Recent Probe History:
+                </span>
+                <div className="flex items-center gap-2">
+                  {pingResult.history.map((lat, i) => (
+                    <span
+                      key={i}
+                      className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                        lat < 0
+                          ? "bg-red-500/20 text-red-400"
+                          : lat < 50
+                          ? "bg-emerald-500/20 text-emerald-400"
+                          : "bg-amber-500/20 text-amber-400"
+                      }`}
+                    >
+                      {lat >= 0 ? `${lat}ms` : "ERR"}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </motion.div>
         ) : (
           <div className="py-6 text-center text-xs font-mono text-muted-foreground border border-dashed border-border/40 rounded-xl bg-card/10">
-            Click &quot;Ping Endpoint&quot; above to initiate live network telemetry probes.
+            Measuring edge network telemetry...
           </div>
         )}
       </CardContent>
