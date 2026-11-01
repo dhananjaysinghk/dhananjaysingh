@@ -12,6 +12,7 @@ export function LivePingTester() {
     serverTimestamp: string
     status: string
     history: number[]
+    services?: Record<string, string>
   } | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -31,6 +32,7 @@ export function LivePingTester() {
           serverTimestamp: data.timestamp,
           status: data.status,
           history,
+          services: data.services,
         }
       })
     } catch {
@@ -52,7 +54,7 @@ export function LivePingTester() {
 
   return (
     <Card className="bg-card/30 border-border/40 backdrop-blur-md shadow-lg relative overflow-hidden">
-      <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-transparent via-emerald-500/50 to-transparent" />
       <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-border/20">
         <div className="flex items-center gap-2.5">
           <div className="rounded-lg bg-emerald-500/10 p-2 text-emerald-400 border border-emerald-500/20">
@@ -131,14 +133,14 @@ export function LivePingTester() {
               </div>
             </div>
 
-            {/* Sparkline History */}
-            {pingResult.history.length > 1 && (
-              <div className="flex items-center justify-between px-4 py-2.5 rounded-lg border border-border/30 bg-muted/20 text-xs font-mono">
+            {/* Sparkline History & Microservice Matrix */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 px-4 py-2.5 rounded-lg border border-border/30 bg-muted/20 text-xs font-mono">
+              <div className="flex items-center gap-2">
                 <span className="text-muted-foreground text-[11px] flex items-center gap-1.5">
                   <Wifi className="h-3.5 w-3.5 text-primary" />
-                  Recent Probe History:
+                  Recent Probes:
                 </span>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   {pingResult.history.map((lat, i) => (
                     <span
                       key={i}
@@ -155,7 +157,18 @@ export function LivePingTester() {
                   ))}
                 </div>
               </div>
-            )}
+
+              {pingResult.services && (
+                <div className="flex items-center gap-3 text-[10px] text-muted-foreground pt-2 sm:pt-0 border-t sm:border-t-0 border-border/20">
+                  {Object.entries(pingResult.services).map(([key, val]) => (
+                    <span key={key} className="flex items-center gap-1">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                      <span className="capitalize">{key.replace(/([A-Z])/g, " $1")}</span>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
           </motion.div>
         ) : (
           <div className="py-6 text-center text-xs font-mono text-muted-foreground border border-dashed border-border/40 rounded-xl bg-card/10">
