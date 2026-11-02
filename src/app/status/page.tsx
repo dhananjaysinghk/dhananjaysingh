@@ -121,7 +121,8 @@ export default function StatusPage() {
             const Icon = svc.icon
             return (
               <ScrollReveal key={idx} delay={idx * 0.05}>
-                <Card className="h-full bg-card/30 border-border/40 hover:border-emerald-500/40 hover:bg-card/50 transition-all duration-300 backdrop-blur-sm group">
+                <Card className="h-full bg-card/30 border-border/40 hover:border-emerald-500/40 hover:bg-card/50 transition-all duration-300 backdrop-blur-sm group relative overflow-hidden">
+                  <div className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-transparent via-emerald-500/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   <CardHeader className="pb-2 flex flex-row items-start justify-between gap-4">
                     <div className="flex items-center gap-3">
                       <div className="rounded-lg bg-primary/10 p-2 text-primary border border-primary/20 shrink-0 group-hover:scale-105 transition-transform">
@@ -131,7 +132,8 @@ export default function StatusPage() {
                         {svc.name}
                       </CardTitle>
                     </div>
-                    <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-[10px] font-mono shrink-0">
+                    <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 text-[10px] font-mono shrink-0 flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                       {svc.status}
                     </Badge>
                   </CardHeader>
@@ -154,24 +156,35 @@ export default function StatusPage() {
       {/* 90-Day Uptime Grid Representation */}
       <ScrollReveal className="flex flex-col gap-4 border-t border-border/20 pt-8">
         <div className="flex items-center justify-between">
-          <h3 className="font-heading text-sm font-bold text-foreground uppercase tracking-wider">
-            90-Day Operational History
-          </h3>
-          <span className="text-xs font-mono text-emerald-400 font-bold">100.0% Availability</span>
+          <div className="flex items-center gap-2">
+            <h3 className="font-heading text-sm font-bold text-foreground uppercase tracking-wider">
+              90-Day Operational History
+            </h3>
+            <span className="text-[11px] font-mono text-muted-foreground hidden sm:inline">
+              (Rolling 90-Day Audit)
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-xs font-mono text-emerald-400 font-bold">100.0% Availability</span>
+          </div>
         </div>
 
-        <div className="grid grid-cols-30 sm:grid-cols-45 gap-1.5">
-          {Array.from({ length: 90 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-7 w-full rounded-xs bg-emerald-500/60 hover:bg-emerald-400 transition-colors"
-              title={`Day ${90 - i}: 100% Operational, 0 incidents`}
-            />
-          ))}
-        </div>
-        <div className="flex justify-between text-[10px] font-mono text-muted-foreground">
-          <span>90 days ago</span>
-          <span>Today</span>
+        <div className="p-4 rounded-xl border border-border/30 bg-card/20 backdrop-blur-sm flex flex-col gap-3">
+          <div className="grid grid-cols-30 sm:grid-cols-45 gap-1.5">
+            {Array.from({ length: 90 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-8 w-full rounded-xs bg-emerald-500/60 hover:bg-emerald-400 hover:scale-110 transition-all cursor-pointer shadow-xs hover:shadow-emerald-500/30"
+                title={`Day ${90 - i}: 100% Operational, 0 incidents, SLA satisfied`}
+              />
+            ))}
+          </div>
+          <div className="flex justify-between text-[10px] font-mono text-muted-foreground pt-1 border-t border-border/10">
+            <span>90 days ago</span>
+            <span className="text-emerald-400 font-semibold">Zero Outages Recorded</span>
+            <span>Today</span>
+          </div>
         </div>
       </ScrollReveal>
 
