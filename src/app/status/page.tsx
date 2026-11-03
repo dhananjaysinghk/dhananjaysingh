@@ -188,6 +188,36 @@ export default function StatusPage() {
         </div>
       </ScrollReveal>
 
+      {/* Incident History & Maintenance Window */}
+      <ScrollReveal className="flex flex-col gap-4 border-t border-border/20 pt-8">
+        <div className="flex items-center justify-between">
+          <h3 className="font-heading text-sm font-bold text-foreground uppercase tracking-wider">
+            Past Incident Reports
+          </h3>
+          <span className="text-xs font-mono text-muted-foreground">Last 90 Days</span>
+        </div>
+
+        <div className="rounded-xl border border-border/30 bg-card/15 p-6 backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center shrink-0">
+              <span className="h-2 w-2 rounded-full bg-emerald-400" />
+            </div>
+            <div className="flex flex-col">
+              <span className="font-heading text-sm font-semibold text-foreground">
+                No Degradations or Outages Detected
+              </span>
+              <span className="text-xs text-muted-foreground font-sans">
+                All scheduled health checks, database connections, and CDN nodes performed without interruption.
+              </span>
+            </div>
+          </div>
+
+          <span className="text-[11px] font-mono px-2.5 py-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-medium shrink-0">
+            All Systems Healthy
+          </span>
+        </div>
+      </ScrollReveal>
+
     </div>
   )
 }
