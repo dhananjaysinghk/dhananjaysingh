@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { AlertCircle, CheckCircle2, Loader2, Send } from "lucide-react"
+import { soundFx } from "@/lib/sound"
 
 // Sync schema with server-side validation rules
 const contactSchema = z.object({
@@ -42,15 +43,17 @@ export function ContactForm() {
   const onSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true)
     setSubmitStatus(null)
+    soundFx.playClick()
     try {
       const response = await submitContactForm(data)
       if (response.success) {
+        soundFx.playChime()
         setSubmitStatus({ success: true, message: "Thank you! Your message has been sent successfully." })
         reset()
       } else {
         setSubmitStatus({ success: false, message: response.error || "An error occurred during submission." })
       }
-    } catch (err) {
+    } catch {
       setSubmitStatus({ success: false, message: "A network error occurred. Please try again." })
     } finally {
       setIsSubmitting(false)
