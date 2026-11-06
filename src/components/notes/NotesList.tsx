@@ -5,6 +5,8 @@ import Link from "next/link"
 import { Search, Inbox, FileText } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { soundFx } from "@/lib/sound"
 
 interface Note {
   id: string
@@ -82,23 +84,27 @@ export function NotesList({ initialNotes }: NotesListProps) {
         <h3 className="font-heading text-sm font-bold uppercase tracking-wider text-muted-foreground pl-3">
           Categories
         </h3>
-        <nav className="flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-visible gap-1 pb-2 lg:pb-0 scrollbar-none">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => {
-                setSelectedCategory(cat)
-                setSelectedTag(null) // Reset tag filter on category switch
-              }}
-              className={`rounded-lg px-3 py-2 text-sm font-semibold text-left whitespace-nowrap transition-all ${
-                selectedCategory === cat && !selectedTag
-                  ? "bg-muted text-foreground"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+        <nav className="flex flex-row lg:flex-col overflow-x-auto lg:overflow-x-visible gap-1.5 pb-2 lg:pb-0 scrollbar-none">
+          {categories.map((cat) => {
+            const isSelected = selectedCategory === cat && !selectedTag
+            return (
+              <button
+                key={cat}
+                onClick={() => {
+                  soundFx.playClick()
+                  setSelectedCategory(cat)
+                  setSelectedTag(null) // Reset tag filter on category switch
+                }}
+                className={`rounded-lg px-3 py-2 text-sm font-semibold text-left whitespace-nowrap transition-all ${
+                  isSelected
+                    ? "bg-purple-500/15 text-purple-400 border border-purple-500/30 shadow-xs"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/40 border border-transparent"
+                }`}
+              >
+                {cat}
+              </button>
+            )
+          })}
         </nav>
       </div>
 
@@ -127,10 +133,13 @@ export function NotesList({ initialNotes }: NotesListProps) {
             return (
               <button
                 key={tag}
-                onClick={() => setSelectedTag(isSelected ? null : tag)}
+                onClick={() => {
+                  soundFx.playClick()
+                  setSelectedTag(isSelected ? null : tag)
+                }}
                 className={`rounded-md px-2.5 py-1 text-[10px] font-mono border transition-all ${
                   isSelected
-                    ? "bg-primary/20 text-primary border-primary/40 font-semibold"
+                    ? "bg-purple-500/20 text-purple-400 border-purple-500/40 font-semibold"
                     : "border-border/20 bg-card/10 text-muted-foreground hover:text-foreground hover:border-border/40"
                 }`}
               >
@@ -140,7 +149,10 @@ export function NotesList({ initialNotes }: NotesListProps) {
           })}
           {selectedTag && (
             <button
-              onClick={() => setSelectedTag(null)}
+              onClick={() => {
+                soundFx.playClick()
+                setSelectedTag(null)
+              }}
               className="text-[10px] font-mono text-red-400 hover:text-red-300 underline underline-offset-2 ml-2"
             >
               Reset Filter
@@ -156,29 +168,31 @@ export function NotesList({ initialNotes }: NotesListProps) {
               href={`/notes/${note.category.toLowerCase().replace(/\s+/g, "-")}/${note.slug}`}
               className="group"
             >
-              <Card className="h-full bg-card/25 border-border/40 group-hover:border-border/80 transition-all group-hover:bg-card/45">
+              <Card className="h-full flex flex-col justify-between bg-card/30 border-border/40 hover:border-purple-500/40 hover:bg-card/60 hover:shadow-lg hover:shadow-purple-500/5 transition-all duration-300 group relative overflow-hidden backdrop-blur-sm">
+                <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-purple-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <CardHeader className="pb-3 flex flex-row items-start justify-between gap-4">
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[10px] font-mono font-bold tracking-wider text-purple-500 uppercase">
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[10px] font-mono font-bold tracking-wider text-purple-400 bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded-full self-start uppercase">
                       {note.category}
                     </span>
                     <CardTitle className="font-heading text-base font-bold text-foreground group-hover:text-primary transition-colors leading-snug">
                       {note.title}
                     </CardTitle>
                   </div>
-                  <div className="rounded-lg bg-purple-500/10 p-2 text-purple-500 border border-purple-500/20 shrink-0">
+                  <div className="rounded-lg bg-purple-500/10 p-2 text-purple-400 border border-purple-500/20 shrink-0 group-hover:scale-105 transition-transform">
                     <FileText className="h-4 w-4" />
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="pt-0">
                   <div className="flex flex-wrap gap-1.5 mt-2">
                     {note.tags.map((tag) => (
-                      <span
+                      <Badge
                         key={tag}
-                        className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-muted border border-border/10 text-muted-foreground"
+                        variant="secondary"
+                        className="px-2 py-0.5 text-[10px] font-mono border border-border/20 bg-muted/40 text-foreground/80 hover:bg-muted"
                       >
                         #{tag}
-                      </span>
+                      </Badge>
                     ))}
                   </div>
                 </CardContent>

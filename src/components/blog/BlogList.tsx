@@ -2,9 +2,11 @@
 
 import React, { useState, useMemo } from "react"
 import Link from "next/link"
-import { Search, BookOpen, Inbox, Calendar, Clock } from "lucide-react"
+import { Search, BookOpen, Inbox, Calendar, Clock, ArrowRight } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { soundFx } from "@/lib/sound"
 
 interface BlogPost {
   id: string
@@ -98,6 +100,7 @@ export function BlogList({ initialPosts }: BlogListProps) {
             <button
               key={cat}
               onClick={() => {
+                soundFx.playClick()
                 setSelectedCategory(cat)
                 setSelectedTag(null) // Reset tag filter on category switch
               }}
@@ -124,7 +127,10 @@ export function BlogList({ initialPosts }: BlogListProps) {
           return (
             <button
               key={tag}
-              onClick={() => setSelectedTag(isSelected ? null : tag)}
+              onClick={() => {
+                soundFx.playClick()
+                setSelectedTag(isSelected ? null : tag)
+              }}
               className={`rounded-md px-2.5 py-1 text-[10px] font-mono border transition-all ${
                 isSelected
                   ? "bg-primary/20 text-primary border-primary/40 font-semibold"
@@ -137,7 +143,10 @@ export function BlogList({ initialPosts }: BlogListProps) {
         })}
         {selectedTag && (
           <button
-            onClick={() => setSelectedTag(null)}
+            onClick={() => {
+              soundFx.playClick()
+              setSelectedTag(null)
+            }}
             className="text-[10px] font-mono text-red-400 hover:text-red-300 underline underline-offset-2 ml-2"
           >
             Reset Filter
@@ -149,13 +158,16 @@ export function BlogList({ initialPosts }: BlogListProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {filteredPosts.map((post) => (
           <Link key={post.id} href={`/blog/${post.slug}`} className="group">
-            <Card className="h-full bg-card/25 border-border/40 group-hover:border-border/80 transition-all group-hover:bg-card/45">
-              <CardHeader className="pb-4">
-                <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground font-mono mb-2">
-                  <span className="text-primary font-bold uppercase">{post.category}</span>
+            <Card className="h-full flex flex-col justify-between bg-card/30 border-border/40 hover:border-primary/40 transition-all duration-300 hover:bg-card/60 hover:shadow-xl hover:shadow-primary/5 group relative overflow-hidden">
+              <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <CardHeader className="pb-3">
+                <div className="flex flex-wrap items-center gap-2.5 text-xs text-muted-foreground font-mono mb-2">
+                  <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-primary px-2 py-0.5 rounded-full border border-primary/20 bg-primary/10">
+                    {post.category}
+                  </span>
                   <span>•</span>
                   <span className="flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
+                    <Calendar className="h-3 w-3 text-muted-foreground" />
                     {post.createdAt}
                   </span>
                 </div>
@@ -163,18 +175,32 @@ export function BlogList({ initialPosts }: BlogListProps) {
                   {post.title}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="pb-4 grow">
+              <CardContent className="pb-4 grow flex flex-col justify-between gap-4">
                 <CardDescription className="text-sm font-sans text-muted-foreground leading-relaxed line-clamp-3">
                   {post.excerpt}
                 </CardDescription>
+                {post.tags && post.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 pt-2">
+                    {post.tags.map((tag) => (
+                      <Badge
+                        key={tag}
+                        variant="secondary"
+                        className="px-2 py-0.5 text-[10px] font-mono border border-border/20 bg-muted/40 text-foreground/80 hover:bg-muted"
+                      >
+                        #{tag}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </CardContent>
               <CardFooter className="pt-4 border-t border-border/20 text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors flex justify-between items-center">
-                <span className="flex items-center gap-1 font-mono">
-                  <Clock className="h-3 w-3" />
+                <span className="flex items-center gap-1.5 font-mono text-[11px]">
+                  <Clock className="h-3.5 w-3.5 text-primary" />
                   {post.readingTime}
                 </span>
-                <span className="underline underline-offset-4 group-hover:text-primary transition-colors">
-                  Read Article
+                <span className="inline-flex items-center gap-1 font-medium group-hover:text-primary transition-colors">
+                  <span>Read Article</span>
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                 </span>
               </CardFooter>
             </Card>
