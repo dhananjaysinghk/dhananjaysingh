@@ -7,7 +7,8 @@ import { Share2, Check, Copy, Twitter, Linkedin, Heart } from "lucide-react"
 interface PostInteractionsProps {
   title: string
   slug: string
-  type?: "blog" | "project"
+  type?: "blog" | "project" | "note"
+  path?: string
 }
 
 interface Reaction {
@@ -23,7 +24,7 @@ const DEFAULT_REACTIONS: Reaction[] = [
   { emoji: "⚡", label: "Super Fast", count: 6 },
 ]
 
-export function PostInteractions({ title, slug, type = "blog" }: PostInteractionsProps) {
+export function PostInteractions({ title, slug, type = "blog", path }: PostInteractionsProps) {
   const [copied, setCopied] = useState(false)
   const [reactions, setReactions] = useState<Reaction[]>(DEFAULT_REACTIONS)
   const [userReacted, setUserReacted] = useState<Record<string, boolean>>({})
@@ -86,7 +87,7 @@ export function PostInteractions({ title, slug, type = "blog" }: PostInteraction
     }
   }
 
-  const shareUrl = typeof window !== "undefined" ? window.location.href : `https://dhananjay.dev/${type}/${slug}`
+  const shareUrl = typeof window !== "undefined" ? window.location.href : (path || `https://dhananjay.dev/${type}/${slug}`)
   const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out "${title}" by @dhananjaysinghk`)}&url=${encodeURIComponent(shareUrl)}`
   const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`
 

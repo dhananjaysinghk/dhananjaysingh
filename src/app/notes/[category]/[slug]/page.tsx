@@ -4,6 +4,9 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { db } from "@/lib/db"
 import { MarkdownRenderer } from "@/components/content/markdown-renderer"
+import { ReadingProgressBar } from "@/components/blog/ReadingProgressBar"
+import { TableOfContents } from "@/components/blog/TableOfContents"
+import { PostInteractions } from "@/components/blog/PostInteractions"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
@@ -360,7 +363,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function NoteDetailPage({ params }: PageProps) {
-  const { slug } = await params
+  const { category, slug } = await params
   const note = await getNoteDetail(slug)
 
   if (!note) {
@@ -369,6 +372,8 @@ export default async function NoteDetailPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 flex flex-col gap-10">
+      {/* Scroll indicator */}
+      <ReadingProgressBar />
       
       {/* Back button */}
       <ScrollReveal>
@@ -410,10 +415,18 @@ export default async function NoteDetailPage({ params }: PageProps) {
         {/* Left main: Markdown Renderer */}
         <ScrollReveal className="lg:col-span-3 flex flex-col gap-6">
           <MarkdownRenderer content={note.content} />
+          <PostInteractions
+            title={note.title}
+            slug={note.slug}
+            type="note"
+            path={`https://dhananjay.dev/notes/${category}/${slug}`}
+          />
         </ScrollReveal>
 
-        {/* Right sidebar: Related info / placeholder */}
-        <ScrollReveal className="lg:col-span-1 flex flex-col gap-6 lg:sticky lg:top-24">
+        {/* Right sidebar: Table of Contents & Related info */}
+        <ScrollReveal className="lg:col-span-1 flex flex-col gap-8 lg:sticky lg:top-24 border-l border-border/20 pl-6">
+          <TableOfContents content={note.content} />
+
           <Card className="bg-card/25 border-border/40 backdrop-blur-sm">
             <CardHeader className="border-b border-border/20 pb-3">
               <CardTitle className="font-heading text-xs font-bold uppercase tracking-wider text-muted-foreground">

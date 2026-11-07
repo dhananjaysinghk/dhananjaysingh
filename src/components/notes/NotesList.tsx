@@ -169,7 +169,7 @@ export function NotesList({ initialNotes }: NotesListProps) {
               className="group"
             >
               <Card className="h-full flex flex-col justify-between bg-card/30 border-border/40 hover:border-purple-500/40 hover:bg-card/60 hover:shadow-lg hover:shadow-purple-500/5 transition-all duration-300 group relative overflow-hidden backdrop-blur-sm">
-                <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-purple-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-transparent via-purple-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <CardHeader className="pb-3 flex flex-row items-start justify-between gap-4">
                   <div className="flex flex-col gap-1.5">
                     <span className="text-[10px] font-mono font-bold tracking-wider text-purple-400 bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded-full self-start uppercase">

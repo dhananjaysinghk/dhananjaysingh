@@ -4,6 +4,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { db } from "@/lib/db"
 import { ScrollReveal } from "@/components/animation/motion-wrapper"
+import { ReadingProgressBar } from "@/components/blog/ReadingProgressBar"
 import { PostInteractions } from "@/components/blog/PostInteractions"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
@@ -217,6 +218,8 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 flex flex-col gap-10">
+      {/* Reading Progress Indicator */}
+      <ReadingProgressBar />
       
       {/* Back to projects */}
       <ScrollReveal>
