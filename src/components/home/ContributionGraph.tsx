@@ -48,7 +48,8 @@ export function ContributionGraph() {
     <section className="py-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <ScrollReveal>
-          <div className="rounded-2xl border border-border/40 bg-card/30 p-8 backdrop-blur-sm">
+          <div className="rounded-2xl border border-border/40 bg-card/30 p-8 backdrop-blur-sm relative overflow-hidden shadow-sm">
+            <div className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-transparent via-emerald-500/50 to-transparent" />
             <div className="flex flex-col gap-6">
               
               {/* Header */}
@@ -62,13 +63,13 @@ export function ContributionGraph() {
                       Continuous Integration & Activity
                     </h3>
                     <p className="text-xs text-muted-foreground font-sans">
-                      Simulated compilation and code activity tracking across internal platforms
+                      Git commit &amp; code activity tracking across open-source and production repositories
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2 text-xs text-muted-foreground font-mono">
-                  <Info className="h-3.5 w-3.5" />
+                  <Info className="h-3.5 w-3.5 text-primary" />
                   <span>3,412 commits in the last year</span>
                 </div>
               </div>

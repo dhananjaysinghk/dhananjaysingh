@@ -17,8 +17,8 @@ export function Stats() {
         <ScrollReveal>
           <dl className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4 text-center">
             {stats.map((stat, index) => (
-              <div key={index} className="flex flex-col gap-2">
-                <dd className="font-mono text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+              <div key={index} className="flex flex-col gap-2 group cursor-default">
+                <dd className="font-mono text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">
                   {stat.value}
                 </dd>
                 <dt className="text-xs sm:text-sm font-medium tracking-tight text-muted-foreground uppercase">

@@ -7,6 +7,7 @@ import { Search, SlidersHorizontal, ArrowRight, Github, ExternalLink, Inbox } fr
 import { Input } from "@/components/ui/input"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { soundFx } from "@/lib/sound"
 
 interface Project {
   id: string
@@ -117,6 +118,7 @@ export function ProjectsShowcase({ initialProjects }: ProjectsShowcaseProps) {
           <button
             key={cat}
             onClick={() => {
+              soundFx.playClick()
               setSelectedCategory(cat)
               setSelectedTech(null) // Reset tech filter on category switch
             }}
@@ -141,7 +143,10 @@ export function ProjectsShowcase({ initialProjects }: ProjectsShowcaseProps) {
           return (
             <button
               key={tech}
-              onClick={() => setSelectedTech(isSelected ? null : tech)}
+              onClick={() => {
+                soundFx.playClick()
+                setSelectedTech(isSelected ? null : tech)
+              }}
               className={`rounded-md px-2.5 py-1 text-[10px] font-mono border transition-all ${
                 isSelected
                   ? "bg-primary/20 text-primary border-primary/40 font-semibold"
@@ -154,7 +159,10 @@ export function ProjectsShowcase({ initialProjects }: ProjectsShowcaseProps) {
         })}
         {selectedTech && (
           <button
-            onClick={() => setSelectedTech(null)}
+            onClick={() => {
+              soundFx.playClick()
+              setSelectedTech(null)
+            }}
             className="text-[10px] font-mono text-red-400 hover:text-red-300 underline underline-offset-2 ml-2"
           >
             Reset Filter
