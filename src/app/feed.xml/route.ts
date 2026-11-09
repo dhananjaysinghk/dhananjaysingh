@@ -26,6 +26,24 @@ const fallbackPosts = [
     excerpt: "How modern color spaces and inline CSS themes dramatically simplify design consistency, accessibility compliance, and dynamic dark mode scaling.",
     createdAt: new Date("2026-06-30"),
   },
+  {
+    title: "Zero-Copy Networking with io_uring in Linux",
+    slug: "zero-copy-linux-io-uring",
+    excerpt: "Eliminating kernel context switch overhead and memory copies using asynchronous submission/completion ring buffers for multi-gigabit socket pipelines.",
+    createdAt: new Date("2026-06-12"),
+  },
+  {
+    title: "Distributed Deadlock Resolution: 2PC vs Saga Orchestration",
+    slug: "distributed-deadlocks-2pc-saga",
+    excerpt: "Contrasting two-phase commit protocols with choreographed saga patterns across heterogeneous microservices, covering compensation log recovery.",
+    createdAt: new Date("2026-05-20"),
+  },
+  {
+    title: "Cache-Line Alignment and False Sharing in High-Concurrency Disruptors",
+    slug: "cache-line-false-sharing-disruptor",
+    excerpt: "How L1/L2 cache coherency traffic bottlenecks multi-threaded ring buffers and how 64-byte memory padding recovers millions of operations per second.",
+    createdAt: new Date("2026-05-04"),
+  },
 ]
 
 export async function GET() {

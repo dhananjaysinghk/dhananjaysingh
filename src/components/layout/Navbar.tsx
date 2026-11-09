@@ -149,7 +149,10 @@ export function Navbar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => {
+                      soundFx.playClick()
+                      setIsOpen(false)
+                    }}
                     className={cn(
                       "block rounded-md px-3 py-2 text-base font-medium transition-colors hover:bg-muted",
                       isActive ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"
